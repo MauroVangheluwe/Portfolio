@@ -1,0 +1,35 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const projects: CollectionEntry<"projects">[] = await getCollection("projects");
+---
+
+<BaseLayout title="Projecten">
+  <h1>Projecten</h1>
+  <ul>
+    {
+      projects.map((project) => (
+        <li>
+          <>
+            <a href={`/projects/${project.id}`}>
+              <strong>{project.data.title}</strong>
+            </a>
+            <br />
+          </>
+          {project.data.description}
+          <br />
+          {project.data.image && (
+            <div>
+              <img
+                src={project.data.image.url}
+                alt={project.data.image.alt}
+                width="200"
+              />
+            </div>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

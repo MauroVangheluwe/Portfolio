@@ -1,0 +1,37 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+const { frontmatter, backLink } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title}>
+  {
+    backLink && (
+      <p>
+        <a href={backLink}>← Back to Notes</a>
+      </p>
+    )
+  }
+  {
+    frontmatter.author && (
+      <p>
+        <strong>Author:</strong> {frontmatter.author}
+      </p>
+    )
+  }
+  {
+    frontmatter.date && (
+      <p>
+        <strong>Date:</strong> {frontmatter.date}
+      </p>
+    )
+  }
+  {
+    frontmatter.place && (
+      <p>
+        <strong>Place:</strong> {frontmatter.place}
+      </p>
+    )
+  }
+
+  <slot />
+</BaseLayout>
