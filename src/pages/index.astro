@@ -1,16 +1,75 @@
 ---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
+const projects: CollectionEntry<"projects">[] = await getCollection("projects");
+const notes: CollectionEntry<"notes">[] = await getCollection("notes");
+
+const firstNote = notes[0];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Portfolio van Mauro Vangheluwe">
+  <main>
+    <h1>Portfolio van Mauro Vangheluwe</h1>
+
+    <p>
+      Hey, ik ben Mauro, een creatieve student, DJ en digitale enthousiast. Ik
+      draai muziek, ik hou van sporten en werk graag aan projecten die me
+      motiveren om beter te worden in wat ik doe.
+    </p>
+
+    <h2>Projecten</h2>
+    <ul>
+      {
+        projects.map((project) => (
+          <li>
+            <>
+              <strong>{project.data.title}</strong>
+              <br />
+            </>
+            {project.data.description}
+            {project.data.image && (
+              <div>
+                <img
+                  src={project.data.image.url}
+                  alt={project.data.image.alt}
+                  width="200"
+                />
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      <a href="/projects">
+        <button>Kijk meer projecten</button>
+      </a>
+    </p>
+
+    <h2>Notes</h2>
+    {
+      firstNote && (
+        <div>
+          <>
+            <strong>{firstNote.data.title}</strong>
+            <br />
+          </>
+          {firstNote.data.author && (
+            <span>Author: {firstNote.data.author}</span>
+          )}
+          <br />
+          {firstNote.data.date && <span>Date: {firstNote.data.date}</span>}
+          <br />
+          {firstNote.data.place && <span>Place: {firstNote.data.place}</span>}
+          <br />
+          <p>
+            <a href="/notes">
+              <button>Kijk meer notes</button>
+            </a>
+          </p>
+        </div>
+      )
+    }
+  </main>
+</BaseLayout>

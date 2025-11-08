@@ -1,0 +1,29 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const notes: CollectionEntry<"notes">[] = await getCollection("notes");
+---
+
+<BaseLayout title="Notities">
+  <h1>Notes</h1>
+  <ul>
+    {
+      notes.map((note) => (
+        <li>
+          <>
+            <a href={`/notes/${note.id}`}>
+              <strong>{note.data.title}</strong>
+            </a>
+            <br />
+          </>
+          {note.data.author && <span>Author: {note.data.author}</span>}
+          <br />
+          {note.data.date && <span>Date: {note.data.date}</span>}
+          <br />
+          {note.data.place && <span>Place: {note.data.place}</span>}
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
