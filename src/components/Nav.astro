@@ -1,4 +1,4 @@
-<nav>
+<nav id="main-nav">
   <button id="hamburger" aria-label="Toggle menu" aria-expanded="false">
     <span></span>
     <span></span>
@@ -12,20 +12,27 @@
     <a href="/notes">Notes</a>
   </div>
 
-  <script>
-    (() => {
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
       const hamburger = document.getElementById("hamburger");
-      // Change this line to target the specific ID
       const nav = document.getElementById("main-nav");
 
       if (hamburger && nav) {
         hamburger.addEventListener("click", () => {
           const expanded = hamburger.getAttribute("aria-expanded") === "true";
           hamburger.setAttribute("aria-expanded", (!expanded).toString());
-          // This toggles the 'active' class used by your CSS
           nav.classList.toggle("active");
         });
+
+        // Close menu when clicking on a link
+        const navLinks = nav.querySelectorAll(".nav-links a");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            nav.classList.remove("active");
+            hamburger.setAttribute("aria-expanded", "false");
+          });
+        });
       }
-    })();
+    });
   </script>
 </nav>
