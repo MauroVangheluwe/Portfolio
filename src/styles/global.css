@@ -39,15 +39,22 @@ main {
 
 /* NAVIGATION */
 nav {
+    position: relative;
     background: var(--color-surface);
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--color-border);
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 2.5rem;
     font-weight: 600;
     font-size: 1.1rem;
     box-shadow: var(--shadow);
+}
+
+nav .nav-links {
+    display: flex;
+    gap: 2.5rem;
 }
 
 nav a {
@@ -61,6 +68,37 @@ nav a {
 nav a:hover {
     background: var(--color-accent-soft);
     color: var(--color-accent);
+}
+
+/* HAMBURGER MENU */
+#hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 2000;
+    box-shadow: none;
+}
+
+#hamburger:hover {
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+#hamburger span {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--color-text);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: center;
 }
 
 /* TYPOGRAPHY */
@@ -563,6 +601,10 @@ main>ul {
         font-size: 1rem;
     }
 
+    nav .nav-links {
+        gap: 1.5rem;
+    }
+
     main>ul li a {
         padding: 1.5rem;
     }
@@ -615,6 +657,10 @@ main>ul {
         gap: 2rem;
         padding: 1.5rem 2rem;
         font-size: 1.1rem;
+    }
+
+    nav .nav-links {
+        gap: 2rem;
     }
 
     main>ul li a {
@@ -670,6 +716,10 @@ main>ul {
         font-size: 1.1rem;
     }
 
+    nav .nav-links {
+        gap: 2.5rem;
+    }
+
     main>ul li a {
         padding: 2.5rem;
     }
@@ -699,132 +749,59 @@ main>ul {
     }
 }
 
-/* Hide default nav links and show hamburger on small screens */
-#hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 2rem;
-    height: 2rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    box-sizing: content-box;
-    z-index: 2000;
-}
-
-#hamburger span {
-    width: 2rem;
-    height: 0.25rem;
-    background: var(--color-text);
-    border-radius: 10px;
-    transition: all 0.3s linear;
-    position: relative;
-}
-
-/* Show nav links horizontally on large screens */
-nav .nav-links {
-    display: flex;
-    gap: 2.5rem;
-}
-
+/* MOBILE NAVIGATION */
 @media (max-width: 767px) {
 
-    /* 1. Modify the Nav container */
+    /* Modify the Nav container for mobile */
     nav#main-nav {
-        /* Ensure the logo/title and hamburger are spaced out on mobile */
-        justify-content: space-between;
+        justify-content: flex-end;
         padding: 1rem 2rem;
     }
 
-    /* 2. Hide the nav links by default on mobile */
-    nav .nav-links {
-        display: none;
+    /* Hide the nav links by default on mobile - higher specificity */
+    nav#main-nav .nav-links {
+        display: none !important;
         flex-direction: column;
-        /* Stacks the links vertically */
         position: absolute;
-        /* Positions the dropdown menu */
-        top: 4rem;
-        /* Below the nav bar */
-        right: 1rem;
-        /* Adjust positioning */
+        top: 100%;
+        right: 0;
+        left: 0;
         background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius);
+        border-bottom: 1px solid var(--color-border);
         box-shadow: var(--shadow);
-        padding: 1rem;
-        width: 12rem;
+        padding: 1rem 0;
+        gap: 0 !important;
         z-index: 1000;
     }
 
-    /* 3. Show the hamburger icon */
+    /* Style nav links in mobile menu */
+    nav#main-nav .nav-links a {
+        display: block;
+        padding: 1rem 2rem;
+        border-radius: 0;
+        width: 100%;
+    }
+
+    /* Show the hamburger icon on mobile */
     #hamburger {
-        display: flex;
+        display: flex !important;
     }
 
-    /* 4. Show nav links when active (The TOGGLE) */
-    nav.active .nav-links {
-        display: flex;
+    /* Show nav links when active (The TOGGLE) */
+    nav#main-nav.active .nav-links {
+        display: flex !important;
     }
 
-    /* 5. Hamburger animation when active (turn to X) */
-    nav.active #hamburger span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
+    /* Hamburger animation when active (turn to X) */
+    nav#main-nav.active #hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(0.5rem, 0.5rem);
     }
 
-    nav.active #hamburger span:nth-child(2) {
+    nav#main-nav.active #hamburger span:nth-child(2) {
         opacity: 0;
     }
 
-    nav.active #hamburger span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
+    nav#main-nav.active #hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(0.5rem, -0.5rem);
     }
-}
-
-nav {
-    /* Set a position other than static (like relative) so the absolute positioning of the menu is relative to the nav */
-    position: relative;
-    background: var(--color-surface);
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    /* On desktop, links are side-by-side */
-    justify-content: center;
-    gap: 2.5rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-    box-shadow: var(--shadow);
-}
-
-/* Hide default nav links and show hamburger on small screens */
-#hamburger {
-    display: none;
-    /* Hidden by default on large screens */
-    flex-direction: column;
-    justify-content: space-around;
-    width: 2rem;
-    height: 2rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    box-sizing: content-box;
-    z-index: 2000;
-}
-
-#hamburger span {
-    width: 2rem;
-    height: 0.25rem;
-    background: var(--color-text);
-    border-radius: 10px;
-    transition: all 0.3s linear;
-    position: relative;
-}
-
-/* Show nav links horizontally on large screens */
-nav .nav-links {
-    display: flex;
-    /* Links are visible and side-by-side on large screens */
-    gap: 2.5rem;
 }
