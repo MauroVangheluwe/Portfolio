@@ -19,35 +19,40 @@ const firstNote = notes[0];
     </p>
 
     <h2>Projecten</h2>
-    <ul>
+    <ul class="project-list">
       {
         projects.map((project) => (
-          <li>
-            <>
-              <strong>{project.data.title}</strong>
-              <br />
-            </>
-            {project.data.description}
-            {project.data.image && (
-              <div>
-                <img
-                  src={project.data.image.url}
-                  alt={project.data.image.alt}
-                  width="200"
-                />
+          <li class="project-li">
+            <a href={`/projects/${project.id}`}>
+              <div class="project-card">
+                <div class="project-content">
+                  <div class="project-text">
+                    <strong>{project.data.title}</strong>
+                    <p>{project.data.description}</p>
+                  </div>
+                  {project.data.image && (
+                    <div class="project-image">
+                      <img
+                        src={project.data.image.url}
+                        alt={project.data.image.alt}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+            </a>
           </li>
         ))
       }
     </ul>
+
     <p>
       <a href="/projects">
         <button>Kijk meer projecten</button>
       </a>
     </p>
 
-    <h2>Notes</h2>
+    <h2 class="notes-title">Notes</h2>
     {
       firstNote && (
         <div>
@@ -62,14 +67,13 @@ const firstNote = notes[0];
           {firstNote.data.date && <span>Date: {firstNote.data.date}</span>}
           <br />
           {firstNote.data.place && <span>Place: {firstNote.data.place}</span>}
-          <br />
-          <p>
-            <a href="/notes">
-              <button>Kijk meer notes</button>
-            </a>
-          </p>
         </div>
       )
     }
+    <p>
+      <a href="/notes">
+        <button class="button-notes">Kijk meer notes</button>
+      </a>
+    </p>
   </main>
 </BaseLayout>
