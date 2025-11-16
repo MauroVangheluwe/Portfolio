@@ -4,8 +4,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const projects: CollectionEntry<"projects">[] = await getCollection("projects");
 const notes: CollectionEntry<"notes">[] = await getCollection("notes");
-
-const firstNote = notes[0];
 ---
 
 <BaseLayout title="Portfolio van Mauro Vangheluwe">
@@ -53,23 +51,26 @@ const firstNote = notes[0];
     </p>
 
     <h2 class="notes-title">Notes</h2>
-    {
-      firstNote && (
-        <div>
-          <>
-            <strong>{firstNote.data.title}</strong>
-            <br />
-          </>
-          {firstNote.data.author && (
-            <span>Author: {firstNote.data.author}</span>
-          )}
-          <br />
-          {firstNote.data.date && <span>Date: {firstNote.data.date}</span>}
-          <br />
-          {firstNote.data.place && <span>Place: {firstNote.data.place}</span>}
-        </div>
-      )
-    }
+    <ul class="project-list">
+      {
+        notes.slice(0, 1).map((note) => (
+          <li class="project-li">
+            <a href={`/notes/${note.id}`}>
+              <div class="project-card">
+                <div class="project-content">
+                  <div class="project-text">
+                    <strong>{note.data.title}</strong>
+                    {note.data.author && <p>Author: {note.data.author}</p>}
+                    {note.data.date && <p>Date: {note.data.date}</p>}
+                    {note.data.place && <p>Place: {note.data.place}</p>}
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
     <p>
       <a href="/notes">
         <button class="button-notes">Kijk meer notes</button>

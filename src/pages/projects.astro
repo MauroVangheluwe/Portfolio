@@ -8,25 +8,27 @@ const projects: CollectionEntry<"projects">[] = await getCollection("projects");
 <BaseLayout title="Projecten">
   <main>
     <h1>Projecten</h1>
-    <ul>
+    <ul class="project-list">
       {
         projects.map((project) => (
-          <li>
+          <li class="project-li">
             <a href={`/projects/${project.id}`}>
-              <div class="project-content">
-                <div class="project-text">
-                  <strong>{project.data.title}</strong>
-                  <p>{project.data.description}</p>
-                </div>
-                {project.data.image && (
-                  <div class="project-image">
-                    <img
-                      src={project.data.image.url}
-                      alt={project.data.image.alt}
-                      width="200"
-                    />
+              <div class="project-card">
+                <div class="project-content">
+                  <div class="project-text">
+                    <strong>{project.data.title}</strong>
+                    <p>{project.data.description}</p>
                   </div>
-                )}
+                  {project.data.image && (
+                    <div class="project-image">
+                      <img
+                        src={project.data.image.url}
+                        alt={project.data.image.alt}
+                        width="200"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </a>
           </li>
