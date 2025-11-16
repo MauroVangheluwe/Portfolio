@@ -1,25 +1,43 @@
 :root {
     /* Minimalist color palette - professional designer aesthetic */
-    --color-bg: #fafafa;
-    --color-bg-secondary: #f5f5f5;
+    --color-bg: #f8fafc;
+    --color-bg-secondary: #f1f5f9;
     --color-surface: #ffffff;
     --color-text: #1a1a1a;
     --color-text-secondary: #6b6b6b;
 
-    /* Refined accent - subtle but distinctive */
-    --color-accent: #2C7A7B;
-    --color-accent-hover: #1a5a5b;
-    --color-accent-soft: rgba(44, 122, 123, 0.15);
-    --color-accent-ultra-soft: rgba(44, 122, 123, 0.05);
+    /* Blue primary accent */
+    --color-blue: #2563eb;
+    --color-blue-light: #3b82f6;
+    --color-blue-dark: #1e40af;
+    --color-blue-soft: rgba(37, 99, 235, 0.15);
+    --color-blue-ultra-soft: rgba(37, 99, 235, 0.05);
+
+    /* Teal secondary accent */
+    --color-teal: #2C7A7B;
+    --color-teal-dark: #1a5a5b;
+    --color-teal-soft: rgba(44, 122, 123, 0.15);
+    --color-teal-ultra-soft: rgba(44, 122, 123, 0.05);
+
+    /* Primary accent (blue) */
+    --color-accent: var(--color-blue);
+    --color-accent-hover: var(--color-blue-dark);
+    --color-accent-soft: var(--color-blue-soft);
+    --color-accent-ultra-soft: var(--color-blue-ultra-soft);
 
     --color-border: #d0d0d0;
-    --color-border-hover: #2C7A7B;
+    --color-border-hover: var(--color-blue);
 
     --max-width: 75rem;
     --radius: 0.5rem;
     --shadow: 0 3px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
     --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
-    --shadow-accent: 0 2px 8px rgba(44, 122, 123, 0.15);
+    --shadow-accent: 0 2px 8px rgba(37, 99, 235, 0.15);
+
+    /* Gradients */
+    --gradient-blue: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    --gradient-blue-teal: linear-gradient(135deg, #2563eb 0%, #2C7A7B 100%);
+    --gradient-soft-blue: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
 }
 
 * {
@@ -84,8 +102,8 @@ nav a::after {
     bottom: 0;
     left: 0;
     width: 0;
-    height: 1px;
-    background: var(--color-accent);
+    height: 2px;
+    background: var(--gradient-blue);
     transition: width 0.3s ease;
 }
 
@@ -145,7 +163,10 @@ h1 {
     margin-bottom: 2.5rem;
     letter-spacing: -0.02em;
     line-height: 1.2;
-    color: var(--color-text);
+    background: var(--gradient-blue);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 h2 {
@@ -164,8 +185,8 @@ h2::after {
     bottom: 0;
     left: 0;
     width: 3rem;
-    height: 1px;
-    background: var(--color-accent);
+    height: 2px;
+    background: var(--gradient-blue);
 }
 
 h3 {
@@ -184,18 +205,58 @@ p {
     max-width: 65ch;
 }
 
+/* Reduce spacing for paragraphs containing buttons on homepage */
+/* Target paragraphs with buttons that come after project-list */
+.project-list+p:has(button),
+.project-list+p:has(a button),
+ul.project-list+p:has(button),
+ul.project-list+p:has(a button) {
+    margin-top: 0 !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Reduce margin-bottom of project-list when followed by button paragraph */
+.project-list:has(+ p:has(button)),
+.project-list:has(+ p:has(a button)),
+ul.project-list:has(+ p:has(button)),
+ul.project-list:has(+ p:has(a button)) {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Override for back link paragraphs - must come after general p rule */
+main>p:first-of-type:has(a[href*="/projects"]),
+main>p:first-of-type:has(a[href*="/notes"]),
+main>p:first-of-type:has(a[href*="Back"]),
+main>p:first-of-type:has(a[href*="back"]) {
+    font-size: 1.75rem !important;
+    font-weight: 400 !important;
+    margin: 0 0 2rem 0 !important;
+    letter-spacing: -0.01em !important;
+    color: var(--color-text) !important;
+    position: relative !important;
+    padding-bottom: 0.5rem !important;
+    line-height: 1.2 !important;
+    max-width: none !important;
+}
+
 /* LINKS */
 a {
     color: var(--color-text);
     text-decoration: none;
     font-weight: 400;
     transition: color 0.3s ease;
-    border-bottom: 1px solid transparent;
+    border-bottom: none;
 }
 
 a:hover {
     color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
+    border-bottom: none;
+}
+
+/* Remove blue border on skill list items only */
+main>h2+ul:not(.project-list) li a,
+main>h2+ul:not(.project-list) li a:hover {
+    border-bottom: none !important;
 }
 
 /* LISTS */
@@ -223,7 +284,7 @@ main>ul li {
     margin-right: 0;
     margin-bottom: 2.5rem;
     box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: visible;
     padding-left: 0;
@@ -242,10 +303,42 @@ main>ul.project-list li:hover,
 main>ul li.project-li:hover,
 .project-list li:hover,
 main>ul li:hover {
-    transform: translateY(-3px);
-    border-color: var(--color-border-hover);
-    box-shadow: var(--shadow-hover);
-    background: var(--color-accent-ultra-soft);
+    transform: translateY(-3px) !important;
+    border-color: var(--color-blue) !important;
+    box-shadow: var(--shadow-hover), var(--shadow-accent) !important;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%) !important;
+    position: relative;
+}
+
+main>ul.project-list li::after,
+main>ul li.project-li::after,
+.project-list li::after,
+main>ul li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 50%, #2563eb 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+main>ul.project-list li:hover::after,
+main>ul li.project-li:hover::after,
+.project-list li:hover::after,
+main>ul li:hover::after {
+    opacity: 1 !important;
+}
+
+/* Remove blue line from skills list items */
+main>h2+ul:not(.project-list) li::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    height: 0 !important;
 }
 
 /* Remove vertical color bar for minimal design */
@@ -269,6 +362,7 @@ main>ul li a {
     width: 100%;
     height: 100%;
     position: relative;
+    border-bottom: none !important;
 }
 
 main>ul.project-list li a:hover,
@@ -276,6 +370,8 @@ main>ul li.project-li a:hover,
 .project-list li a:hover,
 main>ul li a:hover {
     text-decoration: none;
+    border-bottom: none !important;
+    color: inherit;
 }
 
 main>ul.project-list li a strong,
@@ -291,7 +387,11 @@ main>ul.project-list li a:hover strong,
 main>ul li.project-li a:hover strong,
 .project-list li a:hover strong,
 main>ul li a:hover strong {
-    color: var(--color-accent);
+    color: var(--color-blue);
+    background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-blue-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Project content layout - side by side */
@@ -407,8 +507,8 @@ main>h2+ul:not(.project-list) li:hover::before {
 /* BUTTONS */
 button {
     background: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-text);
+    color: var(--color-blue);
+    border: 2px solid var(--color-blue);
     padding: 0.875rem 2rem;
     font-size: 0.95rem;
     font-weight: 400;
@@ -417,13 +517,31 @@ button {
     box-shadow: none;
     transition: all 0.3s ease;
     letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    transition: left 0.3s ease;
+    z-index: -1;
 }
 
 button:hover {
-    background: var(--color-text);
-    color: var(--color-surface);
-    transform: none;
-    box-shadow: none;
+    color: var(--color-surface) !important;
+    border-color: var(--color-blue-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-accent) !important;
+}
+
+button:hover::before {
+    left: 0 !important;
 }
 
 a button {
@@ -441,41 +559,96 @@ small {
     color: var(--color-text-secondary);
 }
 
-/* BACK LINK (Cleaner) */
-p a[href*="Back"] {
-    display: inline-flex;
-    gap: 0.5rem;
-    color: var(--color-text-secondary);
-    font-weight: 400;
-    margin-bottom: 2rem;
-    padding: 0;
-    background: transparent;
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid transparent;
+/* BACK LINK PARAGRAPH (Styled like h2) */
+main>p:has(a[href*="Back"]),
+main>p:has(a[href*="back"]),
+main>p:has(a[href*="/projects"]),
+main>p:has(a[href*="/notes"]) {
+    font-size: 1.75rem !important;
+    font-weight: 400 !important;
+    margin: 5rem 0 2rem 0 !important;
+    letter-spacing: -0.01em !important;
+    color: var(--color-text) !important;
+    position: relative !important;
+    padding-bottom: 0.5rem !important;
+    line-height: 1.2 !important;
+    max-width: none !important;
+}
+
+main>p:has(a[href*="Back"])::after,
+main>p:has(a[href*="back"])::after,
+main>p:has(a[href*="/projects"])::after,
+main>p:has(a[href*="/notes"])::after {
+    content: '' !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3rem;
+    height: 2px;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+}
+
+/* BACK LINK (Styled like h2) */
+main>p>a[href*="Back"],
+main>p>a[href*="back"],
+p a[href*="Back"],
+p a[href*="back"] {
+    display: inline;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    border: none !important;
+    border-bottom: none !important;
     transition: all 0.3s ease;
 }
 
-p a[href*="Back"]:hover {
-    color: var(--color-text);
-    border-bottom-color: var(--color-text);
-    background: transparent;
+main>p>a[href*="Back"]:hover,
+main>p>a[href*="back"]:hover,
+p a[href*="Back"]:hover,
+p a[href*="back"]:hover {
+    color: var(--color-blue) !important;
+    transform: translateX(-5px);
+    border-bottom: none !important;
+}
+
+main>p:has(a[href*="Back"]):hover::after,
+main>p:has(a[href*="back"]):hover::after,
+main>p:has(a[href*="/projects"]):hover::after,
+main>p:has(a[href*="/notes"]):hover::after {
+    width: 3rem !important;
+    transition: width 0.3s ease;
 }
 
 /* DETAIL PAGE CONTENT CONTAINER */
 main>article {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
     border-radius: 0;
-    padding: 0;
+    padding: 3rem 2.5rem;
     margin-top: 2rem;
-    box-shadow: none;
+    box-shadow: var(--shadow);
     position: relative;
+    max-width: 65ch;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 main>article::before {
-    display: none;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 50%, #2563eb 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+main>article:hover::before {
+    opacity: 1 !important;
 }
 
 /* DETAIL PAGE METADATA */
@@ -503,17 +676,30 @@ main article p:has(strong:first-child) {
 
 /* DETAIL PAGE IMAGES */
 main article img {
-    width: 100%;
-    max-width: 100%;
-    margin: 3rem 0;
+    max-width: min(600px, 100%);
+    width: auto;
+    height: auto;
+    margin: 2.5rem auto;
+    display: block;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem;
+    background: var(--color-bg-secondary);
 }
 
 /* MARKDOWN CONTENT STYLING */
 main article h1:first-child {
     margin-top: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    background: var(--gradient-blue);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 main article h2,
@@ -523,6 +709,30 @@ main article h5,
 main article h6 {
     margin-top: 2.5rem;
     margin-bottom: 1rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+}
+
+main article h2 {
+    font-size: 1.75rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    position: relative;
+}
+
+main article h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 4rem;
+    height: 2px;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+}
+
+main article h3 {
+    font-size: 1.4rem;
 }
 
 main article h2:first-of-type {
@@ -531,6 +741,8 @@ main article h2:first-of-type {
 
 main article p {
     margin-bottom: 1.5rem;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
 }
 
 main article ul {
@@ -572,11 +784,25 @@ main article ol li::before {
 }
 
 main article blockquote {
-    border-left: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-blue);
     padding-left: 1.5rem;
     margin: 2rem 0;
     color: var(--color-text-secondary);
-    font-style: normal;
+    font-style: italic;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+    padding: 1rem 1.5rem;
+    border-radius: 0;
+    position: relative;
+}
+
+main article blockquote::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
 }
 
 main article code {
@@ -585,6 +811,8 @@ main article code {
     border-radius: 0.3rem;
     font-size: 0.9rem;
     font-family: 'Courier New', monospace;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
 }
 
 main article pre {
@@ -593,12 +821,14 @@ main article pre {
     border-radius: 0;
     overflow-x: auto;
     margin: 1.5rem 0;
-    border-left: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow);
 }
 
 main article pre code {
     background: none;
     padding: 0;
+    border: none;
 }
 
 .button-notes {
@@ -606,7 +836,7 @@ main article pre code {
 }
 
 .notes-title {
-    margin-top: 6rem;
+    margin-top: 5rem;
 }
 
 .project-card {
@@ -646,6 +876,11 @@ main>ul {
 @media (max-width: 479px) {
     h1 {
         font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    p a[href*="Back"] {
+        font-size: 1.4rem;
         margin-bottom: 1.5rem;
     }
 
@@ -736,7 +971,28 @@ main>ul {
         width: 100%;
     }
 
-    main>article,
+    main>article {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    main>article img {
+        max-width: 100%;
+        margin: 2rem auto;
+    }
+
+    main>article h1:first-child {
+        font-size: 2rem;
+    }
+
+    main>article h2 {
+        font-size: 1.5rem;
+    }
+
+    main>article h3 {
+        font-size: 1.2rem;
+    }
+
     .project-card {
         padding: 0;
     }
@@ -746,6 +1002,10 @@ main>ul {
 @media (min-width: 480px) {
     h1 {
         font-size: 2.4rem;
+    }
+
+    p a[href*="Back"] {
+        font-size: 1.6rem;
     }
 
     h2 {
@@ -811,7 +1071,28 @@ main>ul {
     }
 
 
-    main>article,
+    main>article {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    main>article img {
+        max-width: 100%;
+        margin: 2rem auto;
+    }
+
+    main>article h1:first-child {
+        font-size: 2rem;
+    }
+
+    main>article h2 {
+        font-size: 1.5rem;
+    }
+
+    main>article h3 {
+        font-size: 1.2rem;
+    }
+
     .project-card {
         padding: 0;
     }
@@ -821,6 +1102,10 @@ main>ul {
 @media (min-width: 768px) {
     h1 {
         font-size: 2.8rem;
+    }
+
+    p a[href*="Back"] {
+        font-size: 2rem;
     }
 
     h2 {
@@ -887,7 +1172,28 @@ main>ul {
     }
 
 
-    main>article,
+    main>article {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    main>article img {
+        max-width: 100%;
+        margin: 2rem auto;
+    }
+
+    main>article h1:first-child {
+        font-size: 2rem;
+    }
+
+    main>article h2 {
+        font-size: 1.5rem;
+    }
+
+    main>article h3 {
+        font-size: 1.2rem;
+    }
+
     .project-card {
         padding: 0;
     }
@@ -897,6 +1203,10 @@ main>ul {
 @media (min-width: 1280px) {
     h1 {
         font-size: 3.2rem;
+    }
+
+    p a[href*="Back"] {
+        font-size: 2.2rem;
     }
 
     h2 {
@@ -962,7 +1272,28 @@ main>ul {
     }
 
 
-    main>article,
+    main>article {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    main>article img {
+        max-width: 100%;
+        margin: 2rem auto;
+    }
+
+    main>article h1:first-child {
+        font-size: 2rem;
+    }
+
+    main>article h2 {
+        font-size: 1.5rem;
+    }
+
+    main>article h3 {
+        font-size: 1.2rem;
+    }
+
     .project-card {
         padding: 0;
     }
