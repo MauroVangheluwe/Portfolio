@@ -4,36 +4,42 @@ const { frontmatter, backLink } = Astro.props;
 ---
 
 <BaseLayout title={frontmatter.title}>
-  {
-    backLink && (
-      <p>
-        <a href={backLink}>← Back to Projects</a>
-      </p>
-    )
-  }
-  {
-    frontmatter.date && (
-      <p>
-        <small>{frontmatter.date}</small>
-      </p>
-    )
-  }
-  {
-    frontmatter.description && (
-      <p>
-        <em>{frontmatter.description}</em>
-      </p>
-    )
-  }
-  {
-    frontmatter.image && (
-      <img
-        src={frontmatter.image.url}
-        alt={frontmatter.image.alt}
-        width="400"
-      />
-    )
-  }
+  <main>
+    {
+      backLink && (
+        <p>
+          <a href={backLink}>← Back to Projects</a>
+        </p>
+      )
+    }
 
-  <slot />
+    <article>
+      <h1>{frontmatter.title}</h1>
+      {
+        frontmatter.date && (
+          <p>
+            <small>{frontmatter.date}</small>
+          </p>
+        )
+      }
+      {
+        frontmatter.description && (
+          <p>
+            <em>{frontmatter.description}</em>
+          </p>
+        )
+      }
+      {
+        frontmatter.image && (
+          <img
+            src={frontmatter.image.url}
+            alt={frontmatter.image.alt}
+            width="400"
+          />
+        )
+      }
+
+      <slot />
+    </article>
+  </main>
 </BaseLayout>

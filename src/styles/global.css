@@ -1,36 +1,830 @@
-body {
-    margin: 3rem;
-    font-family: system-ui, sans-serif;
-    line-height: 1.6;
-    background: #fafafa;
-    color: #111;
+:root {
+    /* Colors */
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f2f4f7;
+    --color-surface: #ffffff;
+    --color-text: #111111;
+    --color-text-secondary: #4b5563;
+
+    /* Bold accent system */
+    --color-accent: #ff4d6d;
+    --color-accent-hover: #e03557;
+    --color-accent-soft: rgba(255, 77, 109, 0.15);
+
+    --color-border: #e5e7eb;
+
+    --max-width: 70rem;
+    --radius: 0.75rem;
+    --shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    line-height: 1.65;
+}
+
+main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+/* NAVIGATION */
 nav {
-    padding: 1rem;
+    background: var(--color-surface);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--color-border);
     display: flex;
-    gap: 1rem;
-    font-size: 1rem;
+    justify-content: center;
+    gap: 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow);
 }
 
 nav a {
     text-decoration: none;
-    color: #111;
+    color: var(--color-text);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    transition: 0.2s ease;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
 }
 
-ul {
-    padding-left: 0;
-    list-style: none;
+/* TYPOGRAPHY */
+h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
 }
 
-li {
+h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+}
+
+h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+}
+
+p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
     margin-bottom: 1.5rem;
 }
 
+/* LINKS */
 a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-accent-hover);
     text-decoration: underline;
+}
+
+/* LISTS */
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 3rem 0;
+    padding: 0 1rem;
+}
+
+li {
+    margin-bottom: 2rem;
+}
+
+/* PROJECT & NOTES CARDS (only direct children of main) */
+main>ul li {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    box-shadow: var(--shadow);
+    transition: 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    position: relative;
+    padding-left: 1.2rem;
+    position: relative;
+    padding-left: 1rem;
+    min-height: 4rem;
+}
+
+main>ul li:hover {
+    transform: translateY(-0.2rem);
+    border-color: var(--color-accent);
+    box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.15);
+}
+
+/* Vertical color bar for bold visual identity (disabled for projects) */
+main>ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0.4rem;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 0.2rem 0 0 0.2rem;
+}
+
+/* Disable ::before for projects to match notes style */
+main>ul li.project-li::before {
+    display: none;
+}
+
+/* Make entire card clickable */
+main>ul li a {
+    display: block;
+    padding: 2.5rem;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+main>ul li a:hover {
+    text-decoration: none;
+}
+
+main>ul li a strong {
+    color: var(--color-text);
+}
+
+main>ul li a:hover strong {
+    color: var(--color-accent);
+}
+
+/* Project content layout - side by side */
+.project-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.project-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.project-text strong {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.project-text p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+}
+
+.project-image {
+    flex-shrink: 0;
+    width: 12rem;
+    height: 12rem;
+    overflow: hidden;
+    border-radius: var(--radius);
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 0;
+}
+
+main>ul li span {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+/* Skills list styling (simple, no cards - override card styles) */
+main>h2+ul li {
+    background: none !important;
+    border: none !important;
+    padding: 0.5rem 0 !important;
+    margin-bottom: 0.75rem !important;
+    box-shadow: none !important;
+    position: relative;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    padding-left: 1.5rem !important;
+}
+
+main>h2+ul li::before {
+    content: "•" !important;
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    border-radius: 0 !important;
+}
+
+/* Notes section on homepage */
+main>h2~div {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+main>h2~div::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.4rem;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+main>h2~div strong {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+main>h2~div span {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+/* BUTTONS */
+button {
+    background: var(--color-accent);
+    color: #ffffff;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: 0 0.4rem 1rem rgba(255, 77, 109, 0.4);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-0.15rem);
+    box-shadow: 0 0.6rem 1.4rem rgba(255, 77, 109, 0.45);
+}
+
+a button {
+    display: inline-block;
+}
+
+/* SPACING AROUND IMAGES */
+img {
+    max-width: 100%;
+    border-radius: var(--radius);
+}
+
+small {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* BACK LINK (Cleaner) */
+p a[href*="Back"] {
+    display: inline-flex;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    transition: 0.2s ease;
+}
+
+p a[href*="Back"]:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+/* DETAIL PAGE CONTENT CONTAINER */
+main>article {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 3rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+main>article::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.4rem;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+/* DETAIL PAGE METADATA */
+main article p:has(small),
+main article p:has(em),
+main article p:has(strong:first-child) {
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-secondary);
+    border-left: 0.3rem solid var(--color-accent);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+main article p:has(em) {
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+main article p:has(strong:first-child) {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+/* DETAIL PAGE IMAGES */
+main article img {
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem 0;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+/* MARKDOWN CONTENT STYLING */
+main article h1:first-child {
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+main article h2,
+main article h3,
+main article h4,
+main article h5,
+main article h6 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+main article h2:first-of-type {
+    margin-top: 2rem;
+}
+
+main article p {
+    margin-bottom: 1.5rem;
+}
+
+main article ul {
+    list-style: disc;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+}
+
+main article ul li {
+    margin-bottom: 0.75rem;
+    background: none;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    position: relative;
+}
+
+main article ul li::before {
+    display: none;
+}
+
+main article ol {
+    list-style: decimal;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+}
+
+main article ol li {
+    margin-bottom: 0.75rem;
+    background: none;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    position: relative;
+}
+
+main article ol li::before {
+    display: none;
+}
+
+main article blockquote {
+    border-left: 0.3rem solid var(--color-accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+main article code {
+    background: var(--color-bg-secondary);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+}
+
+main article pre {
+    background: var(--color-bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-left: 0.3rem solid var(--color-accent);
+}
+
+main article pre code {
+    background: none;
+    padding: 0;
+}
+
+.button-notes {
+    margin-top: 4rem;
+}
+
+.notes-title {
+    margin-top: 6rem;
+}
+
+.project-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 3rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.project-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.4rem;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+main>ul li::before {
+    display: none;
+}
+
+li.project-li::before {
+    content: none;
+}
+
+.project-list {
+    padding-left: 0rem;
+    margin-left: -4rem;
+}
+
+main>ul {
+    margin-left: -2rem;
+}
+
+/* ------------------------- */
+/*   RESPONSIVE DESIGN       */
+/* ------------------------- */
+
+/* Smartphones (≥480px) */
+@media (min-width: 480px) {
+    h1 {
+        font-size: 2.4rem;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    main {
+        padding: 2rem 1rem;
+    }
+
+    nav {
+        flex-direction: row;
+        gap: 1.5rem;
+        padding: 1rem 1rem;
+        font-size: 1rem;
+    }
+
+    main>ul li a {
+        padding: 1.5rem;
+    }
+
+    .project-content {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .project-image {
+        width: 100%;
+        height: 10rem;
+    }
+
+    .project-text strong {
+        font-size: 1.3rem;
+    }
+
+    main>h2~div {
+        padding: 1.5rem;
+    }
+
+    main>article,
+    .project-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Tablets (≥768px) */
+@media (min-width: 768px) {
+    h1 {
+        font-size: 2.8rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+    }
+
+    main {
+        padding: 3rem 1.5rem;
+    }
+
+    nav {
+        flex-direction: row;
+        gap: 2rem;
+        padding: 1.5rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    main>ul li a {
+        padding: 2rem;
+    }
+
+    .project-content {
+        flex-direction: row;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .project-image {
+        width: 8rem;
+        height: 8rem;
+    }
+
+    .project-text strong {
+        font-size: 1.4rem;
+    }
+
+    main>h2~div {
+        padding: 2rem;
+    }
+
+    main>article,
+    .project-card {
+        padding: 2rem;
+    }
+}
+
+/* Laptops/Desktops (≥1280px) */
+@media (min-width: 1280px) {
+    h1 {
+        font-size: 3.2rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    h3 {
+        font-size: 1.6rem;
+    }
+
+    main {
+        padding: 4rem 2rem;
+    }
+
+    nav {
+        gap: 2.5rem;
+        padding: 1.5rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    main>ul li a {
+        padding: 2.5rem;
+    }
+
+    .project-content {
+        flex-direction: row;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+
+    .project-image {
+        width: 12rem;
+        height: 12rem;
+    }
+
+    .project-text strong {
+        font-size: 1.6rem;
+    }
+
+    main>h2~div {
+        padding: 2.5rem;
+    }
+
+    main>article,
+    .project-card {
+        padding: 3rem;
+    }
+}
+
+/* Hide default nav links and show hamburger on small screens */
+#hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: content-box;
+    z-index: 2000;
+}
+
+#hamburger span {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--color-text);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+}
+
+/* Show nav links horizontally on large screens */
+nav .nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+@media (max-width: 767px) {
+
+    /* 1. Modify the Nav container */
+    nav#main-nav {
+        /* Ensure the logo/title and hamburger are spaced out on mobile */
+        justify-content: space-between;
+        padding: 1rem 2rem;
+    }
+
+    /* 2. Hide the nav links by default on mobile */
+    nav .nav-links {
+        display: none;
+        flex-direction: column;
+        /* Stacks the links vertically */
+        position: absolute;
+        /* Positions the dropdown menu */
+        top: 4rem;
+        /* Below the nav bar */
+        right: 1rem;
+        /* Adjust positioning */
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1rem;
+        width: 12rem;
+        z-index: 1000;
+    }
+
+    /* 3. Show the hamburger icon */
+    #hamburger {
+        display: flex;
+    }
+
+    /* 4. Show nav links when active (The TOGGLE) */
+    nav.active .nav-links {
+        display: flex;
+    }
+
+    /* 5. Hamburger animation when active (turn to X) */
+    nav.active #hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    nav.active #hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+
+    nav.active #hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+}
+
+nav {
+    /* Set a position other than static (like relative) so the absolute positioning of the menu is relative to the nav */
+    position: relative;
+    background: var(--color-surface);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    /* On desktop, links are side-by-side */
+    justify-content: center;
+    gap: 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow);
+}
+
+/* Hide default nav links and show hamburger on small screens */
+#hamburger {
+    display: none;
+    /* Hidden by default on large screens */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: content-box;
+    z-index: 2000;
+}
+
+#hamburger span {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--color-text);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+}
+
+/* Show nav links horizontally on large screens */
+nav .nav-links {
+    display: flex;
+    /* Links are visible and side-by-side on large screens */
+    gap: 2.5rem;
 }
