@@ -35,6 +35,29 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Loading state - prevent scrolling and hide content */
+body.loading {
+    overflow: hidden;
+    height: 100vh;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-blue-dark);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+body.loaded #loading-overlay {
+    opacity: 0;
+}
+
 main {
     flex: 1;
     padding: 0rem 0rem;
@@ -222,6 +245,7 @@ main {
     opacity: 1;
 }
 
+
 /* WORK SECTION */
 
 
@@ -234,7 +258,7 @@ main {
     font-family: "Owners-XNarrow", sans-serif;
     text-align: center;
     font-size: 7rem;
-    /*     opacity: 0;*/
+    opacity: 0;
 }
 
 .work-subtitle {
@@ -242,11 +266,17 @@ main {
     font-style: italic;
     font-size: 2.5rem;
     margin-top: -3rem;
-    /*     opacity: 0; */
+    opacity: 0;
+}
+
+.work-title,
+.work-subtitle {
+    transform: translateY(60px);
 }
 
 /* PROJECTS CAROUSEL */
 .projects-carousel {
+    margin-top: 2rem;
     width: 100%;
     overflow: hidden;
     padding: 6rem 0;
@@ -278,28 +308,29 @@ main {
     text-decoration: none;
     color: inherit;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
-    opacity: 0.4;
     pointer-events: auto;
     transform-style: preserve-3d;
+    --scale: 0.7;
+    --translate-y: 100px;
+    --translate-z: -200px;
     --rotate-y: 35deg;
     --rotate-z: 0deg;
-    transform: scale(0.7) translateY(100px) translateZ(-200px) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+    --opacity: 0.4;
+    transform: scale(var(--scale)) translateY(var(--translate-y)) translateZ(var(--translate-z)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+    opacity: var(--opacity);
 }
 
 .project-card.active {
-    opacity: 1;
     z-index: 10;
-    --rotate-y: 0deg;
-    --rotate-z: 0deg;
-    transform: scale(1) translateY(-60px) translateZ(0px) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
 }
 
 .project-card:not(.active):hover {
-    opacity: 0.6;
+    filter: brightness(1.1);
 }
 
 .project-card.active:hover {
     transform: scale(1.03) translateY(-70px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    opacity: 1;
 }
 
 .card-image-wrapper {
