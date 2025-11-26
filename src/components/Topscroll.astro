@@ -1,0 +1,76 @@
+---
+import { getCollection } from "astro:content";
+const skillsEntries = await getCollection("skills");
+const skillNames = skillsEntries
+  .map((entry) => entry.data.name)
+  .filter(Boolean)
+  .sort((a, b) => a.localeCompare(b));
+
+// Duplicate the list to create a seamless infinite loop
+const marqueeItems = [...skillNames, ...skillNames];
+---
+
+<section aria-label="Skills marquee" class="skills-marquee" data-paused="false">
+  <div class="marquee">
+    <div class="track" id="skills-track">
+      {
+        marqueeItems.map((name, i) => (
+          <>
+            <span class="item">[{name}]</span>
+            <span class="sep" aria-hidden="true">
+              <svg
+                class="ster"
+                width="18"
+                height="18"
+                viewBox="0 0 22 23"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.067 0.587755C10.4216 -0.195914 11.5345 -0.195913 11.8891 0.587757L12.9684 2.97294C13.2111 3.50939 13.8625 3.72104 14.3742 3.42972L16.6493 2.13444C17.3968 1.70887 18.2972 2.36304 18.1235 3.20547L17.5946 5.7695C17.4757 6.34618 17.8783 6.90028 18.4635 6.96537L21.0654 7.25475C21.9203 7.34982 22.2642 8.40829 21.6285 8.98771L19.6936 10.7512C19.2584 11.1478 19.2584 11.8328 19.6936 12.2294L21.6285 13.9929C22.2642 14.5723 21.9203 15.6308 21.0654 15.7258L18.4635 16.0152C17.8783 16.0803 17.4757 16.6344 17.5946 17.2111L18.1235 19.7751C18.2972 20.6176 17.3968 21.2717 16.6493 20.8461L14.3742 19.5509C13.8625 19.2595 13.2111 19.4712 12.9684 20.0077L11.8891 22.3928C11.5345 23.1765 10.4216 23.1765 10.067 22.3928L8.98769 20.0077C8.74495 19.4712 8.09356 19.2595 7.58186 19.5509L5.30675 20.8461C4.55924 21.2717 3.65885 20.6176 3.8326 19.7751L4.36144 17.2111C4.48038 16.6344 4.07779 16.0803 3.49258 16.0152L0.890632 15.7258C0.0357406 15.6308 -0.308176 14.5723 0.32756 13.9929L2.26249 12.2294C2.69768 11.8328 2.69768 11.1478 2.26249 10.7512L0.327559 8.98771C-0.308177 8.40829 0.0357419 7.34982 0.890633 7.25475L3.49258 6.96537C4.0778 6.90028 4.48038 6.34618 4.36144 5.7695L3.8326 3.20547C3.65885 2.36304 4.55924 1.70887 5.30675 2.13444L7.58186 3.42972C8.09356 3.72104 8.74495 3.50939 8.98769 2.97294L10.067 0.587755Z"
+                  fill="var(--color-blue-dark)"
+                />
+              </svg>
+            </span>
+          </>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  const prefersReducedMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const track = document.getElementById("skills-track");
+  const HOVER_RATE = 0.5; // slower on hover
+  const NORMAL_RATE = 1;
+
+  if (track && !prefersReducedMotion) {
+    const animations = track.getAnimations ? track.getAnimations() : [];
+    let anim =
+      animations.find((a) => a.animationName === "scroll") || animations[0];
+
+    if (anim) {
+      anim.playbackRate = NORMAL_RATE;
+      const onEnter = () => {
+        anim.playbackRate = HOVER_RATE;
+      };
+      const onLeave = () => {
+        anim.playbackRate = NORMAL_RATE;
+      };
+      track.addEventListener("mouseenter", onEnter);
+      track.addEventListener("mouseleave", onLeave);
+      track.addEventListener("focusin", onEnter);
+      track.addEventListener("focusout", onLeave);
+    } else {
+      const onEnter = () => track.classList.add("is-slow");
+      const onLeave = () => track.classList.remove("is-slow");
+      track.addEventListener("mouseenter", onEnter);
+      track.addEventListener("mouseleave", onLeave);
+      track.addEventListener("focusin", onEnter);
+      track.addEventListener("focusout", onLeave);
+    }
+  }
+</script>
