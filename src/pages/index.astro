@@ -41,8 +41,14 @@ const projects = await getCollection("projects");
 
     <h2 class="work-title">Featured Work</h2>
     <h3 class="work-subtitle">Some Remarkable Projects</h3>
-    <div class="projects-container">
-      {projects.map((project) => <ProjectCard project={project} />)}
+    <div class="projects-carousel">
+      <div class="carousel-track" id="carouselTrack">
+        {
+          [...projects, ...projects, ...projects].map((project, index) => (
+            <ProjectCard project={project} />
+          ))
+        }
+      </div>
     </div>
 
     <!-- JS goes here, after the DOM elements -->
@@ -109,5 +115,272 @@ const projects = await getCollection("projects");
 
     <!-- GSAP timeline: loaded via external module so Vite resolves imports -->
     <script type="module" src="/src/scripts/hero-anim.js"></script>
+
+    <!-- Carousel drag script -->
+    <script>
+      const track = document.getElementById("carouselTrack");
+      const cards = track?.querySelectorAll(".project-card");
+
+      if (!track || !cards) throw new Error("Carousel elements not found");
+
+      const totalCards = cards.length;
+      const uniqueCards = totalCards / 3; // We have 3 copies
+      const cardWidth = 510; // card width (450) + gap (60)
+
+      let currentIndex = uniqueCards; // Start at middle set
+      let currentX = -currentIndex * cardWidth;
+      let isDragging = false;
+      let hasDragged = false;
+      let startX = 0;
+      let currentTranslate = currentX;
+      let prevTranslate = currentX;
+      let animationID = 0;
+      let offset = 0; // Track continuous offset for smooth infinite scroll
+      let isTransitioning = false; // Prevent rapid navigation
+
+      // Initialize position
+      track.style.transform = `translateX(${currentX}px)`;
+      updateActiveCard();
+
+      // Update card positions for circular effect
+      function updateCardPositions() {
+        cards.forEach((card, index) => {
+          const offset = index - currentIndex;
+          card.setAttribute("data-offset", offset.toString());
+
+          // Set CSS custom properties for rotation
+          if (offset < 0) {
+            const rotateZ = Math.min(offset * 8, 20);
+            const rotateY = Math.max(offset * 35, -35);
+            card.style.setProperty("--rotate-y", `${rotateY}deg`);
+            card.style.setProperty("--rotate-z", `${rotateZ}deg`);
+          } else if (offset > 0) {
+            const rotateZ = Math.min(offset * 8, 20);
+            const rotateY = Math.min(offset * 35, 35);
+            card.style.setProperty("--rotate-y", `${rotateY}deg`);
+            card.style.setProperty("--rotate-z", `${rotateZ}deg`);
+          } else {
+            card.style.setProperty("--rotate-y", "0deg");
+            card.style.setProperty("--rotate-z", "0deg");
+          }
+        });
+      }
+      updateCardPositions();
+
+      // Prevent default drag behavior
+      track.addEventListener("dragstart", (e) => e.preventDefault());
+
+      // Prevent click on links when dragging
+      cards.forEach((card) => {
+        card.addEventListener("click", (e) => {
+          if (hasDragged || !card.classList.contains("active")) {
+            e.preventDefault();
+          }
+        });
+      }); // Mouse events
+      track.addEventListener("mousedown", dragStart);
+      track.addEventListener("mousemove", drag);
+      track.addEventListener("mouseup", dragEnd);
+      track.addEventListener("mouseleave", dragEnd);
+
+      // Touch events
+      track.addEventListener("touchstart", dragStart, { passive: true });
+      track.addEventListener("touchmove", drag, { passive: true });
+      track.addEventListener("touchend", dragEnd);
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          navigateCarousel(-1); // Go left (previous)
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          navigateCarousel(1); // Go right (next)
+        }
+      });
+
+      function navigateCarousel(direction) {
+        if (isDragging || isTransitioning) return; // Don't navigate while dragging or transitioning
+
+        isTransitioning = true;
+        currentIndex += direction;
+
+        currentX = -currentIndex * cardWidth;
+        currentTranslate = currentX;
+        prevTranslate = currentX;
+
+        track.style.transition =
+          "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        track.style.transform = `translateX(${currentX}px)`;
+
+        updateActiveCard();
+        updateCardPositions();
+
+        // Handle infinite loop after transition completes
+        const handleTransitionEnd = (e) => {
+          if (e.target !== track || e.propertyName !== "transform") return;
+
+          track.removeEventListener("transitionend", handleTransitionEnd);
+
+          let needsReposition = false;
+          let newIndex = currentIndex;
+
+          if (currentIndex >= uniqueCards * 2) {
+            newIndex = currentIndex - uniqueCards;
+            needsReposition = true;
+          } else if (currentIndex < uniqueCards) {
+            newIndex = currentIndex + uniqueCards;
+            needsReposition = true;
+          }
+
+          if (needsReposition) {
+            currentIndex = newIndex;
+            currentX = -currentIndex * cardWidth;
+            currentTranslate = currentX;
+            prevTranslate = currentX;
+
+            cards.forEach((card) => {
+              card.style.transition = "none";
+            });
+
+            track.style.transition = "none";
+            track.style.transform = `translateX(${currentX}px)`;
+            updateActiveCard();
+            updateCardPositions();
+
+            track.offsetHeight;
+
+            cards.forEach((card) => {
+              card.style.transition = "";
+            });
+          }
+
+          // Re-enable navigation after repositioning
+          isTransitioning = false;
+        };
+
+        track.addEventListener("transitionend", handleTransitionEnd);
+      }
+
+      function dragStart(e) {
+        e.preventDefault();
+        isDragging = true;
+        hasDragged = false;
+        startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
+        prevTranslate = currentTranslate;
+        track.style.transition = "none";
+        animationID = requestAnimationFrame(animation);
+        track.style.cursor = "grabbing";
+      }
+
+      function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const currentPosition = e.type.includes("mouse")
+          ? e.clientX
+          : e.touches[0].clientX;
+        const diff = currentPosition - startX;
+
+        // If moved more than 5px, consider it a drag
+        if (Math.abs(diff) > 5) {
+          hasDragged = true;
+        }
+
+        currentTranslate = prevTranslate + diff;
+      }
+
+      function dragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        cancelAnimationFrame(animationID);
+        track.style.cursor = "grab";
+
+        // Reset hasDragged after a short delay
+        setTimeout(() => {
+          hasDragged = false;
+        }, 100);
+
+        // Snap to nearest card
+        const movedBy = currentTranslate - prevTranslate;
+        if (Math.abs(movedBy) > 50) {
+          currentIndex += movedBy > 0 ? -1 : 1;
+        }
+
+        currentX = -currentIndex * cardWidth;
+        currentTranslate = currentX;
+        prevTranslate = currentX;
+
+        // Animate to the new position
+        track.style.transition =
+          "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        track.style.transform = `translateX(${currentX}px)`;
+
+        updateActiveCard();
+        updateCardPositions();
+
+        // Handle infinite loop after transition completes
+        const handleTransitionEnd = (e) => {
+          // Only trigger for track's transform, not child card transitions
+          if (e.target !== track || e.propertyName !== "transform") return;
+
+          track.removeEventListener("transitionend", handleTransitionEnd);
+
+          let needsReposition = false;
+          let newIndex = currentIndex;
+
+          // Check if we need to reposition
+          if (currentIndex >= uniqueCards * 2) {
+            newIndex = currentIndex - uniqueCards;
+            needsReposition = true;
+          } else if (currentIndex < uniqueCards) {
+            newIndex = currentIndex + uniqueCards;
+            needsReposition = true;
+          }
+
+          if (needsReposition) {
+            currentIndex = newIndex;
+            currentX = -currentIndex * cardWidth;
+            currentTranslate = currentX;
+            prevTranslate = currentX;
+
+            // Disable transitions on all cards during jump
+            cards.forEach((card) => {
+              card.style.transition = "none";
+            });
+
+            // Reposition instantly without transition
+            track.style.transition = "none";
+            track.style.transform = `translateX(${currentX}px)`;
+            updateActiveCard();
+            updateCardPositions();
+
+            // Force reflow to ensure transition: none takes effect
+            track.offsetHeight;
+
+            // Re-enable transitions on cards
+            cards.forEach((card) => {
+              card.style.transition = "";
+            });
+          }
+        };
+
+        track.addEventListener("transitionend", handleTransitionEnd);
+      }
+
+      function animation() {
+        track.style.transform = `translateX(${currentTranslate}px)`;
+        if (isDragging) requestAnimationFrame(animation);
+      }
+
+      function updateActiveCard() {
+        cards.forEach((card, index) => {
+          if (index === currentIndex) {
+            card.classList.add("active");
+          } else {
+            card.classList.remove("active");
+          }
+        });
+      }
+    </script>
   </main>
 </BaseLayout>
