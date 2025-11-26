@@ -19,21 +19,17 @@ import heroImage4 from "../assets/Hero-image-4.png";
     </div>
 
     <div class="heroimages" id="heroimages">
-      <div class="hero-stack">
-        <div class="heroimage top" data-index="0">
-          <img src={heroImage1.src} alt="Hero 1" />
-        </div>
-        <div class="heroimage top" data-index="1">
-          <img src={heroImage2.src} alt="Hero 2" />
-        </div>
+      <div class="heroimage" data-index="0" data-rotate="2deg">
+        <img src={heroImage1.src} alt="Hero 1" />
       </div>
-      <div class="hero-stack">
-        <div class="heroimage bottom" data-index="2">
-          <img src={heroImage3.src} alt="Hero 3" />
-        </div>
-        <div class="heroimage bottom" data-index="3">
-          <img src={heroImage4.src} alt="Hero 4" />
-        </div>
+      <div class="heroimage" data-index="1" data-rotate="-3deg">
+        <img src={heroImage2.src} alt="Hero 2" />
+      </div>
+      <div class="heroimage" data-index="2" data-rotate="6deg">
+        <img src={heroImage3.src} alt="Hero 3" />
+      </div>
+      <div class="heroimage" data-index="3" data-rotate="-2deg">
+        <img src={heroImage4.src} alt="Hero 4" />
       </div>
     </div>
 
@@ -42,64 +38,58 @@ import heroImage4 from "../assets/Hero-image-4.png";
       const heroImages = document.querySelectorAll(".heroimage");
       const container = document.getElementById("heroimages");
 
-      // For animation towards mouse position with easing
-      const positions = Array(heroImages.length)
-        .fill(null)
-        .map(() => ({ x: 0, y: 0 }));
-      const targetPositions = Array(heroImages.length)
-        .fill(null)
-        .map(() => ({ x: 0, y: 0 }));
-      const maxOffset = 15; // max pixels offset for movement
-
       window.addEventListener("load", () => {
         if (container) {
           container.classList.add("heromounted");
         }
       });
 
-      window.addEventListener("mousemove", (e) => {
-        if (!container) return;
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let prevMouseX = mouseX;
+      let prevMouseY = mouseY;
 
-        const rect = container.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        // Calculate offset relative to container center
-        const offsetX = mouseX - centerX;
-        const offsetY = mouseY - centerY;
-
-        heroImages.forEach((img, index) => {
-          // Each image moves slightly differently for layered effect
-          const movementFactor = (index + 1) / heroImages.length;
-          targetPositions[index].x = offsetX * 0.2 * movementFactor;
-          targetPositions[index].y = offsetY * 0.1 * movementFactor;
-        });
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
       });
 
+      // Adjust individual intensity per image here
+      const intensities = [0.1, 0.06, 0.08, 0.12]; // image 0, 1, 2, 3
+
       function animate() {
+        if (!container) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const containerCenterX = containerRect.left + containerRect.width / 2;
+        const containerCenterY = containerRect.top + containerRect.height / 2;
+
+        // Calculate offset from container center
+        const offsetX = mouseX - containerCenterX;
+        const offsetY = mouseY - containerCenterY;
+
+        // Calculate mouse velocity for rotation
+        const velocityX = mouseX - prevMouseX;
+        const velocityY = mouseY - prevMouseY;
+        prevMouseX = mouseX;
+        prevMouseY = mouseY;
+
         heroImages.forEach((img, index) => {
-          // Smooth easing towards target position
-          positions[index].x +=
-            (targetPositions[index].x - positions[index].x) * 0.1;
-          positions[index].y +=
-            (targetPositions[index].y - positions[index].y) * 0.1;
+          if (!(img instanceof HTMLElement)) return;
 
-          // Apply rotation influence for subtle 3D effect
-          if (img instanceof HTMLElement) {
-            const baseRotate = parseFloat(getComputedStyle(img).rotate) || 0;
-            const rotateX = positions[index].y * 0.15;
-            const rotateY = positions[index].x * 0.15;
-            // Defer mouse-follow transforms until GSAP entrance completes
-            const entranceDone =
-              document.body.classList.contains("entrance-done");
-            if (entranceDone) {
-              img.style.transform = `scale(1) rotate(${baseRotate}deg) translate(${positions[index].x}px, ${positions[index].y}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            }
-          }
+          const strength = intensities[index];
+
+          const moveX = offsetX * strength;
+          const moveY = offsetY * strength;
+
+          // Add rotation based on horizontal velocity
+          const rotateAttr = img.getAttribute("data-rotate") ?? "0";
+          const baseRotate = parseFloat(rotateAttr) || 0;
+          const dynamicRotate = velocityX * 0.05;
+          const totalRotate = baseRotate + dynamicRotate;
+
+          img.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${totalRotate}deg)`;
         });
-
         requestAnimationFrame(animate);
       }
       animate();

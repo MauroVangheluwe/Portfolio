@@ -1,10 +1,4 @@
-/* FONT LOADING — placed at the top */
-@font-face {
-    font-family: 'OwnersXXNarrow';
-    src: url('owners-800.woff2') format('woff2');
-    font-weight: 800;
-    font-display: swap;
-}
+/* FONT LOADING via Adobe Fonts */
 
 :root {
     /* Modern minimalist color palette with blue focus */
@@ -44,8 +38,8 @@ main {
 /* TOPSCROLL */
 
 .skills-marquee {
-    --gap: 1.5rem;
-    --speed: 45s;
+    --gap: 2rem;
+    --speed: 50s;
     /* Adjust for slower/faster scroll */
     overflow: hidden;
     width: 100%;
@@ -64,7 +58,8 @@ main {
     gap: var(--gap);
     white-space: nowrap;
     will-change: transform;
-    animation: scroll var(--speed) linear infinite;
+    /* WAAPI drives scrolling; disable CSS animation to avoid jump/double-run */
+    animation: none;
 }
 
 .item {
@@ -74,6 +69,9 @@ main {
     flex: 0 0 auto;
     font-weight: 600;
     letter-spacing: 0.02em;
+}
+
+.marquee {
     padding: 0.8rem 1rem;
 }
 
@@ -88,19 +86,13 @@ main {
     height: 1rem;
 }
 
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        /* Move left by half the content since we duplicated items */
-        transform: translateX(-50%);
-    }
-}
+/* keyframes not needed when using WAAPI */
 
 /* slower animation when hovering */
-.track.is-slow {
+
+
+/* Slow marquee when hovering the blue marquee box only */
+.skills-marquee:hover .track {
     animation-duration: calc(var(--speed) * 2.5);
 }
 
@@ -136,13 +128,13 @@ main {
 
 .first-word {
     color: var(--color-blue);
-    font-size: 35rem;
+    font-size: 30rem;
     -webkit-text-stroke: 0.5rem var(--color-blue);
 }
 
 .second-word {
     color: var(--color-blue-light);
-    font-size: 23rem;
+    font-size: 25rem;
     -webkit-text-stroke: 0.6rem var(--color-blue-light);
 }
 
@@ -150,26 +142,17 @@ main {
 
 .heroimages {
     display: flex;
-    gap: 1.2rem;
+    gap: 0rem;
     position: relative;
-    width: 100%;
-    max-width: 70%;
+    width: fit-content;
     justify-content: center;
     margin: 0 auto;
     margin-top: -4rem;
     z-index: 2;
 }
 
-.hero-stack {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.8rem;
-}
-
 .heroimage {
     width: 230px;
-    /* look at max width of container */
     height: 230px;
     border: 0.5rem solid var(--color-blue);
     border-radius: 1rem;
@@ -180,6 +163,11 @@ main {
     transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1.2s ease-out;
     position: relative;
     will-change: transform;
+    margin-left: -1.5rem;
+}
+
+.heroimage:first-child {
+    margin-left: 0;
 }
 
 .heroimage img {
@@ -193,30 +181,25 @@ main {
 
 .heroimage:nth-child(1) {
     rotate: 2deg;
+    z-index: 4;
 }
 
 .heroimage:nth-child(2) {
     rotate: -3deg;
+    z-index: 3;
 }
 
 .heroimage:nth-child(3) {
     rotate: 6deg;
+    z-index: 2;
 }
 
 .heroimage:nth-child(4) {
     rotate: -2deg;
+    z-index: 1;
 }
 
 .heromounted .heroimage {
     scale: 1;
     opacity: 1;
-}
-
-/* explicit stacking order within each stack */
-.hero-stack .heroimage:nth-child(1) {
-    z-index: 2;
-}
-
-.hero-stack .heroimage:nth-child(2) {
-    z-index: 1;
 }

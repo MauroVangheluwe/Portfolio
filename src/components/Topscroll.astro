@@ -10,7 +10,12 @@ const skillNames = skillsEntries
 const marqueeItems = [...skillNames, ...skillNames];
 ---
 
-<section aria-label="Skills marquee" class="skills-marquee" data-paused="false">
+<section
+  aria-label="Skills marquee"
+  class="skills-marquee"
+  id="skills-marquee"
+  data-paused="false"
+>
   <div class="marquee">
     <div class="track" id="skills-track">
       {
@@ -43,34 +48,30 @@ const marqueeItems = [...skillNames, ...skillNames];
   const prefersReducedMotion =
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const marquee = document.getElementById("skills-marquee");
   const track = document.getElementById("skills-track");
   const HOVER_RATE = 0.5; // slower on hover
   const NORMAL_RATE = 1;
 
   if (track && !prefersReducedMotion) {
-    const animations = track.getAnimations ? track.getAnimations() : [];
-    let anim =
-      animations.find((a) => a.animationName === "scroll") || animations[0];
+    // Create WAAPI animation for smooth speed changes without jump
+    const anim = track.animate(
+      [{ transform: "translateX(0)" }, { transform: "translateX(-50%)" }],
+      { duration: 45000, iterations: Infinity, easing: "linear" }
+    );
+    anim.playbackRate = NORMAL_RATE;
 
-    if (anim) {
+    const onEnter = () => {
+      anim.playbackRate = HOVER_RATE;
+    };
+    const onLeave = () => {
       anim.playbackRate = NORMAL_RATE;
-      const onEnter = () => {
-        anim.playbackRate = HOVER_RATE;
-      };
-      const onLeave = () => {
-        anim.playbackRate = NORMAL_RATE;
-      };
-      track.addEventListener("mouseenter", onEnter);
-      track.addEventListener("mouseleave", onLeave);
-      track.addEventListener("focusin", onEnter);
-      track.addEventListener("focusout", onLeave);
-    } else {
-      const onEnter = () => track.classList.add("is-slow");
-      const onLeave = () => track.classList.remove("is-slow");
-      track.addEventListener("mouseenter", onEnter);
-      track.addEventListener("mouseleave", onLeave);
-      track.addEventListener("focusin", onEnter);
-      track.addEventListener("focusout", onLeave);
-    }
+    };
+
+    const target = marquee || track;
+    target.addEventListener("mouseenter", onEnter);
+    target.addEventListener("mouseleave", onLeave);
+    target.addEventListener("focusin", onEnter);
+    target.addEventListener("focusout", onLeave);
   }
 </script>
