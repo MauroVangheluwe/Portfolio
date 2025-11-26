@@ -1,0 +1,104 @@
+---
+import { getCollection } from "astro:content";
+
+// This will throw an error if schema validation fails
+const projects = await getCollection("projects");
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Projects Data</title>
+    <style>
+      body {
+        font-family: monospace;
+        padding: 2rem;
+        background: #1a1a1a;
+        color: #eee;
+      }
+      .project {
+        background: #2a2a2a;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 8px;
+      }
+      .field {
+        margin: 0.5rem 0;
+      }
+      .label {
+        color: #66d9ef;
+        font-weight: bold;
+      }
+      .value {
+        color: #a6e22e;
+      }
+      .array {
+        color: #f92672;
+      }
+      pre {
+        background: #1a1a1a;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Projects Collection Test</h1>
+    <p>Total projects: {projects.length}</p>
+
+    {
+      projects.map((project) => (
+        <div class="project">
+          <h2>{project.data.name}</h2>
+          <div class="field">
+            <span class="label">ID:</span>{" "}
+            <span class="value">{project.id}</span>
+          </div>
+          <div class="field">
+            <span class="label">Head Image:</span>{" "}
+            <span class="value">{project.data.headImg}</span>
+          </div>
+          <div class="field">
+            <span class="label">Main Image:</span>{" "}
+            <span class="value">{project.data.img}</span>
+          </div>
+          <div class="field">
+            <span class="label">Description:</span>{" "}
+            <span class="value">{project.data.description}</span>
+          </div>
+          <div class="field">
+            <span class="label">Creative Field:</span>{" "}
+            <span class="array">
+              {JSON.stringify(project.data.creativeField)}
+            </span>
+          </div>
+          <div class="field">
+            <span class="label">Duration:</span>{" "}
+            <span class="value">{project.data.duration}</span>
+          </div>
+          <div class="field">
+            <span class="label">Year:</span>{" "}
+            <span class="value">{project.data.year}</span>
+          </div>
+          <div class="field">
+            <span class="label">Client:</span>{" "}
+            <span class="value">{project.data.client}</span>
+          </div>
+          <div class="field">
+            <span class="label">Software:</span>{" "}
+            <span class="array">{JSON.stringify(project.data.software)}</span>
+          </div>
+
+          <details>
+            <summary style="cursor: pointer; margin-top: 1rem;">
+              View Full Object
+            </summary>
+            <pre>{JSON.stringify(project, null, 2)}</pre>
+          </details>
+        </div>
+      ))
+    }
+  </body>
+</html>

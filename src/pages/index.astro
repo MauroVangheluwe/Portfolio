@@ -1,36 +1,48 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Topscroll from "../components/Topscroll.astro";
 import heroImage1 from "../assets/Hero-image-1.png";
 import heroImage2 from "../assets/Hero-image-2.png";
-import heroImage3 from "../assets/Hero-image-3.png";
+import heroImage3 from "../assets/Hero-image-3.gif";
 import heroImage4 from "../assets/Hero-image-4.png";
+import ProjectCard from "../components/ProjectCard.astro";
+
+const projects = await getCollection("projects");
 ---
 
 <BaseLayout title="Mauro Vangheluwe">
   <main>
     <Topscroll />
+    <div class="hero-container">
+      <div class="hero-title-wrap">
+        <p class="hero-top-title">Digital Designer & Developer</p>
+        <h1 class="hero-title">
+          <span class="first-word">Mauro</span>
+          <span class="second-word">Vangheluwe</span>
+        </h1>
+      </div>
 
-    <div class="hero-title-wrap">
-      <h1 class="hero-title">
-        <span class="first-word">Mauro</span>
-        <span class="second-word">Vangheluwe</span>
-      </h1>
+      <div class="heroimages" id="heroimages">
+        <div class="heroimage" data-index="0" data-rotate="2deg">
+          <img src={heroImage1.src} alt="Hero 1" />
+        </div>
+        <div class="heroimage" data-index="1" data-rotate="-3deg">
+          <img src={heroImage2.src} alt="Hero 2" />
+        </div>
+        <div class="heroimage" data-index="2" data-rotate="6deg">
+          <img src={heroImage3.src} alt="Hero 3" />
+        </div>
+        <div class="heroimage" data-index="3" data-rotate="-2deg">
+          <img src={heroImage4.src} alt="Hero 4" />
+        </div>
+      </div>
     </div>
 
-    <div class="heroimages" id="heroimages">
-      <div class="heroimage" data-index="0" data-rotate="2deg">
-        <img src={heroImage1.src} alt="Hero 1" />
-      </div>
-      <div class="heroimage" data-index="1" data-rotate="-3deg">
-        <img src={heroImage2.src} alt="Hero 2" />
-      </div>
-      <div class="heroimage" data-index="2" data-rotate="6deg">
-        <img src={heroImage3.src} alt="Hero 3" />
-      </div>
-      <div class="heroimage" data-index="3" data-rotate="-2deg">
-        <img src={heroImage4.src} alt="Hero 4" />
-      </div>
+    <h2 class="work-title">Featured Work</h2>
+    <h3 class="work-subtitle">Some Remarkable Projects</h3>
+    <div class="projects-container">
+      {projects.map((project) => <ProjectCard project={project} />)}
     </div>
 
     <!-- JS goes here, after the DOM elements -->
