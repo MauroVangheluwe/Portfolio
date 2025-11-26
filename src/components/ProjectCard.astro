@@ -1,0 +1,25 @@
+---
+const { project } = Astro.props;
+---
+
+{
+  project ? (
+    <a href="/about" class="project-card">
+      <div class="card-image-wrapper">
+        <div class="card-tags">
+          {project.data.creativeField.map((field: string) => (
+            <span class="tag">{field}</span>
+          ))}
+        </div>
+        <img
+          src={project.data.img}
+          alt={project.data.name}
+          class="card-cover"
+        />
+      </div>
+      <div class="card-title">{project.data.name}</div>
+    </a>
+  ) : (
+    <p>No project found</p>
+  )
+}
