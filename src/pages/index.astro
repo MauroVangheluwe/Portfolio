@@ -1,80 +1,111 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const projects: CollectionEntry<"projects">[] = await getCollection("projects");
-const notes: CollectionEntry<"notes">[] = await getCollection("notes");
+import Topscroll from "../components/Topscroll.astro";
+import heroImage1 from "../assets/Hero-image-1.png";
+import heroImage2 from "../assets/Hero-image-2.png";
+import heroImage3 from "../assets/Hero-image-3.png";
+import heroImage4 from "../assets/Hero-image-4.png";
 ---
 
-<BaseLayout title="Portfolio van Mauro Vangheluwe">
+<BaseLayout title="Mauro Vangheluwe">
   <main>
-    <h1>Portfolio van Mauro Vangheluwe</h1>
+    <Topscroll />
 
-    <p>
-      Hey, ik ben Mauro, een creatieve student, DJ en digitale enthousiast. Ik
-      draai muziek, ik hou van sporten en werk graag aan projecten die me
-      motiveren om beter te worden in wat ik doe.
-    </p>
+    <div class="hero-title-wrap">
+      <h1 class="hero-title">
+        <span class="first-word">Mauro</span>
+        <span class="second-word">Vangheluwe</span>
+      </h1>
+    </div>
 
-    <h2>Projecten</h2>
-    <ul class="project-list">
-      {
-        projects.map((project) => (
-          <li class="project-li">
-            <a href={`/projects/${project.id}`}>
-              <div class="project-card">
-                <div class="project-content">
-                  <div class="project-text">
-                    <strong>{project.data.title}</strong>
-                    <p>{project.data.description}</p>
-                  </div>
-                  {project.data.image && (
-                    <div class="project-image">
-                      <img
-                        src={project.data.image.url}
-                        alt={project.data.image.alt}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </a>
-          </li>
-        ))
+    <div class="heroimages" id="heroimages">
+      <div class="hero-stack">
+        <div class="heroimage top" data-index="0">
+          <img src={heroImage1.src} alt="Hero 1" />
+        </div>
+        <div class="heroimage top" data-index="1">
+          <img src={heroImage2.src} alt="Hero 2" />
+        </div>
+      </div>
+      <div class="hero-stack">
+        <div class="heroimage bottom" data-index="2">
+          <img src={heroImage3.src} alt="Hero 3" />
+        </div>
+        <div class="heroimage bottom" data-index="3">
+          <img src={heroImage4.src} alt="Hero 4" />
+        </div>
+      </div>
+    </div>
+
+    <!-- JS goes here, after the DOM elements -->
+    <script>
+      const heroImages = document.querySelectorAll(".heroimage");
+      const container = document.getElementById("heroimages");
+
+      // For animation towards mouse position with easing
+      const positions = Array(heroImages.length)
+        .fill(null)
+        .map(() => ({ x: 0, y: 0 }));
+      const targetPositions = Array(heroImages.length)
+        .fill(null)
+        .map(() => ({ x: 0, y: 0 }));
+      const maxOffset = 15; // max pixels offset for movement
+
+      window.addEventListener("load", () => {
+        if (container) {
+          container.classList.add("heromounted");
+        }
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!container) return;
+
+        const rect = container.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        // Calculate offset relative to container center
+        const offsetX = mouseX - centerX;
+        const offsetY = mouseY - centerY;
+
+        heroImages.forEach((img, index) => {
+          // Each image moves slightly differently for layered effect
+          const movementFactor = (index + 1) / heroImages.length;
+          targetPositions[index].x = offsetX * 0.2 * movementFactor;
+          targetPositions[index].y = offsetY * 0.1 * movementFactor;
+        });
+      });
+
+      function animate() {
+        heroImages.forEach((img, index) => {
+          // Smooth easing towards target position
+          positions[index].x +=
+            (targetPositions[index].x - positions[index].x) * 0.1;
+          positions[index].y +=
+            (targetPositions[index].y - positions[index].y) * 0.1;
+
+          // Apply rotation influence for subtle 3D effect
+          if (img instanceof HTMLElement) {
+            const baseRotate = parseFloat(getComputedStyle(img).rotate) || 0;
+            const rotateX = positions[index].y * 0.15;
+            const rotateY = positions[index].x * 0.15;
+            // Defer mouse-follow transforms until GSAP entrance completes
+            const entranceDone =
+              document.body.classList.contains("entrance-done");
+            if (entranceDone) {
+              img.style.transform = `scale(1) rotate(${baseRotate}deg) translate(${positions[index].x}px, ${positions[index].y}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
+          }
+        });
+
+        requestAnimationFrame(animate);
       }
-    </ul>
+      animate();
+    </script>
 
-    <p>
-      <a href="/projects">
-        <button>Kijk meer projecten</button>
-      </a>
-    </p>
-
-    <h2 class="notes-title">Notes</h2>
-    <ul class="project-list">
-      {
-        notes.slice(0, 1).map((note) => (
-          <li class="project-li">
-            <a href={`/notes/${note.id}`}>
-              <div class="project-card">
-                <div class="project-content">
-                  <div class="project-text">
-                    <strong>{note.data.title}</strong>
-                    {note.data.author && <p>Author: {note.data.author}</p>}
-                    {note.data.date && <p>Date: {note.data.date}</p>}
-                    {note.data.place && <p>Place: {note.data.place}</p>}
-                  </div>
-                </div>
-              </div>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-    <p>
-      <a href="/notes">
-        <button class="button-notes">Kijk meer notes</button>
-      </a>
-    </p>
+    <!-- GSAP timeline: loaded via external module so Vite resolves imports -->
+    <script type="module" src="/src/scripts/hero-anim.js"></script>
   </main>
 </BaseLayout>
