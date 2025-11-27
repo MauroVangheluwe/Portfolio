@@ -2,8 +2,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 window.addEventListener("load", () => {
-  // DEV MODE: Skip entrance animation
-  const skipEntrance = false; // Set to false to re-enable
+  // Check if animation should be skipped (set by index.astro when back navigation detected)
+  const skipEntrance = sessionStorage.getItem('skipHomeAnimation') === 'true';
   
   const vh = window.innerHeight;
 
@@ -107,7 +107,7 @@ gsap.to(".work-subtitle", {
     start: "bottom 60%",
     end: "bottom 30%",
     scrub: true,
-    markers: true,
+    markers: false,
   }
 });
 

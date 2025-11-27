@@ -1,8 +1,17 @@
----
+--- 
 name: "Wiselight"
 headImg: "/images/Project-1/Hero-image.png"
 img: "/images/Project-1/Cover-image.png"
-description: "This website was designed and developed as my integration project at Devine, Howest. It is an assignment where I combined all the skills I learned during the semester. The site features an interactive entrance animation and a bright, colorful style. The concept focuses on helping a specific group of students save money by providing tips, information, and engaging interactive elements. I chose to target students who are drawn to any form of light and creatively incorporated shadows to enhance the visual experience. For my first real project, with only half year of experience, I’m actually proud of what I accomplished back then."
+imgs:
+ - "/images/Project-1/gif-1.gif"
+ - "/images/Project-1/img-2.png"
+ - "/images/Project-1/img-3.png"
+ - "/images/Project-1/img-4.png"
+ - "/images/Project-1/img-5.png"
+ - "/images/Project-1/img-6.png"
+ - "/images/Project-1/img-7.png"
+ - "/images/Project-1/img-8.png"
+description: "This website was my integration project at Devine, Howest, combining skills learned during the semester. It features a bright, interactive entrance animation and focuses on helping students save money with tips and engaging elements. I also used light and shadows creatively to enhance the visual experience. For my first real project with just half a year of experience, I’m proud of what I accomplished."
 creativeField: ["Web Development", "Visual Design"]
 duration: "1 month"
 year: 2024

@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
   const projects: CollectionEntry<"projects">[] =
@@ -15,8 +15,595 @@ export async function getStaticPaths() {
 const { project } = Astro.props as { project: CollectionEntry<"projects"> };
 
 const { Content } = await render(project);
+const {
+  name,
+  description,
+  creativeField,
+  duration,
+  year,
+  client,
+  software,
+  imgs,
+} = project.data;
 ---
 
-<MarkdownPostLayout frontmatter={project.data} backLink="/projects">
-  <Content />
-</MarkdownPostLayout>
+<BaseLayout title={project.data.name}>
+  <main class="project-detail">
+    <section class="project-info-grid">
+      <div class="info-column">
+        <h3 class="info-title">Creative Field</h3>
+        <p class="info-content">{creativeField.join(", ")}</p>
+      </div>
+
+      <div class="info-column">
+        <h3 class="info-title">Duration & Year</h3>
+        <p class="info-content">{duration} · {year}</p>
+      </div>
+
+      <div class="info-column">
+        <h3 class="info-title">Client</h3>
+        <p class="info-content">{client}</p>
+      </div>
+
+      <div class="info-column">
+        <h3 class="info-title">Software</h3>
+        <p class="info-content">{software.join(", ")}</p>
+      </div>
+    </section>
+
+    <h1 class="project-name" id="project-name">{name}</h1>
+    <p class="project-description">{description}</p>
+
+    {
+      imgs && imgs.length > 0 && (
+        <div class="gallery" id="gallery">
+          {imgs.map((imgSrc, index) => (
+            <img
+              src={imgSrc}
+              alt={`${name} - Image ${index + 1}`}
+              class="gallery-item"
+              loading="lazy"
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <button class="back-nav" id="back-button">
+      <span class="arrow">←</span>
+      <span class="text">Back</span>
+    </button>
+  </main>
+
+  <script>
+    const backButton = document.getElementById("back-button");
+    if (backButton) {
+      backButton.addEventListener("click", () => {
+        window.history.back();
+      });
+    }
+
+    // Adjust project name font size to fit within container
+    function adjustTitleSize() {
+      const title = document.getElementById("project-name");
+      if (!title) return;
+
+      // Use 80vw for mobile, 60vw for desktop
+      const viewportWidthPercent = window.innerWidth <= 768 ? 0.8 : 0.6;
+      const maxWidth = window.innerWidth * viewportWidthPercent;
+      const maxFontSize = 30; // Max 30rem
+      const minFontSize = 2; // Min 2rem
+      let fontSize = maxFontSize;
+
+      // Start with max size
+      title.style.fontSize = `${fontSize}rem`;
+
+      // Decrease font size until it fits
+      while (title.scrollWidth > maxWidth && fontSize > minFontSize) {
+        fontSize -= 0.1;
+        title.style.fontSize = `${fontSize}rem`;
+      }
+
+      // If it fits with room to spare, try increasing
+      if (title.scrollWidth < maxWidth && fontSize < maxFontSize) {
+        while (title.scrollWidth < maxWidth && fontSize < maxFontSize) {
+          fontSize += 0.1;
+          title.style.fontSize = `${fontSize}rem`;
+
+          // If we went too far, step back
+          if (title.scrollWidth > maxWidth) {
+            fontSize -= 0.1;
+            title.style.fontSize = `${fontSize}rem`;
+            break;
+          }
+        }
+      }
+    }
+
+    // Run on load and resize
+    window.addEventListener("load", adjustTitleSize);
+    window.addEventListener("resize", adjustTitleSize);
+
+    // Gallery: Smart masonry layout with aspect ratio detection
+    function setupGallery() {
+      const gallery = document.getElementById("gallery");
+      if (!gallery) return;
+
+      const images = Array.from(
+        gallery.querySelectorAll(".gallery-item")
+      ) as HTMLImageElement[];
+      const totalImages = images.length;
+
+      // If only one image, make it span both columns
+      if (totalImages === 1) {
+        images[0].classList.add("wide");
+        return;
+      }
+
+      // Wait for all images to load, then analyze
+      let loadedCount = 0;
+      const aspectRatios: number[] = [];
+
+      images.forEach((img: HTMLImageElement, index: number) => {
+        const checkLoad = () => {
+          aspectRatios[index] = img.naturalWidth / img.naturalHeight;
+          loadedCount++;
+
+          if (loadedCount === totalImages) {
+            applyLayout(images, aspectRatios);
+          }
+        };
+
+        if (img.complete) {
+          checkLoad();
+        } else {
+          img.addEventListener("load", checkLoad);
+        }
+      });
+    }
+
+    function applyLayout(images: HTMLImageElement[], aspectRatios: number[]) {
+      const gallery = document.getElementById("gallery");
+      if (!gallery) return;
+
+      // Classify images: landscape (>1) or portrait/square (<=1)
+      const imageData = images.map((img: HTMLImageElement, index: number) => ({
+        element: img,
+        aspectRatio: aspectRatios[index],
+        type: aspectRatios[index] > 1 ? "landscape" : "portrait",
+      }));
+
+      // Separate landscape and portrait images
+      const landscapeImages = imageData.filter(
+        (img: any) => img.type === "landscape"
+      );
+      const portraitImages = imageData.filter(
+        (img: any) => img.type === "portrait"
+      );
+
+      // Clear gallery and rebuild with new order
+      gallery.innerHTML = "";
+
+      // Track portrait images to pair them
+      let portraitQueue = [...portraitImages];
+      let landscapeIndex = 0;
+      let originalIndex = 0;
+
+      while (originalIndex < imageData.length) {
+        const originalImg = imageData[originalIndex];
+
+        if (originalImg.type === "landscape") {
+          // Add landscape image (spans both columns)
+          originalImg.element.classList.add("wide");
+          gallery.appendChild(originalImg.element);
+          landscapeIndex++;
+          originalIndex++;
+        } else {
+          // Portrait/square image - try to pair with next portrait
+          if (portraitQueue.length >= 2) {
+            // Add two portrait images side by side
+            const first = portraitQueue.shift();
+            const second = portraitQueue.shift();
+
+            if (!first || !second) continue;
+
+            first.element.classList.remove("wide");
+            second.element.classList.remove("wide");
+
+            // Check if one is portrait and one is square for special styling
+            const firstIsPortrait = first.aspectRatio < 0.95;
+            const firstIsSquare =
+              first.aspectRatio >= 0.95 && first.aspectRatio <= 1.05;
+            const secondIsPortrait = second.aspectRatio < 0.95;
+            const secondIsSquare =
+              second.aspectRatio >= 0.95 && second.aspectRatio <= 1.05;
+
+            if (
+              (firstIsPortrait && secondIsSquare) ||
+              (firstIsSquare && secondIsPortrait)
+            ) {
+              // Portrait + Square pair - add special class
+              first.element.classList.add("mixed-pair");
+              second.element.classList.add("mixed-pair");
+
+              let portraitEl: HTMLImageElement, squareEl: HTMLImageElement;
+              if (firstIsPortrait) {
+                portraitEl = first.element;
+                squareEl = second.element;
+                first.element.classList.add("portrait-in-pair");
+                second.element.classList.add("square-in-pair");
+              } else {
+                portraitEl = second.element;
+                squareEl = first.element;
+                first.element.classList.add("square-in-pair");
+                second.element.classList.add("portrait-in-pair");
+              }
+
+              // Dynamically adjust square height to match portrait after render
+              setTimeout(() => adjustMixedPairHeights(portraitEl, squareEl), 0);
+            }
+
+            gallery.appendChild(first.element);
+            gallery.appendChild(second.element);
+          } else if (portraitQueue.length === 1) {
+            // Single portrait remaining - span both columns
+            const single = portraitQueue.shift();
+            if (!single) continue;
+            single.element.classList.add("wide");
+            gallery.appendChild(single.element);
+          }
+          originalIndex++;
+        }
+      }
+    }
+
+    // Adjust mixed pair heights to match and fill full grid width
+    function adjustMixedPairHeights(
+      portraitEl: HTMLImageElement,
+      squareEl: HTMLImageElement
+    ) {
+      // Force both images to render first
+      const portraitInitialHeight =
+        portraitEl.offsetHeight || portraitEl.naturalHeight;
+      const squareInitialHeight =
+        squareEl.offsetHeight || squareEl.naturalHeight;
+
+      // Get gallery width and calculate available width for the pair
+      const gallery = document.getElementById("gallery");
+      const galleryWidth = gallery ? gallery.offsetWidth : 1200;
+      const columnGap = 16; // 16px gap
+      const availableWidth = galleryWidth - columnGap; // Total width minus gap
+
+      // Get natural dimensions and aspect ratios
+      const portraitNaturalWidth = portraitEl.naturalWidth;
+      const portraitNaturalHeight = portraitEl.naturalHeight;
+      const portraitAspectRatio = portraitNaturalWidth / portraitNaturalHeight;
+
+      const squareNaturalWidth = squareEl.naturalWidth;
+      const squareNaturalHeight = squareEl.naturalHeight;
+      const squareAspectRatio = squareNaturalWidth / squareNaturalHeight;
+
+      // Use the larger initial height as reference
+      const initialHeight = Math.max(
+        portraitInitialHeight,
+        squareInitialHeight
+      );
+
+      // Calculate initial widths based on aspect ratios
+      const initialPortraitWidth = initialHeight * portraitAspectRatio;
+      const initialSquareWidth = initialHeight * squareAspectRatio;
+      const initialTotalWidth = initialPortraitWidth + initialSquareWidth;
+
+      // Calculate scale factor to make total width fill available width
+      const scaleFactor = availableWidth / initialTotalWidth;
+
+      // Apply scaled dimensions - BOTH get the same finalHeight
+      const finalHeight = initialHeight * scaleFactor;
+      const finalPortraitWidth = initialPortraitWidth * scaleFactor;
+      const finalSquareWidth = initialSquareWidth * scaleFactor;
+
+      // Set portrait dimensions
+      portraitEl.style.height = `${finalHeight}px`;
+      portraitEl.style.width = `${finalPortraitWidth}px`;
+      portraitEl.style.minHeight = `${finalHeight}px`;
+      portraitEl.style.objectFit = "cover";
+      portraitEl.style.maxWidth = "none";
+
+      // Set square dimensions - EXACT same height as portrait
+      squareEl.style.height = `${finalHeight}px`;
+      squareEl.style.width = `${finalSquareWidth}px`;
+      squareEl.style.minHeight = `${finalHeight}px`;
+      squareEl.style.objectFit = "cover";
+      squareEl.style.maxWidth = "none";
+    }
+
+    window.addEventListener("load", setupGallery);
+  </script>
+
+  <style>
+    .project-detail {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .back-nav {
+      position: fixed;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      padding: 0.5rem 2rem;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--box-shadow);
+      border: none;
+
+      font-family: "Owners-XNarrow", sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--color-blue-dark);
+      background-color: var(--color-blue-light);
+      text-decoration: none;
+      text-transform: uppercase;
+
+      cursor: pointer;
+      transition: all 0.5s ease;
+      z-index: 100;
+    }
+
+    .back-nav .line {
+      letter-spacing: -0.3em;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition:
+        gap 0.3s ease,
+        background-color 0.3s ease,
+        color 0.3s ease;
+    }
+
+    .back-nav:hover {
+      gap: 1.5rem;
+    }
+
+    .arrow {
+      font-size: 2.5rem;
+    }
+
+    .project-info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-bottom: 4rem;
+      padding: 2rem 0;
+      width: 100%;
+      order: 1;
+    }
+
+    .info-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .info-title {
+      font-family: "Owners-XXNarrow", sans-serif;
+      font-size: 3.5rem;
+      color: var(--color-blue);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .info-content {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.5rem;
+      color: var(--color-blue-light);
+      margin-top: -1.5rem;
+      line-height: 1.6;
+    }
+
+    .project-name {
+      font-family: "Owners-XXNarrow", sans-serif;
+      font-size: clamp(3rem, 8vw, 12rem);
+      font-weight: 900;
+      line-height: 0.9;
+      text-transform: uppercase;
+      color: var(--color-blue);
+      margin: 0 0 2rem 0;
+      max-width: 90vw;
+      text-align: center;
+      white-space: nowrap;
+      order: 2;
+    }
+
+    .project-description {
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(1rem, 1.5vw, 1.5rem);
+      line-height: 1.5;
+      color: var(--color-blue-light);
+      max-width: min(85vw, 900px);
+      margin: 0 0 4rem 0;
+      text-align: center;
+      order: 3;
+    }
+
+    /* Gallery Styles */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: min(1200px, 90vw);
+      margin: 0 0 4rem 0;
+      padding: 0;
+      align-items: end; /* Align items to bottom of grid row for better visual balance */
+      order: 4;
+    }
+
+    .gallery-item {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: var(--border-radius-md, 8px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: block;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Wide images (landscape or single portrait/square) span both columns */
+    .gallery-item.wide {
+      grid-column: span 2;
+    }
+
+    /* Special handling for portrait + square pairs */
+    .gallery-item.mixed-pair {
+      align-self: end; /* Both align to bottom of grid row */
+    }
+
+    .gallery-item.portrait-in-pair {
+      /* Dimensions set dynamically by JS to match square height */
+      /* Width adjusted proportionally to avoid cropping */
+      justify-self: start; /* Stay within left column */
+    }
+
+    .gallery-item.square-in-pair {
+      width: 100%;
+      height: auto;
+      max-height: 600px; /* Square sets the reference height */
+      object-fit: cover;
+      justify-self: start; /* Start from left of its column */
+      position: relative;
+      z-index: 2; /* Ensure square appears above to cross the middle */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .project-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem 1.5rem;
+      }
+
+      .info-title {
+        font-size: clamp(2rem, 3vw, 3rem);
+      }
+
+      .info-content {
+        font-size: clamp(1rem, 1.3vw, 1.3rem);
+      }
+
+      .back-nav {
+        font-size: 1.5rem;
+        padding: 0.4rem 1.5rem;
+        bottom: 2rem;
+      }
+
+      .arrow {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .project-description {
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .project-detail {
+        padding: 1rem;
+      }
+
+      .project-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem 1rem;
+        margin-bottom: 3rem;
+        padding: 1rem 0;
+        order: 3;
+      }
+
+      .info-title {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+      }
+
+      .info-content {
+        font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+      }
+
+      .project-name {
+        order: 1;
+      }
+
+      .project-description {
+        order: 2;
+        margin-bottom: 2rem;
+      }
+
+      .gallery {
+        order: 4;
+      }
+
+      .info-content {
+        margin-top: -1rem;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .gallery-item.wide {
+        grid-column: span 1;
+      }
+
+      .gallery-item.mixed-pair {
+        /* Disable special mixed pair behavior on mobile */
+      }
+
+      .gallery-item.portrait-in-pair,
+      .gallery-item.square-in-pair {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        max-width: 100% !important;
+      }
+
+      .back-nav {
+        font-size: 1.3rem;
+        padding: 0.4rem 1.2rem;
+        bottom: 1.5rem;
+        gap: 0.3rem;
+      }
+
+      .back-nav:hover {
+        gap: 1rem;
+      }
+
+      .arrow {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .back-nav {
+        font-size: 1.1rem;
+        padding: 0.3rem 1rem;
+      }
+    }
+  </style>
+</BaseLayout>
