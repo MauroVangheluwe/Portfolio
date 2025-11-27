@@ -1,6 +1,16 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Fallback: Remove loading state after 3 seconds if animations fail
+setTimeout(() => {
+  if (document.body.classList.contains('loading')) {
+    document.body.classList.remove('loading');
+    document.body.classList.add('loaded');
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay) overlay.remove();
+  }
+}, 3000);
+
 window.addEventListener("load", () => {
   // Check if animation should be skipped (set by index.astro when back navigation detected)
   const skipEntrance = sessionStorage.getItem('skipHomeAnimation') === 'true';
