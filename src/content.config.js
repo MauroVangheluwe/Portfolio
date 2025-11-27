@@ -23,6 +23,12 @@ const projects = defineCollection({
     software: z.array(z.string()),
     imgs: z.array(z.string()).optional(),
     websiteImgIndexes: z.array(z.number()).optional(),
+    iframes: z.array(z.object({
+      src: z.string(),
+      width: z.number().optional(),
+      height: z.number().optional(),
+    })).optional(),
+    iframeIndexes: z.array(z.number()).optional(),
   }),
 });
 
