@@ -1,0 +1,14 @@
+---
+interface Props {
+  firstName: string;
+  lastName: string;
+  animated?: boolean;
+}
+
+const { firstName, lastName, animated = false } = Astro.props;
+---
+
+<h1 class="hero-title" class:list={[{ "hero-title-animated": animated }]}>
+  <span class:list={["first-word", { animated: animated }]}>{firstName}</span>
+  <span class:list={["second-word", { animated: animated }]}>{lastName}</span>
+</h1>

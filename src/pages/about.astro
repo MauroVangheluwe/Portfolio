@@ -1,14 +1,210 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroTitle from "../components/HeroTitle.astro";
+import Topscroll from "../components/Topscroll.astro";
 ---
 
-<BaseLayout title="About">
+<BaseLayout title="About" withLoadingState={false}>
   <main>
-    <h1>Over mij</h1>
-    <p>
-      Ik ben Mauro Vangheluwe, een 20-jarige student en DJ. Creativiteit staat
-      centraal in alles wat ik doe, of dat nu muziek, webdesign of sport is.
+    <p class="about-hero-top-title">Digital Designer & Developer</p>
+    <p class="about-hero-top-subtitle">Clarity in design. Purpose in code.</p>
+    <HeroTitle firstName="Mauro" lastName="Vangheluwe" />
+    <div class="about-image-stack">
+      <img src="/images/about/left.png" alt="" class="img-left" />
+      <img src="/images/about/middle.png" alt="" class="img-middle" />
+      <img src="/images/about/right.png" alt="" class="img-right" />
+    </div>
+    <p class="about-h2-upcoming">Upcoming</p>
+    <h2 class="about-h2">Digital Designer</h2>
+    <h2 class="about-h2-sub">& Developer</h2>
+
+    <div class="topscroll-cross-bottom">
+      <div class="topscroll-wrapper-bottom topscroll-bottom-1">
+        <Topscroll />
+      </div>
+      <div class="topscroll-wrapper-bottom topscroll-bottom-2">
+        <Topscroll reverse={true} />
+      </div>
+    </div>
+    <p class="about-description">
+      Mauro is a Digital Designer and Developer with a passion for <span
+        class="ab-descr-span">making ideas look good and work well</span
+      >.
     </p>
 
+    <svg
+      class="signature"
+      data-name="Layer 1"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 440.55 152.28"
+    >
+      <defs>
+        <mask id="signature-reveal-mask">
+          <rect width="100%" height="100%" fill="black"></rect>
+          <path
+            class="signature-mask-path"
+            fill="none"
+            stroke="white"
+            stroke-width="10"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M199.8 96.08c-.16-33.28-7.82-29.04-16.41-94.94-.1-.75 1.23-.2 2.02 1.42 17.65 35.8 46.19 28.57 69.79 23.09 3.88-.91 8.84-1.73 9.39 3.39.43 18.6-.89 37.37-1.08 56.01-.76 15.66 4.83.6 7.74-4.5 3.08-5.61 4.41-30.03 10.82-25.81 10.36 8.82 20.72 35.36 30.7 44.6 3.73 3.74 8.59 5.88 11.65.17 6.11-11.74 3.37-26.05 4.52-38.87 2.56-36.05 36.51-34.51 53.24-8.44 12.14 18.98 24.79 40.45 22.47 63.7-2.14 21.8-18.66 35.77-40.47 35.88-7.84.24-15.93-1.64-24.06-2.62C151.52 126.54 135.55 92.6 58.45 59.3 48.02 54.2 36.9 47.1 33.41 35.64 29.05 21.61 38.97 7.47 52.13 1.56c6.83-3.14 58.46 1.71 65.87 1.76 8.65.06 17.38 1.61 25.86 3.35 68.3 14.39 123.98 33.34 186.56 63.93 3.6 1.86 7.27 3.95 10.36 6.57 10.37 8.4 7.55 19.93-5.38 22.99-99.69 8.22-217.92 17.77-317.59 9.85-6.12-.66-15.48-1.85-17.24-8.45-.81-5.64 4.62-8.72 9.65-10.56 17.55-4.65 67.28-27.51 157.09-42.85C331.46 19.35 259.2 24.74 440.5 9.48"
+          ></path>
+        </mask>
+      </defs>
+      <path
+        fill="var(--color-blue-light)"
+        mask="url(#signature-reveal-mask)"
+        d="M199.8 96.08c-.16-33.28-7.82-29.04-16.41-94.94-.1-.75 1.23-.2 2.02 1.42 17.65 35.8 46.19 28.57 69.79 23.09 3.88-.91 8.84-1.73 9.39 3.39.43 18.6-.89 37.37-1.08 56.01-.76 15.66 4.83.6 7.74-4.5 3.08-5.61 4.41-30.03 10.82-25.81 10.36 8.82 20.72 35.36 30.7 44.6 3.73 3.74 8.59 5.88 11.65.17 6.11-11.74 3.37-26.05 4.52-38.87 2.56-36.05 36.51-34.51 53.24-8.44 12.14 18.98 24.79 40.45 22.47 63.7-2.14 21.8-18.66 35.77-40.47 35.88-7.84.24-15.93-1.64-24.06-2.62C151.52 126.54 135.55 92.6 58.45 59.3 48.02 54.2 36.9 47.1 33.41 35.64 29.05 21.61 38.97 7.47 52.13 1.56c6.83-3.14 58.46 1.71 65.87 1.76 8.65.06 17.38 1.61 25.86 3.35 68.3 14.39 123.98 33.34 186.56 63.93 3.6 1.86 7.27 3.95 10.36 6.57 10.37 8.4 7.55 19.93-5.38 22.99-99.69 8.22-217.92 17.77-317.59 9.85-6.12-.66-15.48-1.85-17.24-8.45-.81-5.64 4.62-8.72 9.65-10.56 17.55-4.65 67.28-27.51 157.09-42.85C331.46 19.35 259.2 24.74 440.5 9.48"
+      ></path>
+    </svg>
+
+    <style>
+      .about-image-stack {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        transform: translateY(-3rem);
+      }
+
+      .about-image-stack img {
+        position: absolute;
+        width: 300px;
+        border-radius: 12px;
+      }
+
+      .img-middle {
+        z-index: 3;
+        transform: translateX(0);
+      }
+
+      .img-left {
+        z-index: 2;
+        transform: translateX(-200px) rotate(-10deg);
+        opacity: 1;
+      }
+
+      .img-right {
+        z-index: 1;
+        transform: translateX(200px) rotate(10deg);
+        opacity: 1;
+      }
+
+      .topscroll-cross {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .topscroll-wrapper {
+        position: absolute;
+        width: 100%;
+        left: 0;
+      }
+
+      .topscroll-1 {
+        top: 30%;
+        transform: rotate(9deg);
+      }
+
+      .topscroll-2 {
+        top: 30%;
+        transform: rotate(-2.5deg);
+      }
+
+      .topscroll-2 :global(.track) {
+        animation-direction: reverse;
+      }
+
+      .about-hero-top-title,
+      .about-hero-top-subtitle,
+      .hero-title,
+      .about-image-stack {
+        position: relative;
+        z-index: 1;
+      }
+
+      .topscroll-cross-bottom {
+        position: relative;
+        width: 100%;
+        height: 80px;
+        margin-top: 4rem;
+      }
+
+      .topscroll-wrapper-bottom {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 0;
+      }
+
+      .topscroll-bottom-1 {
+        transform: rotate(5deg);
+      }
+
+      .topscroll-bottom-2 {
+        transform: rotate(-4deg);
+      }
+
+      .topscroll-2 :global(.track) {
+        animation-direction: reverse;
+      }
+
+      .about-h2-upcoming {
+        font-family: "Schoolbell", cursive;
+        font-size: 3rem;
+        text-align: center;
+        margin-top: 20rem;
+        margin-bottom: -4rem;
+      }
+
+      .about-h2 {
+        color: var(--blue, #1393d1);
+        font-size: 10rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .about-h2-sub {
+        position: relative;
+        z-index: 15;
+        font-family: "Schoolbell", cursive;
+        font-size: 7rem;
+        margin-top: -8rem;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .about-description {
+        font-family: "Instrument Serif", serif;
+        font-size: 3rem;
+        text-align: center;
+        margin: 10rem auto 0;
+        max-width: 70%;
+        line-height: 1.2;
+      }
+
+      .ab-descr-span {
+        color: var(--color-blue);
+      }
+
+      .ab-descr-span:hover {
+        color: var(--color-blue-light);
+      }
+
+      .signature {
+        width: 15rem;
+        margin-top: 5rem;
+      }
+    </style>
+
+    <script type="module" src="/src/scripts/about-animations.js"></script>
   </main>
 </BaseLayout>

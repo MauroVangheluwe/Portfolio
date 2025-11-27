@@ -1,6 +1,12 @@
 ---
 import "../styles/global.css";
-const { title } = Astro.props;
+
+interface Props {
+  title: string;
+  withLoadingState?: boolean;
+}
+
+const {withLoadingState = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -14,10 +20,15 @@ const { title } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schoolbell&display=swap"
       rel="stylesheet"
     />
-    <title>{title}</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%231393D1' /%3E%3C/svg%3E"
+    />
+
+    <title>Mauro Vangheluwe</title>
   </head>
-  <body class="loading">
-    <div id="loading-overlay"></div>
+  <body class:list={[{ loading: withLoadingState }]}>
+    {withLoadingState && <div id="loading-overlay" />}
     <slot />
   </body>
 </html>
