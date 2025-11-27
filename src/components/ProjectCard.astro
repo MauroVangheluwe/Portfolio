@@ -5,7 +5,7 @@ const { project } = Astro.props;
 {
   project ? (
     <a
-      href={`/projects/${project.id}`}
+      href={`${import.meta.env.BASE_URL}/projects/${project.id}`}
       class="project-card"
       data-project-id={project.id}
     >

@@ -12,8 +12,10 @@ client: "School Assignment"
 software: ["Adobe After Effects"]
 ---
 
-if it is a website:
+<!-- Content handled through frontmatter only -->
+
+<!-- if it is a website:
 imgs:
 
 - "/images/Project-2/Cover-image.gif"
-  websiteImgIndexes: [0]
+  websiteImgIndexes: [0] -->

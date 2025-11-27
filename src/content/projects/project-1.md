@@ -18,3 +18,4 @@ year: 2024
 client: "School Assignment"
 software: ["Figma", "VSCode"]
 ---
+<!-- Content handled through frontmatter only -->
