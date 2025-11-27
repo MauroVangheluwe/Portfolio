@@ -16,7 +16,7 @@ const { project } = Astro.props;
           ))}
         </div>
         <img
-          src={project.data.img}
+          src={`${import.meta.env.BASE_URL}${project.data.img}`}
           alt={project.data.name}
           class="card-cover"
         />

@@ -83,7 +83,7 @@ const {
 
             return (
               <img
-                src={imgSrc}
+                src={`${import.meta.env.BASE_URL}${imgSrc}`}
                 alt={`${name} - Image ${index + 1}`}
                 class="gallery-item"
                 data-is-website={
