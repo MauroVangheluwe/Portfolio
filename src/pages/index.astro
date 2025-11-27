@@ -7,20 +7,18 @@ import heroImage2 from "../assets/Hero-image-2.png";
 import heroImage3 from "../assets/Hero-image-3.gif";
 import heroImage4 from "../assets/Hero-image-4.png";
 import ProjectCard from "../components/ProjectCard.astro";
+import HeroTitle from "../components/HeroTitle.astro";
 
 const projects = await getCollection("projects");
 ---
 
-<BaseLayout title="Mauro Vangheluwe">
+<BaseLayout title="Home" withLoadingState={true}>
   <main>
     <Topscroll />
     <div class="hero-container">
       <div class="hero-title-wrap">
         <p class="hero-top-title">Digital Designer & Developer</p>
-        <h1 class="hero-title">
-          <span class="first-word">Mauro</span>
-          <span class="second-word">Vangheluwe</span>
-        </h1>
+        <HeroTitle firstName="Mauro" lastName="Vangheluwe" animated={true} />
       </div>
 
       <div class="heroimages" id="heroimages">
@@ -50,6 +48,9 @@ const projects = await getCollection("projects");
         }
       </div>
     </div>
+
+    <!-- GSAP timeline: loaded via external module so Vite resolves imports -->
+    <script type="module" src="/src/scripts/hero-animations.js"></script>
 
     <script>
       window.history.scrollRestoration = "manual";
@@ -117,9 +118,6 @@ const projects = await getCollection("projects");
       }
       animate();
     </script>
-
-    <!-- GSAP timeline: loaded via external module so Vite resolves imports -->
-    <script type="module" src="/src/scripts/hero-anim.js"></script>
 
     <!-- Carousel drag script -->
     <script>
