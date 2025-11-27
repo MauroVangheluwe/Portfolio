@@ -13,6 +13,32 @@ const projects = await getCollection("projects");
 ---
 
 <BaseLayout title="Home" withLoadingState={true}>
+  <!-- Handle scroll position based on navigation type -->
+  <script is:inline>
+    // Execute immediately, before page render
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    const navType = navEntry ? navEntry.type : "navigate";
+
+    if (navType === "reload") {
+      // On reload: force scroll to top
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    } else if (navType === "back_forward") {
+      // On back navigation: allow scroll restoration
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "auto";
+      }
+    } else {
+      // Fresh load: scroll to top
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    }
+  </script>
+
   <main>
     <Topscroll />
     <div class="hero-container">
@@ -53,18 +79,26 @@ const projects = await getCollection("projects");
     <script type="module" src="/src/scripts/hero-animations.js"></script>
 
     <script>
-      // Check if this is a back/forward navigation
+      // Check if this is a back/forward navigation or reload
       const navEntry = performance.getEntriesByType("navigation")[0];
       const isBackForward =
         navEntry &&
         (navEntry as PerformanceNavigationTiming).type === "back_forward";
 
-      if (isBackForward) {
+      const isReload =
+        navEntry && (navEntry as PerformanceNavigationTiming).type === "reload";
+
+      if (isReload) {
+        // On reload: always clear skip flag, scroll to top, and play animation
+        sessionStorage.removeItem("skipHomeAnimation");
+        window.history.scrollRestoration = "manual";
+        window.scrollTo({ top: 0, behavior: "instant" });
+      } else if (isBackForward) {
         // Returning via browser back: skip animation and restore scroll
         sessionStorage.setItem("skipHomeAnimation", "true");
         window.history.scrollRestoration = "auto";
       } else {
-        // Fresh load or reload: clear flag, play animation, scroll to top
+        // Fresh load: clear flag, play animation, scroll to top
         sessionStorage.removeItem("skipHomeAnimation");
         window.history.scrollRestoration = "manual";
         window.scrollTo({ top: 0, behavior: "instant" });

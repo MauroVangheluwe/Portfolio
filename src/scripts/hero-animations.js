@@ -74,42 +74,55 @@ window.addEventListener("load", () => {
       const overlay = document.getElementById("loading-overlay");
       if (overlay) overlay.remove();
     });
+});
 
-    
-
+// Setup ScrollTrigger animations outside load event
 gsap.registerPlugin(ScrollTrigger);
 
+function setupScrollTriggers() {
+  // Kill existing triggers to avoid duplicates
+  ScrollTrigger.getAll().forEach(trigger => {
+    if (trigger.vars.trigger === ".work-title" || trigger.vars.trigger === ".work-subtitle") {
+      trigger.kill();
+    }
+  });
 
-gsap.to(".work-title", {
-  opacity: 1,
-  y: 0,
-  duration: 2,
-  ease: "power2.out",
+  gsap.to(".work-title", {
+    opacity: 1,
+    y: 0,
+    duration: 2,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".work-title",
+      start: "bottom 60%",
+      end: "bottom 30%",
+      scrub: true,
+    }
+  });
 
-  scrollTrigger: {
-    trigger: ".work-title",
-    start: "bottom 60%",
-    end: "bottom 30%",
-    scrub: true,
+  gsap.to(".work-subtitle", {
+    opacity: 1,
+    y: 0,
+    duration: 1.2,
+    delay: 0.2,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".work-subtitle",
+      start: "bottom 60%",
+      end: "bottom 30%",
+      scrub: true,
+      markers: false,
+    }
+  });
+}
+
+// Run on initial load
+window.addEventListener("load", setupScrollTriggers);
+
+// Run on pageshow (handles bfcache restoration)
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    // Page was restored from bfcache
+    setupScrollTriggers();
   }
-});
-
-gsap.to(".work-subtitle", {
-
-  opacity: 1,
-  y: 0,
-  duration: 1.2,
-  delay: 0.2,
-  ease: "power2.out",
-
-  scrollTrigger: {
-    trigger: ".work-subtitle",
-    start: "bottom 60%",
-    end: "bottom 30%",
-    scrub: true,
-    markers: false,
-  }
-});
-
-
 });

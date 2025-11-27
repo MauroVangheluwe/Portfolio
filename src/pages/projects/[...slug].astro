@@ -79,6 +79,8 @@ const {
     const backButton = document.getElementById("back-button");
     if (backButton) {
       backButton.addEventListener("click", () => {
+        // Clear the skip animation flag so animations work when returning
+        sessionStorage.removeItem("skipHomeAnimation");
         window.history.back();
       });
     }
