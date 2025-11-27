@@ -22,6 +22,7 @@ const projects = defineCollection({
     client: z.string(),
     software: z.array(z.string()),
     imgs: z.array(z.string()).optional(),
+    websiteImgIndexes: z.array(z.number()).optional(),
   }),
 });
 

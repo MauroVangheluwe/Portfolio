@@ -24,6 +24,7 @@ const {
   client,
   software,
   imgs,
+  websiteImgIndexes,
 } = project.data;
 ---
 
@@ -56,12 +57,15 @@ const {
 
     {
       imgs && imgs.length > 0 && (
-        <div class="gallery" id="gallery">
+        <div class="gallery" id="gallery" data-image-count={imgs.length}>
           {imgs.map((imgSrc, index) => (
             <img
               src={imgSrc}
               alt={`${name} - Image ${index + 1}`}
               class="gallery-item"
+              data-is-website={
+                websiteImgIndexes?.includes(index) ? "true" : "false"
+              }
               loading="lazy"
             />
           ))}
@@ -126,6 +130,24 @@ const {
     window.addEventListener("load", adjustTitleSize);
     window.addEventListener("resize", adjustTitleSize);
 
+    // Helper function to check single image aspect ratio
+    function checkSingleImageAspect(
+      img: HTMLImageElement,
+      gallery: HTMLElement
+    ) {
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      const isLandscape = aspectRatio > 1.05;
+
+      if (isLandscape) {
+        // Landscape: span both columns with cover
+        img.classList.add("wide");
+        gallery.removeAttribute("data-single-contained");
+      } else {
+        // Portrait or square: use contain and max-height
+        gallery.setAttribute("data-single-contained", "true");
+      }
+    }
+
     // Gallery: Smart masonry layout with aspect ratio detection
     function setupGallery() {
       const gallery = document.getElementById("gallery");
@@ -136,9 +158,25 @@ const {
       ) as HTMLImageElement[];
       const totalImages = images.length;
 
-      // If only one image, make it span both columns
+      // If only one image, check if it's a website or portrait/square
       if (totalImages === 1) {
-        images[0].classList.add("wide");
+        const img = images[0];
+        const isWebsite = img.getAttribute("data-is-website") === "true";
+
+        if (isWebsite) {
+          // Website images span both columns with normal cover
+          img.classList.add("wide");
+          gallery.removeAttribute("data-single-contained");
+        } else {
+          // Non-website single images: check aspect ratio when loaded
+          if (img.complete) {
+            checkSingleImageAspect(img, gallery);
+          } else {
+            img.addEventListener("load", () =>
+              checkSingleImageAspect(img, gallery)
+            );
+          }
+        }
         return;
       }
 
@@ -438,10 +476,10 @@ const {
 
     .project-description {
       font-family: "Instrument Serif", serif;
-      font-size: clamp(1rem, 1.5vw, 1.5rem);
+      font-size: clamp(1rem, 1.9vw, 2.5rem);
       line-height: 1.5;
       color: var(--color-blue-light);
-      max-width: min(85vw, 900px);
+      max-width: min(90vw, 1000px);
       margin: 0 0 4rem 0;
       text-align: center;
       order: 3;
@@ -460,13 +498,28 @@ const {
       order: 4;
     }
 
+    /* Single image gallery: show full image (for portrait/square non-website images) */
+    .gallery[data-single-contained="true"] {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gallery[data-single-contained="true"] .gallery-item {
+      object-fit: contain;
+      max-height: 90vh;
+      width: auto;
+      max-width: 100%;
+      cursor: default;
+    }
+
     .gallery-item {
       width: 100%;
       height: auto;
       object-fit: cover;
       border-radius: var(--border-radius-md, 8px);
       transition: all 0.3s ease;
-      cursor: pointer;
+      cursor: default;
       display: block;
     }
 
