@@ -129,8 +129,14 @@ const projects = await getCollection("projects");
       // Adjust individual intensity per image here
       const intensities = [0.1, 0.06, 0.08, 0.12]; // image 0, 1, 2, 3
 
+      // Check if device is mobile/touch (disable mouse animation)
+      const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      const shouldDisableMouseAnimation = isTouchDevice || isSmallScreen;
+
       function animate() {
-        if (!container) return;
+        if (!container || shouldDisableMouseAnimation) return;
 
         const containerRect = container.getBoundingClientRect();
         const containerCenterX = containerRect.left + containerRect.width / 2;
@@ -164,7 +170,17 @@ const projects = await getCollection("projects");
         });
         requestAnimationFrame(animate);
       }
-      animate();
+
+      if (!shouldDisableMouseAnimation) {
+        animate();
+      } else {
+        // On mobile/small screens, don't apply inline transform
+        // Let CSS rotate property handle the rotation
+        heroImages.forEach((img) => {
+          if (!(img instanceof HTMLElement)) return;
+          img.style.transform = "";
+        });
+      }
     </script>
 
     <!-- Carousel drag script -->
