@@ -10,9 +10,21 @@ import Topscroll from "../components/Topscroll.astro";
     <p class="about-hero-top-subtitle">Clarity in design. Purpose in code.</p>
     <HeroTitle firstName="Mauro" lastName="Vangheluwe" />
     <div class="about-image-stack">
-      <img src="/images/about/left.png" alt="" class="img-left" />
-      <img src="/images/about/middle.png" alt="" class="img-middle" />
-      <img src="/images/about/right.png" alt="" class="img-right" />
+      <img
+        src={`${import.meta.env.BASE_URL}/images/about/left.png`}
+        alt=""
+        class="img-left"
+      />
+      <img
+        src={`${import.meta.env.BASE_URL}/images/about/middle.png`}
+        alt=""
+        class="img-middle"
+      />
+      <img
+        src={`${import.meta.env.BASE_URL}/images/about/right.png`}
+        alt=""
+        class="img-right"
+      />
     </div>
     <p class="about-h2-upcoming">Upcoming</p>
     <h2 class="about-h2">Digital Designer</h2>
