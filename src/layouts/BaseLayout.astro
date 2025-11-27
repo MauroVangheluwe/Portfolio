@@ -6,7 +6,7 @@ interface Props {
   withLoadingState?: boolean;
 }
 
-const {withLoadingState = false } = Astro.props;
+const { withLoadingState = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -22,10 +22,27 @@ const {withLoadingState = false } = Astro.props;
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%231393D1' /%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23B3D7E7' /%3E%3Ccircle cx='50' cy='50' r='20' fill='%231393D1' /%3E%3C/svg%3E"
     />
 
     <title>Mauro Vangheluwe</title>
+    <script is:inline>
+      let originalTitle = document.title;
+      let timeout;
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          // Start timer when user leaves the tab
+          timeout = setTimeout(() => {
+            document.title = "Wait, come back 😔";
+          }, 2000);
+        } else {
+          // User returned → reset
+          clearTimeout(timeout);
+          document.title = originalTitle;
+        }
+      });
+    </script>
   </head>
   <body class:list={[{ loading: withLoadingState }]}>
     {withLoadingState && <div id="loading-overlay" />}

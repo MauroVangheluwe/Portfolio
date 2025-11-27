@@ -53,8 +53,22 @@ const projects = await getCollection("projects");
     <script type="module" src="/src/scripts/hero-animations.js"></script>
 
     <script>
-      window.history.scrollRestoration = "manual";
-      window.scrollTo({ top: 0, behavior: "instant" });
+      // Check if this is a back/forward navigation
+      const navEntry = performance.getEntriesByType("navigation")[0];
+      const isBackForward =
+        navEntry &&
+        (navEntry as PerformanceNavigationTiming).type === "back_forward";
+
+      if (isBackForward) {
+        // Returning via browser back: skip animation and restore scroll
+        sessionStorage.setItem("skipHomeAnimation", "true");
+        window.history.scrollRestoration = "auto";
+      } else {
+        // Fresh load or reload: clear flag, play animation, scroll to top
+        sessionStorage.removeItem("skipHomeAnimation");
+        window.history.scrollRestoration = "manual";
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
     </script>
 
     <!-- JS goes here, after the DOM elements -->
@@ -131,7 +145,27 @@ const projects = await getCollection("projects");
       const uniqueCards = totalCards / 3; // We have 3 copies
       const cardWidth = 510; // card width (450) + gap (60)
 
-      let currentIndex = uniqueCards; // Start at middle set
+      // Check if returning from a project detail page
+      const returnedFromProject = sessionStorage.getItem("clickedProjectId");
+      let currentIndex = uniqueCards; // Default: start at middle set
+
+      if (returnedFromProject) {
+        // Find the index of the clicked project in the middle set
+        const targetCard = Array.from(cards).find((card, idx) => {
+          return (
+            idx >= uniqueCards &&
+            idx < uniqueCards * 2 &&
+            card.getAttribute("data-project-id") === returnedFromProject
+          );
+        });
+
+        if (targetCard) {
+          currentIndex = Array.from(cards).indexOf(targetCard);
+        }
+
+        // Clear the stored project ID
+        sessionStorage.removeItem("clickedProjectId");
+      }
       let currentX = -currentIndex * cardWidth;
       let isDragging = false;
       let hasDragged = false;
@@ -199,6 +233,12 @@ const projects = await getCollection("projects");
         card.addEventListener("click", (e) => {
           if (hasDragged || !card.classList.contains("active")) {
             e.preventDefault();
+          } else {
+            // Store which project was clicked for carousel restoration
+            const projectId = card.getAttribute("data-project-id");
+            if (projectId) {
+              sessionStorage.setItem("clickedProjectId", projectId);
+            }
           }
         });
       }); // Mouse events

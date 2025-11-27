@@ -11,6 +11,7 @@
     --border-blue: 0.5rem solid var(--color-blue);
     --border-blue-light: 0.5rem solid var(--color-blue-light);
     --box-shadow: 1px 5px 10px var(--color-blue-dark);
+    --box-shadow-light: 1px 5px 10px var(--color-blue-light);
     --border-radius-sm: 1rem;
     --border-radius-md: 1.5rem;
     --border-radius-lg: 2rem;
@@ -193,7 +194,7 @@ main {
 .heroimage {
     width: 230px;
     height: 230px;
-    box-shadow: 1px 5px 10px var(--color-blue-dark);
+    box-shadow: 1px 5px 10px var(--color-blue-light);
     border-radius: var(--border-radius-sm);
     overflow: hidden;
     transform-origin: center bottom;
@@ -343,6 +344,7 @@ main {
     transition: border 0.3s ease;
     -webkit-user-drag: none;
     user-select: none;
+    border: 1rem solid var(--color-blue-dark);
 }
 
 .card-image-wrapper:hover {

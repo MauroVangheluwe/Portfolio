@@ -21,6 +21,7 @@ const projects = defineCollection({
     year: z.number(),
     client: z.string(),
     software: z.array(z.string()),
+    imgs: z.array(z.string()).optional(),
   }),
 });
 

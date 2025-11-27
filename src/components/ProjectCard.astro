@@ -4,7 +4,11 @@ const { project } = Astro.props;
 
 {
   project ? (
-    <a href="/about" class="project-card">
+    <a
+      href={`/projects/${project.id}`}
+      class="project-card"
+      data-project-id={project.id}
+    >
       <div class="card-image-wrapper">
         <div class="card-tags">
           {project.data.creativeField.map((field: string) => (
