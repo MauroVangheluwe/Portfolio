@@ -1,21 +1,27 @@
 ---
-name: "CAMPAGNE RODE KRUIS"
-headImg: "/images/Project-3/Hero-image.png"
-img: "/images/Project-3/Cover-image.png"
+name: "MIXBOX"
+img: "/images/Project-4/Cover-image.png"
+headImg: "/images/Project-4/Cover-image.png"
 imgs:
-  - "IFRAME_PLACEHOLDER"
+ - "/images/Project-4/img-1.png"
+ - "/images/Project-4/img-2.png"
+ - "/images/Project-4/img-3.png"
+ - "/images/Project-4/img-4.png"
+ - "/images/Project-4/img-5.png"
+ - "/images/Project-4/img-6.png"
+ - "IFRAME_PLACEHOLDER"
 
-description: "This project is a campaign website prototype for Rode Kruis-Vlaanderen, created for a school assignment. The concept, Night of Light, targets students and uses a fluorescent visual style to raise awareness for plasma donation. The website combines bold colors, symbolic neon elements, and clear information to guide users through the digital and in real life experience and motivate them to donate."
-creativeField: ["Visual Design"]
-duration: "3 weeks"
-year: 2024
+description: ""
+creativeField: ["Visual Design", "Branding", "Packaging"]
+duration: "5 weeks"
+year: 2025
 client: "School Assignment"
-software: ["Figma", "Adobe Illustrator"]
+software: ["Figma", "Adobe Illustrator", "Adobe Photoshop"]
 iframes:
-  - src: "https://embed.figma.com/proto/rn2M86MLgiqAppwVkcCApU/2VD_RodeKruis_Mauro?page-id=1%3A3&node-id=38-71&viewport=479%2C454%2C0.22&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=38%3A71&embed-host=share"
+  - src: "https://embed.figma.com/proto/A5DbdUecH1tSIpFj0DzzUO/MIXBOX-MV-VD4-V2?page-id=2023%3A5434&node-id=2063-7107&viewport=99%2C179%2C0.24&scaling=scale-down&content-scaling=fixed&starting-point-node-id=2063%3A7107&embed-host=share"
     width: 1200
     height: 675
-iframeIndexes: [0]
+iframeIndexes: [6]
 ---
 
 <!-- Content handled through frontmatter only -->

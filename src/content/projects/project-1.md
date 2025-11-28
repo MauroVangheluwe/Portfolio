@@ -1,7 +1,7 @@
 --- 
 name: "Wiselight"
-headImg: "/images/Project-1/Hero-image.png"
 img: "/images/Project-1/Cover-image.png"
+headImg: "/images/Project-1/Hero-img.png"
 imgs:
  - "/images/Project-1/gif-1.gif"
  - "/images/Project-1/img-2.png"
