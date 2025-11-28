@@ -71,153 +71,6 @@ import Topscroll from "../components/Topscroll.astro";
       ></path>
     </svg>
 
-    <style>
-      .about-image-stack {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        transform: translateY(-3rem);
-      }
-
-      .about-image-stack img {
-        position: absolute;
-        width: 300px;
-        border-radius: 12px;
-      }
-
-      .img-middle {
-        z-index: 3;
-        transform: translateX(0);
-      }
-
-      .img-left {
-        z-index: 2;
-        transform: translateX(-200px) rotate(-10deg);
-        opacity: 1;
-      }
-
-      .img-right {
-        z-index: 1;
-        transform: translateX(200px) rotate(10deg);
-        opacity: 1;
-      }
-
-      .topscroll-cross {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-      }
-
-      .topscroll-wrapper {
-        position: absolute;
-        width: 100%;
-        left: 0;
-      }
-
-      .topscroll-1 {
-        top: 30%;
-        transform: rotate(9deg);
-      }
-
-      .topscroll-2 {
-        top: 30%;
-        transform: rotate(-2.5deg);
-      }
-
-      .topscroll-2 :global(.track) {
-        animation-direction: reverse;
-      }
-
-      .about-hero-top-title,
-      .about-hero-top-subtitle,
-      .hero-title,
-      .about-image-stack {
-        position: relative;
-        z-index: 1;
-      }
-
-      .topscroll-cross-bottom {
-        position: relative;
-        width: 100%;
-        height: 80px;
-        margin-top: 4rem;
-      }
-
-      .topscroll-wrapper-bottom {
-        position: absolute;
-        width: 100%;
-        left: 0;
-        top: 0;
-      }
-
-      .topscroll-bottom-1 {
-        transform: rotate(5deg);
-      }
-
-      .topscroll-bottom-2 {
-        transform: rotate(-4deg);
-      }
-
-      .topscroll-2 :global(.track) {
-        animation-direction: reverse;
-      }
-
-      .about-h2-upcoming {
-        font-family: "Schoolbell", cursive;
-        font-size: 3rem;
-        text-align: center;
-        margin-top: 20rem;
-        margin-bottom: -4rem;
-      }
-
-      .about-h2 {
-        color: var(--blue, #1393d1);
-        font-size: 10rem;
-        font-weight: 900;
-        text-transform: uppercase;
-      }
-
-      .about-h2-sub {
-        position: relative;
-        z-index: 15;
-        font-family: "Schoolbell", cursive;
-        font-size: 7rem;
-        margin-top: -8rem;
-        font-weight: 400;
-        text-transform: uppercase;
-      }
-
-      .about-description {
-        font-family: "Instrument Serif", serif;
-        font-size: 3rem;
-        text-align: center;
-        margin: 10rem auto 0;
-        max-width: 70%;
-        line-height: 1.2;
-      }
-
-      .ab-descr-span {
-        color: var(--color-blue);
-      }
-
-      .ab-descr-span:hover {
-        color: var(--color-blue-light);
-      }
-
-      .signature {
-        width: 15rem;
-        margin-top: 5rem;
-        margin-bottom: 30rem;
-      }
-    </style>
-
     <script>
       import { gsap } from "gsap";
       import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -226,11 +79,15 @@ import Topscroll from "../components/Topscroll.astro";
       gsap.registerPlugin(ScrollTrigger);
       gsap.registerPlugin(SplitText);
 
+      const isMobile = window.innerWidth <= 768;
+      const scrollStart = isMobile ? "top 30%" : "top 80%";
+      const scrollEnd = isMobile ? "bottom 10%" : "bottom 20%";
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".about-image-stack",
-          start: "top 80%",
-          end: "bottom 20%",
+          start: scrollStart,
+          end: scrollEnd,
           scrub: true,
         },
       });

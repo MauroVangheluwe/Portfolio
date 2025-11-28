@@ -30,6 +30,7 @@ body {
     line-height: 1.6;
     color: var(--color-blue-light);
     background-color: var(--color-blue-dark);
+    overflow-x: hidden;
 }
 
 html {
@@ -173,7 +174,7 @@ main {
 
 .second-word {
     color: var(--color-blue-light);
-    font-size: 20rem;
+    font-size: 18rem;
     -webkit-text-stroke: 0.6rem var(--color-blue-light);
 }
 
@@ -436,17 +437,175 @@ main {
     margin-bottom: -1rem;
 }
 
+
+.about-image-stack {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 3/4;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    transform: translateY(-3rem);
+    margin-bottom: -25rem;
+}
+
+.about-image-stack img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.img-middle {
+    z-index: 3;
+    transform: translateX(0);
+}
+
+.img-left {
+    z-index: 2;
+    transform: translateX(-100px) rotate(-10deg);
+    opacity: 1;
+}
+
+.img-right {
+    z-index: 1;
+    transform: translateX(100px) rotate(10deg);
+    opacity: 1;
+}
+
+.topscroll-cross {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.topscroll-wrapper {
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
+
+.topscroll-1 {
+    top: 30%;
+    transform: rotate(9deg);
+}
+
+.topscroll-2 {
+    top: 30%;
+    transform: rotate(-2.5deg);
+}
+
+.topscroll-2 :global(.track) {
+    animation-direction: reverse;
+}
+
+.about-hero-top-title,
+.about-hero-top-subtitle,
+.hero-title,
+.about-image-stack {
+    position: relative;
+    z-index: 1;
+}
+
+.topscroll-cross-bottom {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    margin-top: 4rem;
+}
+
+.topscroll-wrapper-bottom {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.topscroll-bottom-1 {
+    transform: rotate(5deg);
+}
+
+.topscroll-bottom-2 {
+    transform: rotate(-4deg);
+}
+
+.topscroll-2 :global(.track) {
+    animation-direction: reverse;
+}
+
+.about-h2-upcoming {
+    font-family: "Schoolbell", cursive;
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 20rem;
+    margin-bottom: -4rem;
+}
+
+.about-h2 {
+    color: var(--blue, #1393d1);
+    font-size: 10rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.about-h2-sub {
+    position: relative;
+    z-index: 15;
+    font-family: "Schoolbell", cursive;
+    font-size: 7rem;
+    margin-top: -8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.about-description {
+    font-family: "Instrument Serif", serif;
+    font-size: 3rem;
+    text-align: center;
+    margin: 8rem auto 2rem;
+    max-width: 70%;
+    line-height: 1.2;
+}
+
+.ab-descr-span {
+    color: var(--color-blue);
+}
+
+.ab-descr-span:hover {
+    color: var(--color-blue-light);
+}
+
+.signature {
+    width: 15rem;
+    margin-top: 5rem;
+    margin-bottom: 50rem;
+}
+
+
+
+
+
+
+
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1024px) {
     .first-word {
-        font-size: 15rem;
+        font-size: 20rem;
         -webkit-text-stroke: 0.35rem var(--color-blue);
         letter-spacing: 0.04em;
     }
 
     .second-word {
-        font-size: 13rem;
+        font-size: 14rem;
         -webkit-text-stroke: 0.4rem var(--color-blue-light);
         letter-spacing: 0.04em;
     }
@@ -484,21 +643,78 @@ main {
     .card-title {
         font-size: 2.2rem;
     }
+
+    .about-image-stack {
+        margin-top: 4rem;
+        margin-bottom: -21rem;
+    }
+
+    .about-image-stack img {
+        width: 250px;
+        height: auto;
+    }
+
+    .about-hero-top-title {
+        font-size: 1.8rem;
+        margin-top: 2.5rem;
+    }
+
+    .about-hero-top-subtitle {
+        font-size: 1.8rem;
+    }
+
+    .img-left {
+        transform: translateX(-90px) rotate(-9deg);
+    }
+
+    .img-right {
+        transform: translateX(90px) rotate(9deg);
+    }
+
+    .about-h2-upcoming {
+        font-size: 2.5rem;
+        margin-top: 15rem;
+    }
+
+    .about-h2 {
+        font-size: 8rem;
+    }
+
+    .about-h2-sub {
+        font-size: 6rem;
+        margin-top: -6rem;
+    }
+
+    .about-description {
+        font-size: 2.5rem;
+        max-width: 75%;
+        margin-top: 8rem;
+    }
+
+    .signature {
+        width: 12rem;
+    }
+
+    .ab-descr-span:hover {
+        color: var(--color-blue);
+    }
 }
 
+
+/* tablet */
 @media (max-width: 768px) {
     .hero-top-title {
         font-size: 1.5rem;
     }
 
     .first-word {
-        font-size: 14rem;
+        font-size: 17rem;
         -webkit-text-stroke: 0.25rem var(--color-blue);
         letter-spacing: 0.05em;
     }
 
     .second-word {
-        font-size: 9rem;
+        font-size: 11rem;
         -webkit-text-stroke: 0.3rem var(--color-blue-light);
         letter-spacing: 0.05em;
     }
@@ -571,23 +787,93 @@ main {
         gap: 40px;
         padding: 40px calc(50vw - 175px);
     }
+
+    .about-image-stack {
+        margin-top: 1rem;
+        margin-bottom: -17rem;
+    }
+
+    .about-image-stack img {
+        width: 200px;
+        height: auto;
+    }
+
+    .about-hero-top-title {
+        font-size: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .about-hero-top-subtitle {
+        font-size: 1.5rem;
+    }
+
+    .second-word {
+        margin: 0rem 0.5rem;
+    }
+
+    .about-image-stack {
+        transform: translateY(-2rem);
+    }
+
+
+    .img-left {
+        transform: translateX(-90px) rotate(-9deg);
+    }
+
+    .img-right {
+        transform: translateX(90px) rotate(9deg);
+    }
+
+    .about-h2-upcoming {
+        font-size: 3rem;
+        margin-top: 10rem;
+        margin-bottom: -2.5rem;
+    }
+
+    .about-h2 {
+        font-size: 8rem;
+        margin-top: -3.5rem;
+        margin-bottom: -1rem;
+    }
+
+    .about-h2-sub {
+        font-size: 6rem;
+        margin-top: -6.5rem;
+    }
+
+    .about-description {
+        font-size: 2rem;
+        max-width: 85%;
+        margin-top: 4rem;
+    }
+
+    .signature {
+        width: 10rem;
+        margin-top: 4rem;
+    }
+
+    .ab-descr-span:hover {
+        color: var(--color-blue);
+    }
 }
 
-@media (max-width: 650px) {
+
+/* small tablet */
+@media (max-width: 640px) {
     .hero-top-title {
         font-size: 1.5rem;
         margin-top: 2rem;
     }
 
     .first-word {
-        font-size: 12rem;
+        font-size: 13rem;
         -webkit-text-stroke: 0.25rem var(--color-blue);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.05em;
     }
 
     .second-word {
-        font-size: 8rem;
-        -webkit-text-stroke: 0.3rem var(--color-blue-light);
+        font-size: 9rem;
+        -webkit-text-stroke: 0.25rem var(--color-blue-light);
         letter-spacing: 0.08em;
     }
 
@@ -668,8 +954,90 @@ main {
     .card-tags {
         gap: 0.5rem;
     }
+
+
+    .about-image-stack {
+        margin-top: 1rem;
+        margin-bottom: -16rem;
+    }
+
+    .about-image-stack img {
+        width: 180px;
+        height: auto;
+    }
+
+    .about-hero-top-title {
+        font-size: 1.5rem;
+    }
+
+    .about-hero-top-subtitle {
+        font-size: 1.5rem;
+    }
+
+    .img-left {
+        transform: translateX(-80px) rotate(-9deg);
+    }
+
+    .img-right {
+        transform: translateX(80px) rotate(9deg);
+    }
+
+    .about-h2-upcoming {
+        font-size: 2rem;
+        margin-top: 8rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-h2 {
+        font-size: 7rem;
+        margin-bottom: -0.8rem;
+    }
+
+    .about-h2-sub {
+        font-size: 4.5rem;
+        margin-top: -5.5rem;
+    }
+
+    .about-description {
+        font-size: 1.9rem;
+        max-width: 90%;
+        margin-top: 3.5rem;
+    }
+
+    .signature {
+        width: 9rem;
+    }
+
+    .ab-descr-span:hover {
+        color: var(--color-blue);
+    }
 }
 
+@media (max-width: 560px) {
+    .first-word {
+        font-size: 12rem;
+        -webkit-text-stroke: 0.25rem var(--color-blue);
+        letter-spacing: 0.05em;
+    }
+
+    .second-word {
+        font-size: 7rem;
+        -webkit-text-stroke: 0.25rem var(--color-blue-light);
+        letter-spacing: 0.08em;
+    }
+
+    .about-image-stack {
+        margin-top: 2rem;
+        margin-bottom: -17rem;
+    }
+
+    .about-image-stack img {
+        width: 150px;
+        height: auto;
+    }
+}
+
+/* mobile phone */
 @media (max-width: 480px) {
     .hero-top-title {
         font-size: 1.5rem;
@@ -677,13 +1045,13 @@ main {
     }
 
     .first-word {
-        font-size: 9rem;
+        font-size: 10rem;
         -webkit-text-stroke: 0.15rem var(--color-blue);
         letter-spacing: 0.05em;
     }
 
     .second-word {
-        font-size: 6rem;
+        font-size: 7rem;
         -webkit-text-stroke: 0.2rem var(--color-blue-light);
         letter-spacing: 0.05em;
     }
@@ -765,5 +1133,66 @@ main {
     .tag {
         font-size: 0.8rem;
         padding: 0.1rem 0.6rem;
+    }
+
+    .about-image-stack {
+        margin-top: 2rem;
+        margin-bottom: -20rem;
+    }
+
+    .about-image-stack img {
+        width: 140px;
+        height: auto;
+    }
+
+    .about-hero-top-title {
+        font-size: 1.3rem;
+        margin-top: 2.5rem;
+    }
+
+    .about-hero-top-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .img-left {
+        transform: translateX(-70px) rotate(-6deg);
+    }
+
+    .img-right {
+        transform: translateX(70px) rotate(6deg);
+    }
+
+    .about-h2-upcoming {
+        font-size: 2rem;
+        margin-bottom: 1.5rem
+    }
+
+    .about-h2 {
+        font-size: 5rem;
+    }
+
+    .about-h2-sub {
+        font-size: 3.5rem;
+        margin-top: -4rem;
+    }
+
+    .about-description {
+        font-size: 2.5rem;
+        max-width: 90%;
+        margin-top: 8rem;
+    }
+
+    .signature {
+        width: 8rem;
+        margin-top: 3rem;
+    }
+
+    .topscroll-cross-bottom {
+        height: 60px;
+        margin-top: 2.5rem;
+    }
+
+    .ab-descr-span:hover {
+        color: var(--color-blue);
     }
 }

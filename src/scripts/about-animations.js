@@ -38,28 +38,34 @@ tl.to(".img-middle", {
 
 
 document.fonts.ready.then(() => {
-  // Split the text into words
+  // 1. Split the text into words
   const split = new SplitText(".about-description", {
     type: "words",
     aria: "hidden",
   });
 
-  // Animate each word on scroll
+  // 2. Animate each word directly using gsap.from()
   gsap.from(split.words, {
     opacity: 0,
-    y: 20,
-    duration: 1,
+    y: 15,
     ease: "power3.out",
-    stagger: 0.08,
+    
+    // Maintain tiny duration and stagger to keep time duration near zero
+    duration: 0.01,
+    stagger: 0.01, 
+
     scrollTrigger: {
       trigger: ".about-description",
-      start: "top 80%",    // when element enters viewport
-      end: "bottom 20%",   // optional, defines when ScrollTrigger ends
-      toggleActions: "play none play reverse", // play down, reverse up
-      markers: false,
+      start: "top 60%",   
+      end: "bottom top",   
+      // *** FINAL FIX: Change scrub: true to scrub: 1 ***
+      scrub: 1, 
+      // Add markers: true to definitively see your start/end points
+      // markers: true,
     },
   });
 });
+
 
 // Signature fill reveal animation using mask
 const signatureMaskPath = document.querySelector(".signature-mask-path");
@@ -78,8 +84,9 @@ if (signatureMaskPath) {
       scrollTrigger: {
         trigger: ".signature",
         start: "top 80%",
-        end: "top 50%",
+        end: "top 60%",
         scrub: 1,
+        markers: true,
       },
     }
   );
