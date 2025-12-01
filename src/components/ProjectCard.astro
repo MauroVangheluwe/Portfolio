@@ -1,5 +1,15 @@
 ---
+import { Image } from "astro:assets";
 const { project } = Astro.props;
+
+// Check if cover image is a GIF
+const coverImg = project.data.img;
+const isGif =
+  (typeof coverImg === "object" &&
+    coverImg.src &&
+    typeof coverImg.src === "string" &&
+    coverImg.src.endsWith(".gif")) ||
+  (typeof coverImg === "object" && coverImg.format === "gif");
 ---
 
 {
@@ -15,11 +25,18 @@ const { project } = Astro.props;
             <span class="tag">{field}</span>
           ))}
         </div>
-        <img
-          src={`${import.meta.env.BASE_URL}${project.data.img}`}
-          alt={project.data.name}
-          class="card-cover"
-        />
+        {isGif ? (
+          <img src={coverImg.src} alt={project.data.name} class="card-cover" />
+        ) : (
+          <Image
+            src={project.data.img}
+            alt={project.data.name}
+            class="card-cover"
+            widths={[260, 300, 450]}
+            sizes="(min-width: 64rem) 450px, (min-width: 40rem) 300px, 260px"
+            format="webp"
+          />
+        )}
       </div>
       <div class="card-title">{project.data.name}</div>
     </a>

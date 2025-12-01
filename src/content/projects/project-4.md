@@ -1,16 +1,14 @@
 ---
 name: "CAMPAGNE RODE KRUIS"
-img: "/images/Project-3/Cover-image.png"
-headImg: "/images/Project-3/img-2"
+img: "./images/Project-3/Cover-image.png"
+headImg: "./images/Project-3/img-2"
 imgs:
- - "/images/Project-3/img-1.png"
- - "/images/Project-3/img-5.png"
- - "/images/Project-3/img-3.png"
- - "/images/Project-3/img-4.png"
- - "/images/Project-3/img-2.png"
- - "IFRAME_PLACEHOLDER"
-
-description: "This project is a campaign website prototype for Rode Kruis-Vlaanderen, created for a school assignment. The concept, Night of Light, targets students and uses a fluorescent visual style to raise awareness for plasma donation. The website combines bold colors, symbolic neon elements, and clear information to guide users through the digital and in real life experience and motivate them to donate."
+  - "./images/Project-3/img-1.png"
+  - "./images/Project-3/img-5.png"
+  - "./images/Project-3/img-3.png"
+  - "./images/Project-3/img-4.png"
+  - "./images/Project-3/img-2.png"
+  - "IFRAME_PLACEHOLDER"
 creativeField: ["Visual Design"]
 duration: "3 weeks"
 year: 2024
@@ -22,5 +20,7 @@ iframes:
     height: 675
 iframeIndexes: [5]
 ---
+
+This project is a campaign website prototype for Rode Kruis-Vlaanderen, created for a school assignment. The concept, Night of Light, targets students and uses a fluorescent visual style to raise awareness for plasma donation. The website combines bold colors, symbolic neon elements, and clear information to guide users through the digital and in real life experience and motivate them to donate.
 
 <!-- Content handled through frontmatter only -->

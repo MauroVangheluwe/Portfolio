@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -17,7 +18,6 @@ const { project } = Astro.props as { project: CollectionEntry<"projects"> };
 const { Content } = await render(project);
 const {
   name,
-  description,
   creativeField,
   duration,
   year,
@@ -55,7 +55,9 @@ const {
     </section>
 
     <h1 class="project-name" id="project-name">{name}</h1>
-    <p class="project-description">{description}</p>
+    <div class="project-description">
+      <Content />
+    </div>
 
     {
       imgs && imgs.length > 0 && (
@@ -81,14 +83,40 @@ const {
               );
             }
 
+            // Check if it's a GIF (keep as img tag for animation)
+            // Check both .src string and .format property for GIF detection
+            const isGif =
+              (typeof imgSrc === "object" &&
+                imgSrc.src &&
+                typeof imgSrc.src === "string" &&
+                imgSrc.src.endsWith(".gif")) ||
+              (typeof imgSrc === "object" && imgSrc.format === "gif");
+
+            if (isGif) {
+              return (
+                <img
+                  src={imgSrc.src}
+                  alt={`${name} - Image ${index + 1}`}
+                  class="gallery-item"
+                  data-is-website={
+                    websiteImgIndexes?.includes(index) ? "true" : "false"
+                  }
+                  loading="lazy"
+                />
+              );
+            }
+
             return (
-              <img
-                src={`${import.meta.env.BASE_URL}${imgSrc}`}
+              <Image
+                src={imgSrc}
                 alt={`${name} - Image ${index + 1}`}
                 class="gallery-item"
                 data-is-website={
                   websiteImgIndexes?.includes(index) ? "true" : "false"
                 }
+                widths={[400, 640, 1024, 1280, 1920]}
+                sizes="(min-width: 64rem) 1280px, (min-width: 48rem) 1024px, (min-width: 40rem) 640px, 400px"
+                format="webp"
                 loading="lazy"
               />
             );
@@ -759,4 +787,3 @@ const {
     }
   </style>
 </BaseLayout>
-

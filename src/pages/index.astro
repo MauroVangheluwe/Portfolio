@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Topscroll from "../components/Topscroll.astro";
 import heroImage1 from "../assets/Hero-image-1.png";
@@ -49,16 +50,34 @@ const projects = await getCollection("projects");
 
       <div class="heroimages" id="heroimages">
         <div class="heroimage" data-index="0" data-rotate="2deg">
-          <img src={heroImage1.src} alt="Hero 1" />
+          <Image
+            src={heroImage1}
+            alt="Digital design work showcase"
+            widths={[120, 140, 230]}
+            sizes="(min-width: 64rem) 230px, (min-width: 40rem) 140px, 120px"
+            format="webp"
+          />
         </div>
         <div class="heroimage" data-index="1" data-rotate="-3deg">
-          <img src={heroImage2.src} alt="Hero 2" />
+          <Image
+            src={heroImage2}
+            alt="Creative development portfolio"
+            widths={[120, 140, 230]}
+            sizes="(min-width: 64rem) 230px, (min-width: 40rem) 140px, 120px"
+            format="webp"
+          />
         </div>
         <div class="heroimage" data-index="2" data-rotate="6deg">
-          <img src={heroImage3.src} alt="Hero 3" />
+          <img src={heroImage3.src} alt="Animated portfolio element" />
         </div>
         <div class="heroimage" data-index="3" data-rotate="-2deg">
-          <img src={heroImage4.src} alt="Hero 4" />
+          <Image
+            src={heroImage4}
+            alt="Web development projects"
+            widths={[120, 140, 230]}
+            sizes="(min-width: 64rem) 230px, (min-width: 40rem) 140px, 120px"
+            format="webp"
+          />
         </div>
       </div>
     </div>
@@ -175,7 +194,6 @@ const projects = await getCollection("projects");
               opacity: 1,
               duration: 0.8,
               stagger: 0.12,
-              
             },
             "-=0.45"
           )
