@@ -1268,7 +1268,7 @@ main {
 
 @media (max-width: 30rem) {
     .carousel-track {
-            padding-left: calc(50vw - 130px);
-            padding-right: calc(50vw - 150px);
-        }
+        padding-left: calc(50vw - 130px);
+        padding-right: calc(50vw - 150px);
+    }
 }
