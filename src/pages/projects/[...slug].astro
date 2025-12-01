@@ -682,6 +682,10 @@ const {
       .project-name {
         margin-bottom: 1.5rem;
       }
+
+      .project-info-grid {
+        margin-top: -4rem;
+      }
     }
 
     @media (min-width: 40rem) {
@@ -746,18 +750,20 @@ const {
 
       .project-info-grid {
         grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
+        gap: 0.5rem;
         margin-bottom: 4rem;
         padding: 2rem 0;
         order: 1;
+        margin-bottom: -1rem;
+        margin-top: 0rem;
       }
 
       .info-title {
-        font-size: clamp(2rem, 3.5vw, 3.5rem);
+        font-size: clamp(3rem, 3.5vw, 3.5rem);
       }
 
       .info-content {
-        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-size: clamp(1.2rem, 1.5vw, 3rem);
         margin-top: -1.5rem;
       }
 
@@ -785,6 +791,25 @@ const {
         font-size: 2.55rem;
       }
     }
-    
+
+    @media (max-width: 35rem) {
+      .project-info-grid {
+        margin-top: -4rem;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .info-column {
+        margin-top: 0rem;
+      }
+
+      .info-title {
+        font-size: clamp(3rem, 1.5vw, 4rem);
+      }
+
+      .info-content {
+        font-size: clamp(1.2rem, 1.5vw, 3rem);
+      }
+    }
   </style>
 </BaseLayout>
