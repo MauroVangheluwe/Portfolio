@@ -67,29 +67,37 @@ const { body } = project;
             );
           }
 
-          // Check if it's a GIF (keep as img tag for animation)
-          // Check both .src string and .format property for GIF detection
-          const isGif =
-            (typeof imgSrc === "object" &&
-              imgSrc.src &&
-              typeof imgSrc.src === "string" &&
-              imgSrc.src.endsWith(".gif")) ||
-            (typeof imgSrc === "object" && imgSrc.format === "gif");
+          // Check if it's a video (MP4, WebM) - content collections return videos as strings
+          if (typeof imgSrc === "string") {
+            const isVideo = imgSrc.includes(".mp4") || imgSrc.includes(".webm");
 
-          if (isGif) {
-            return (
-              <img
-                src={imgSrc.src}
-                alt={`${name} - Image ${index + 1}`}
-                class="gallery-item"
-                data-is-website={
-                  websiteImgIndexes?.includes(index) ? "true" : "false"
-                }
-                loading="lazy"
-              />
-            );
+            if (isVideo) {
+              // Add BASE_URL for videos from public folder
+              const videoSrc = `${import.meta.env.BASE_URL}${imgSrc}`;
+              return (
+                <video
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  class="gallery-item"
+                  data-is-website={
+                    websiteImgIndexes?.includes(index) ? "true" : "false"
+                  }
+                >
+                  <source
+                    src={videoSrc}
+                    type={imgSrc.includes(".webm") ? "video/webm" : "video/mp4"}
+                  />
+                </video>
+              );
+            } else {
+              // String but not a video - skip or handle as needed
+              return null;
+            }
           }
 
+          // If we get here, it's an image object
           return (
             <Image
               src={imgSrc}

@@ -2,14 +2,15 @@
 import { Image } from "astro:assets";
 const { project } = Astro.props;
 
-// Check if cover image is a GIF
+// Check if cover image is a video (MP4 or WebM)
 const coverImg = project.data.img;
-const isGif =
-  (typeof coverImg === "object" &&
-    coverImg.src &&
-    typeof coverImg.src === "string" &&
-    coverImg.src.endsWith(".gif")) ||
-  (typeof coverImg === "object" && coverImg.format === "gif");
+// Content collections import videos as strings (from public folder), images as objects (from content)
+const isVideo =
+  typeof coverImg === "string" &&
+  (coverImg.includes(".mp4") || coverImg.includes(".webm"));
+
+// Add BASE_URL to video paths
+const videoSrc = isVideo ? `${import.meta.env.BASE_URL}${coverImg}` : null;
 ---
 
 {
@@ -25,8 +26,13 @@ const isGif =
             <span class="tag">{field}</span>
           ))}
         </div>
-        {isGif ? (
-          <img src={coverImg.src} alt={project.data.name} class="card-cover" />
+        {isVideo ? (
+          <video autoplay loop muted playsinline class="card-cover">
+            <source
+              src={videoSrc}
+              type={coverImg.includes(".webm") ? "video/webm" : "video/mp4"}
+            />
+          </video>
         ) : (
           <Image
             src={project.data.img}

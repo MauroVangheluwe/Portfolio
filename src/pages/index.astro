@@ -5,7 +5,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Topscroll from "../components/Topscroll.astro";
 import heroImage1 from "../assets/Hero-image-1.png";
 import heroImage2 from "../assets/Hero-image-2.png";
-import heroImage3 from "../assets/Hero-image-3.gif";
+import heroImage3 from "../assets/Hero-image-3.mp4";
 import heroImage4 from "../assets/Hero-image-4.png";
 import ProjectCard from "../components/ProjectCard.astro";
 import HeroTitle from "../components/HeroTitle.astro";
@@ -68,7 +68,9 @@ const projects = await getCollection("projects");
           />
         </div>
         <div class="heroimage" data-index="2" data-rotate="6deg">
-          <img src={heroImage3.src} alt="Animated portfolio element" />
+          <video autoplay loop muted playsinline>
+            <source src={heroImage3} type="video/mp4" />
+          </video>
         </div>
         <div class="heroimage" data-index="3" data-rotate="-2deg">
           <Image
