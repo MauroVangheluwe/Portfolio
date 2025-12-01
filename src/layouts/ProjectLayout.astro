@@ -106,6 +106,11 @@ const {
           }
         }
       }
+
+      // Mark title as ready after calculation
+      requestAnimationFrame(() => {
+        title.classList.add("ready");
+      });
     }
 
     // Run on load and resize
@@ -138,10 +143,14 @@ const {
       const items = Array.from(gallery.querySelectorAll(".gallery-item")) as (
         | HTMLImageElement
         | HTMLIFrameElement
+        | HTMLVideoElement
       )[];
       const images = items.filter(
         (item) => item.tagName === "IMG"
       ) as HTMLImageElement[];
+      const videos = items.filter(
+        (item) => item.tagName === "VIDEO"
+      ) as HTMLVideoElement[];
       const iframes = items.filter((item) => item.tagName === "IFRAME");
       const totalImages = items.length;
 
@@ -150,13 +159,38 @@ const {
         iframe.classList.add("wide");
       });
 
-      // If only one image, check if it's a website or portrait/square
+      // If only one image/video, check if it's a website or portrait/square
       if (totalImages === 1) {
         const item = items[0];
 
         // If it's an iframe, it's already wide
         if (item.tagName === "IFRAME") {
           gallery.removeAttribute("data-single-contained");
+          gallery.classList.add("ready");
+          return;
+        }
+
+        // Handle video elements
+        if (item.tagName === "VIDEO") {
+          const video = item as HTMLVideoElement;
+          const checkVideoAspect = () => {
+            const aspectRatio = video.videoWidth / video.videoHeight;
+            const isLandscape = aspectRatio > 1.05;
+
+            if (isLandscape) {
+              video.classList.add("wide");
+              gallery.removeAttribute("data-single-contained");
+            } else {
+              gallery.setAttribute("data-single-contained", "true");
+            }
+            gallery.classList.add("ready");
+          };
+
+          if (video.readyState >= 1) {
+            checkVideoAspect();
+          } else {
+            video.addEventListener("loadedmetadata", checkVideoAspect);
+          }
           return;
         }
 
@@ -167,20 +201,24 @@ const {
           // Website images span both columns with normal cover
           img.classList.add("wide");
           gallery.removeAttribute("data-single-contained");
+          gallery.classList.add("ready");
         } else {
           // Non-website single images: check aspect ratio when loaded
-          if (img.complete) {
+          const finalCheck = () => {
             checkSingleImageAspect(img, gallery);
+            gallery.classList.add("ready");
+          };
+
+          if (img.complete) {
+            finalCheck();
           } else {
-            img.addEventListener("load", () =>
-              checkSingleImageAspect(img, gallery)
-            );
+            img.addEventListener("load", finalCheck);
           }
         }
         return;
       }
 
-      // Wait for all images to load, then analyze
+      // Wait for all images and videos to load, then analyze
       let loadedCount = 0;
       const aspectRatios: (number | null)[] = [];
 
@@ -192,6 +230,26 @@ const {
         }
       });
 
+      // Handle videos
+      videos.forEach((video: HTMLVideoElement) => {
+        const itemIndex = items.indexOf(video);
+        const checkVideoLoad = () => {
+          aspectRatios[itemIndex] = video.videoWidth / video.videoHeight;
+          loadedCount++;
+
+          if (loadedCount === totalImages) {
+            applyLayout(items, aspectRatios);
+          }
+        };
+
+        if (video.readyState >= 1) {
+          checkVideoLoad();
+        } else {
+          video.addEventListener("loadedmetadata", checkVideoLoad);
+        }
+      });
+
+      // Handle images
       images.forEach((img: HTMLImageElement) => {
         const itemIndex = items.indexOf(img);
         const checkLoad = () => {
@@ -212,11 +270,16 @@ const {
     }
 
     function applyLayout(
-      items: (HTMLImageElement | HTMLIFrameElement)[],
+      items: (HTMLImageElement | HTMLIFrameElement | HTMLVideoElement)[],
       aspectRatios: (number | null)[]
     ) {
       const gallery = document.getElementById("gallery");
       if (!gallery) return;
+
+      // Mark gallery as ready after layout is applied
+      requestAnimationFrame(() => {
+        gallery.classList.add("ready");
+      });
 
       // Classify items: landscape (>1) or portrait/square (<=1)
       const itemData = items.map((item, index: number) => ({
@@ -224,6 +287,7 @@ const {
         aspectRatio: aspectRatios[index] || 1,
         type: (aspectRatios[index] || 1) > 1 ? "landscape" : "portrait",
         isIframe: item.tagName === "IFRAME",
+        isVideo: item.tagName === "VIDEO",
       }));
 
       // Separate landscape and portrait items
@@ -279,7 +343,7 @@ const {
               first.element.classList.add("mixed-pair");
               second.element.classList.add("mixed-pair");
 
-              // Only apply mixed pair logic to images, not iframes
+              // Only apply mixed pair logic to images, not iframes or videos
               if (
                 first.element.tagName === "IMG" &&
                 second.element.tagName === "IMG"
@@ -296,6 +360,9 @@ const {
                   first.element.classList.add("square-in-pair");
                   second.element.classList.add("portrait-in-pair");
                 }
+
+                // Store the pair for resize handling
+                mixedPairs.push({ portrait: portraitEl, square: squareEl });
 
                 // Dynamically adjust square height to match portrait after render
                 setTimeout(
@@ -324,17 +391,25 @@ const {
       portraitEl: HTMLImageElement,
       squareEl: HTMLImageElement
     ) {
-      // Force both images to render first
-      const portraitInitialHeight =
-        portraitEl.offsetHeight || portraitEl.naturalHeight;
-      const squareInitialHeight =
-        squareEl.offsetHeight || squareEl.naturalHeight;
-
       // Get gallery width and calculate available width for the pair
       const gallery = document.getElementById("gallery");
-      const galleryWidth = gallery ? gallery.offsetWidth : 1200;
-      const columnGap = 16; // 16px gap
-      const availableWidth = galleryWidth - columnGap; // Total width minus gap
+      if (!gallery) return;
+
+      const galleryWidth = gallery.offsetWidth;
+      const viewportWidth = window.innerWidth;
+
+      // Determine if we're in 2-column layout (40rem = 640px)
+      const isTwoColumn = viewportWidth >= 640;
+
+      // Use appropriate gap: 16px for desktop (2-column), 12px for mobile (1-column)
+      const columnGap = isTwoColumn ? 16 : 12;
+
+      // Calculate available width
+      // On mobile (1 column), each image takes full width in its row
+      // On desktop (2 columns), images share the row with a gap between them
+      const availableWidth = isTwoColumn
+        ? galleryWidth - columnGap
+        : galleryWidth;
 
       // Get natural dimensions and aspect ratios
       const portraitNaturalWidth = portraitEl.naturalWidth;
@@ -345,41 +420,78 @@ const {
       const squareNaturalHeight = squareEl.naturalHeight;
       const squareAspectRatio = squareNaturalWidth / squareNaturalHeight;
 
-      // Use the larger initial height as reference
-      const initialHeight = Math.max(
-        portraitInitialHeight,
-        squareInitialHeight
-      );
+      if (isTwoColumn) {
+        // Desktop: Both images side by side, share the available width
+        // Calculate heights that will make both images fit the width together
 
-      // Calculate initial widths based on aspect ratios
-      const initialPortraitWidth = initialHeight * portraitAspectRatio;
-      const initialSquareWidth = initialHeight * squareAspectRatio;
-      const initialTotalWidth = initialPortraitWidth + initialSquareWidth;
+        // Start with an arbitrary height and calculate widths
+        let testHeight = 400; // Starting test height
+        const testPortraitWidth = testHeight * portraitAspectRatio;
+        const testSquareWidth = testHeight * squareAspectRatio;
+        const testTotalWidth = testPortraitWidth + testSquareWidth;
 
-      // Calculate scale factor to make total width fill available width
-      const scaleFactor = availableWidth / initialTotalWidth;
+        // Scale factor to make them fill the available width
+        const scaleFactor = availableWidth / testTotalWidth;
 
-      // Apply scaled dimensions - BOTH get the same finalHeight
-      const finalHeight = initialHeight * scaleFactor;
-      const finalPortraitWidth = initialPortraitWidth * scaleFactor;
-      const finalSquareWidth = initialSquareWidth * scaleFactor;
+        // Apply scaled dimensions - BOTH get the same finalHeight
+        const finalHeight = testHeight * scaleFactor;
+        const finalPortraitWidth = testPortraitWidth * scaleFactor;
+        const finalSquareWidth = testSquareWidth * scaleFactor;
 
-      // Set portrait dimensions
-      portraitEl.style.height = `${finalHeight}px`;
-      portraitEl.style.width = `${finalPortraitWidth}px`;
-      portraitEl.style.minHeight = `${finalHeight}px`;
-      portraitEl.style.objectFit = "cover";
-      portraitEl.style.maxWidth = "none";
+        // Set portrait dimensions
+        portraitEl.style.height = `${finalHeight}px`;
+        portraitEl.style.width = `${finalPortraitWidth}px`;
+        portraitEl.style.minHeight = `${finalHeight}px`;
+        portraitEl.style.objectFit = "cover";
+        portraitEl.style.maxWidth = "none";
 
-      // Set square dimensions - EXACT same height as portrait
-      squareEl.style.height = `${finalHeight}px`;
-      squareEl.style.width = `${finalSquareWidth}px`;
-      squareEl.style.minHeight = `${finalHeight}px`;
-      squareEl.style.objectFit = "cover";
-      squareEl.style.maxWidth = "none";
+        // Set square dimensions - EXACT same height as portrait
+        squareEl.style.height = `${finalHeight}px`;
+        squareEl.style.width = `${finalSquareWidth}px`;
+        squareEl.style.minHeight = `${finalHeight}px`;
+        squareEl.style.objectFit = "cover";
+        squareEl.style.maxWidth = "none";
+      } else {
+        // Mobile: Images stacked vertically, each takes full width
+        // Calculate height based on aspect ratio to fill the width
+
+        const portraitHeight = availableWidth / portraitAspectRatio;
+        const squareHeight = availableWidth / squareAspectRatio;
+
+        // Set portrait dimensions to fill width
+        portraitEl.style.width = `${availableWidth}px`;
+        portraitEl.style.height = `${portraitHeight}px`;
+        portraitEl.style.minHeight = `${portraitHeight}px`;
+        portraitEl.style.objectFit = "cover";
+        portraitEl.style.maxWidth = "100%";
+
+        // Set square dimensions to fill width
+        squareEl.style.width = `${availableWidth}px`;
+        squareEl.style.height = `${squareHeight}px`;
+        squareEl.style.minHeight = `${squareHeight}px`;
+        squareEl.style.objectFit = "cover";
+        squareEl.style.maxWidth = "100%";
+      }
     }
 
+    // Track all mixed pairs for resize handling
+    let mixedPairs: Array<{
+      portrait: HTMLImageElement;
+      square: HTMLImageElement;
+    }> = [];
+
     window.addEventListener("load", setupGallery);
+
+    // Re-adjust mixed pairs on resize
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        mixedPairs.forEach((pair) => {
+          adjustMixedPairHeights(pair.portrait, pair.square);
+        });
+      }, 150);
+    });
   </script>
 
   <style>
@@ -494,6 +606,12 @@ const {
       text-align: center;
       white-space: nowrap;
       order: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-name.ready {
+      opacity: 1;
     }
 
     .project-description {
@@ -518,6 +636,12 @@ const {
       padding: 0;
       align-items: end;
       order: 4;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    :global(.gallery.ready) {
+      opacity: 1;
     }
 
     :global(.gallery[data-single-contained="true"]) {
@@ -574,6 +698,16 @@ const {
       max-height: none;
       min-height: auto;
       max-width: 100%;
+    }
+
+    /* Mobile: Mixed pairs stack vertically, each fills full width */
+    @media (max-width: 39.99rem) {
+      :global(.gallery-item.portrait-in-pair),
+      :global(.gallery-item.square-in-pair) {
+        grid-column: span 1;
+        width: 100%;
+        object-fit: cover;
+      }
     }
 
     /* Responsive Design */
