@@ -327,13 +327,15 @@ main {
     z-index: 10;
 }
 
-.project-card:not(.active):hover {
-    filter: brightness(1.1);
-}
+@media (hover: hover) and (pointer: fine) {
+    .project-card:not(.active):hover {
+        filter: brightness(1.1);
+    }
 
-.project-card.active:hover {
-    transform: scale(1.05) translateY(-20px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
-    opacity: 1;
+    .project-card.active:hover {
+        transform: scale(1.05) translateY(-20px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        opacity: 1;
+    }
 }
 
 .card-image-wrapper {
@@ -349,8 +351,10 @@ main {
     border: 0.4rem solid var(--color-blue-dark);
 }
 
-.card-image-wrapper:hover {
-    box-shadow: 0px 0px 10px var(--color-blue-light);
+@media (hover: hover) and (pointer: fine) {
+    .card-image-wrapper:hover {
+        box-shadow: 0px 0px 10px var(--color-blue-light);
+    }
 }
 
 .card-cover {
@@ -364,17 +368,18 @@ main {
     -webkit-user-drag: none;
 }
 
-.project-card:hover .card-image-wrapper {
-    box-shadow: 0px 0px 20px var(--color-blue-light);
-}
+@media (hover: hover) and (pointer: fine) {
+    .project-card:hover .card-image-wrapper {
+        box-shadow: 0px 0px 20px var(--color-blue-light);
+    }
 
+    .project-card:hover .card-cover {
+        transform: scale(1.1);
+    }
+}
 
 .card-image-wrapper {
     transition: box-shadow 0.4s ease, border 0.3s ease;
-}
-
-.project-card:hover .card-cover {
-    transform: scale(1.1);
 }
 
 .card-tags {
@@ -418,9 +423,11 @@ main {
     align-self: center;
 }
 
-.project-card:hover .card-title {
-    color: var(--color-blue-light);
-    transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+    .project-card:hover .card-title {
+        color: var(--color-blue-light);
+        transform: translateY(-3px);
+    }
 }
 
 /* ABOUT PAGE */
@@ -583,8 +590,10 @@ main {
     color: var(--color-blue);
 }
 
-.ab-descr-span:hover {
-    color: var(--color-blue-light);
+@media (hover: hover) and (pointer: fine) {
+    .ab-descr-span:hover {
+        color: var(--color-blue-light);
+    }
 }
 
 .signature {
@@ -658,8 +667,10 @@ main {
         padding-bottom: 28px;
     }
 
-    .project-card.active:hover {
-        transform: scale(1.05) translateY(-30px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    @media (hover: hover) and (pointer: fine) {
+        .project-card.active:hover {
+            transform: scale(1.05) translateY(-30px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        }
     }
 
 }
@@ -734,8 +745,10 @@ main {
         padding-bottom: 30px;
     }
 
-    .project-card.active:hover {
-        transform: scale(1.05) translateY(-35px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    @media (hover: hover) and (pointer: fine) {
+        .project-card.active:hover {
+            transform: scale(1.05) translateY(-35px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        }
     }
 
     .tag {
@@ -860,8 +873,10 @@ main {
         padding-bottom: 40px;
     }
 
-    .project-card.active:hover {
-        transform: scale(1.05) translateY(-50px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    @media (hover: hover) and (pointer: fine) {
+        .project-card.active:hover {
+            transform: scale(1.05) translateY(-50px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        }
     }
 
     .about-image-stack {
@@ -1012,8 +1027,10 @@ main {
         padding-bottom: 60px;
     }
 
-    .project-card.active:hover {
-        transform: scale(1.05) translateY(-70px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    @media (hover: hover) and (pointer: fine) {
+        .project-card.active:hover {
+            transform: scale(1.05) translateY(-70px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        }
     }
 
     .about-image-stack {
@@ -1174,8 +1191,10 @@ main {
         padding-bottom: 25px;
     }
 
-    .project-card.active:hover {
-        transform: scale(1.05) translateY(-20px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+    @media (hover: hover) and (pointer: fine) {
+        .project-card.active:hover {
+            transform: scale(1.05) translateY(-20px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
+        }
     }
 
     .tag {
@@ -1240,8 +1259,10 @@ main {
         margin-top: 2.5rem;
     }
 
-    .ab-descr-span:hover {
-        color: var(--color-blue);
+    @media (hover: hover) and (pointer: fine) {
+        .ab-descr-span:hover {
+            color: var(--color-blue);
+        }
     }
 }
 
