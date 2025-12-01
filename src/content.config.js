@@ -13,17 +13,16 @@ const skills = defineCollection({
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     name: z.string(),
-    headImg: z.string(),
-    img: z.string(),
-    description: z.string(),
+    headImg: image(),
+    img: image(),
     creativeField: z.array(z.string()),
     duration: z.string(),
     year: z.number(),
     client: z.string(),
     software: z.array(z.string()),
-    imgs: z.array(z.string()).optional(),
+    imgs: z.array(z.union([image(), z.literal("IFRAME_PLACEHOLDER")])).optional(),
     websiteImgIndexes: z.array(z.number()).optional(),
     iframes: z.array(z.object({
       src: z.string(),

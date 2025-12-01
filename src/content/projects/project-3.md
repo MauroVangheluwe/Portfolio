@@ -1,17 +1,15 @@
 ---
 name: "MIXBOX"
-img: "/images/Project-4/Cover-image.png"
-headImg: "/images/Project-4/Cover-image.png"
+img: "./images/Project-4/Cover-image.png"
+headImg: "./images/Project-4/Cover-image.png"
 imgs:
- - "/images/Project-4/img-1.png"
- - "/images/Project-4/img-2.png"
- - "/images/Project-4/img-3.png"
- - "/images/Project-4/img-4.png"
- - "/images/Project-4/img-5.png"
- - "/images/Project-4/img-6.png"
- - "IFRAME_PLACEHOLDER"
-
-description: ""
+  - "./images/Project-4/img-1.png"
+  - "./images/Project-4/img-2.png"
+  - "./images/Project-4/img-3.png"
+  - "./images/Project-4/img-4.png"
+  - "./images/Project-4/img-5.png"
+  - "./images/Project-4/img-6.png"
+  - "IFRAME_PLACEHOLDER"
 creativeField: ["Visual Design", "Branding", "Packaging"]
 duration: "5 weeks"
 year: 2025

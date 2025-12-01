@@ -1,7 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroTitle from "../components/HeroTitle.astro";
 import Topscroll from "../components/Topscroll.astro";
+import leftImage from "../assets/left.png";
+import middleImage from "../assets/middle.png";
+import rightImage from "../assets/right.png";
 ---
 
 <BaseLayout title="About" withLoadingState={false}>
@@ -10,20 +14,29 @@ import Topscroll from "../components/Topscroll.astro";
     <p class="about-hero-top-subtitle">Clarity in design. Purpose in code.</p>
     <HeroTitle firstName="Mauro" lastName="Vangheluwe" />
     <div class="about-image-stack">
-      <img
-        src={`${import.meta.env.BASE_URL}/images/about/left.png`}
-        alt=""
+      <Image
+        src={leftImage}
+        alt="Mauro Vangheluwe portrait - left angle"
         class="img-left"
+        widths={[140, 150, 180, 300]}
+        sizes="(min-width: 64rem) 300px, (min-width: 48rem) 180px, (min-width: 35rem) 150px, 140px"
+        format="webp"
       />
-      <img
-        src={`${import.meta.env.BASE_URL}/images/about/middle.png`}
-        alt=""
+      <Image
+        src={middleImage}
+        alt="Mauro Vangheluwe portrait - center"
         class="img-middle"
+        widths={[140, 150, 180, 300]}
+        sizes="(min-width: 64rem) 300px, (min-width: 48rem) 180px, (min-width: 35rem) 150px, 140px"
+        format="webp"
       />
-      <img
-        src={`${import.meta.env.BASE_URL}/images/about/right.png`}
-        alt=""
+      <Image
+        src={rightImage}
+        alt="Mauro Vangheluwe portrait - right angle"
         class="img-right"
+        widths={[140, 150, 180, 300]}
+        sizes="(min-width: 64rem) 300px, (min-width: 48rem) 180px, (min-width: 35rem) 150px, 140px"
+        format="webp"
       />
     </div>
     <p class="about-h2-upcoming">Upcoming</p>
