@@ -45,7 +45,15 @@ const { withLoadingState = false } = Astro.props;
     </script>
   </head>
   <body class:list={[{ loading: withLoadingState }]}>
-    {withLoadingState && <div id="loading-overlay" />}
-    <slot />
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        {withLoadingState && <div id="loading-overlay" />}
+        <slot />
+      </div>
+    </div>
+    <script>
+      import { setupSmoother } from "../scripts/smoother.js";
+      setupSmoother();
+    </script>
   </body>
 </html>
