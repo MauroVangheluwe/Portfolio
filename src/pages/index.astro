@@ -371,7 +371,34 @@ const projects = await getCollection("projects");
 
       const totalCards = cards.length;
       const uniqueCards = totalCards / 3; // We have 3 copies
-      const cardWidth = 510; // card width (450) + gap (60)
+
+      // Get responsive cardWidth based on viewport
+      function getCardWidth() {
+        const viewportWidth = window.innerWidth;
+        // Convert rem to px (assuming 16px = 1rem)
+        const rem = parseFloat(
+          getComputedStyle(document.documentElement).fontSize
+        );
+
+        if (viewportWidth >= 64 * rem) {
+          // min-width: 64rem -> card: 450px, gap: 60px
+          return 450 + 60;
+        } else if (viewportWidth >= 48 * rem) {
+          // min-width: 48rem -> card: 350px, gap: 40px
+          return 350 + 40;
+        } else if (viewportWidth >= 35 * rem) {
+          // min-width: 35rem -> card: 280px, gap: 28px
+          return 280 + 28;
+        } else if (viewportWidth >= 30 * rem) {
+          // min-width: 30rem -> card: 300px, gap: 30px
+          return 300 + 30;
+        } else {
+          // Base mobile -> card: 260px, gap: 25px
+          return 260 + 25;
+        }
+      }
+
+      let cardWidth = getCardWidth();
 
       // Check if returning from a project detail page
       const returnedFromProject = sessionStorage.getItem("clickedProjectId");
@@ -394,6 +421,7 @@ const projects = await getCollection("projects");
         // Clear the stored project ID
         sessionStorage.removeItem("clickedProjectId");
       }
+
       let currentX = -currentIndex * cardWidth;
       let isDragging = false;
       let hasDragged = false;
@@ -410,6 +438,49 @@ const projects = await getCollection("projects");
 
       // Update card positions for circular effect
       function updateCardPositions() {
+        const viewportWidth = window.innerWidth;
+        const rem = parseFloat(
+          getComputedStyle(document.documentElement).fontSize
+        );
+
+        // Adjust 3D effect intensity based on screen size
+        let scaleIntensity = 0.7;
+        let translateYActive = -60;
+        let translateYInactive = 100;
+        let translateZBase = -200;
+        let rotateYBase = 35;
+        let rotateZBase = 8;
+
+        if (viewportWidth < 48 * rem) {
+          // Reduce 3D effects on smaller screens
+          scaleIntensity = 0.8;
+          translateYActive = -30;
+          translateYInactive = 60;
+          translateZBase = -100;
+          rotateYBase = 25;
+          rotateZBase = 5;
+        }
+
+        if (viewportWidth < 35 * rem) {
+          // Further reduce on smaller screens
+          scaleIntensity = 0.82;
+          translateYActive = -25;
+          translateYInactive = 50;
+          translateZBase = -90;
+          rotateYBase = 22;
+          rotateZBase = 4;
+        }
+
+        if (viewportWidth < 30 * rem) {
+          // Further reduce on mobile
+          scaleIntensity = 0.85;
+          translateYActive = -20;
+          translateYInactive = 40;
+          translateZBase = -80;
+          rotateYBase = 20;
+          rotateZBase = 3;
+        }
+
         cards.forEach((card, index) => {
           const offset = index - currentIndex;
           card.setAttribute("data-offset", offset.toString());
@@ -419,24 +490,30 @@ const projects = await getCollection("projects");
 
           // Scale: smaller as you move away from center
           const scale =
-            offset === 0 ? 1 : Math.max(0.7 - (absOffset - 1) * 0.1, 0.5);
+            offset === 0
+              ? 1
+              : Math.max(scaleIntensity - (absOffset - 1) * 0.1, 0.5);
 
           // Y-axis: cards further away sink lower (parabolic curve)
-          const translateY = offset === 0 ? -60 : 100 + (absOffset - 1) * 40;
+          const translateY =
+            offset === 0
+              ? translateYActive
+              : translateYInactive + (absOffset - 1) * 40;
 
           // Z-axis: cards further away go deeper
-          const translateZ = offset === 0 ? 0 : -200 - (absOffset - 1) * 100;
+          const translateZ =
+            offset === 0 ? 0 : translateZBase - (absOffset - 1) * 100;
 
           // Y-rotation: increases with distance (0 for center)
           const rotateY =
             offset === 0
               ? 0
               : offset < 0
-                ? Math.max(offset * 35 - (absOffset - 1) * 10, -50)
-                : Math.min(offset * 35 + (absOffset - 1) * 10, 50);
+                ? Math.max(offset * rotateYBase - (absOffset - 1) * 10, -50)
+                : Math.min(offset * rotateYBase + (absOffset - 1) * 10, 50);
 
           // Z-rotation: tilt based on position (0 for center)
-          const rotateZ = offset === 0 ? 0 : offset * 8;
+          const rotateZ = offset === 0 ? 0 : offset * rotateZBase;
 
           // Opacity: fade out as cards move away
           const opacity =
@@ -673,6 +750,29 @@ const projects = await getCollection("projects");
           }
         });
       }
+
+      // Handle window resize to recalculate card widths
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          // Recalculate cardWidth for new viewport
+          cardWidth = getCardWidth();
+
+          // Update positions without animation
+          currentX = -currentIndex * cardWidth;
+          currentTranslate = currentX;
+          prevTranslate = currentX;
+
+          track.style.transition = "none";
+          track.style.transform = `translateX(${currentX}px)`;
+
+          updateCardPositions();
+
+          // Force reflow
+          track.offsetHeight;
+        }, 100);
+      });
     </script>
   </main>
 </BaseLayout>
