@@ -8,12 +8,15 @@ export function setupSmoother() {
   // Detect mobile devices
   const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
 
-  ScrollSmoother.create({
-    wrapper: "#smooth-wrapper",
-    content: "#smooth-content",
-    smooth: isMobile ? 0.8 : 1.5,
-    effects: true,
-    normalizeScroll: true,
-    ignoreMobileResize: true,
-  });
+  // Only enable ScrollSmoother on desktop
+  if (!isMobile) {
+    ScrollSmoother.create({
+      wrapper: "#smooth-wrapper",
+      content: "#smooth-content",
+      smooth: 1.5,
+      effects: true,
+      normalizeScroll: true,
+      ignoreMobileResize: true,
+    });
+  }
 }
