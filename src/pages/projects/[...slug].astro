@@ -428,7 +428,7 @@ const {
     .project-detail {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -436,21 +436,21 @@ const {
 
     .back-nav {
       position: fixed;
-      bottom: 3rem;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
 
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
 
-      padding: 0.5rem 2rem;
+      padding: 0.4rem 1.2rem;
       border-radius: var(--border-radius-md);
       box-shadow: var(--box-shadow);
       border: none;
 
       font-family: "Owners-XNarrow", sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: var(--color-blue-dark);
       background-color: var(--color-blue-light);
@@ -469,7 +469,7 @@ const {
     .back-nav {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
       transition:
         gap 0.3s ease,
         background-color 0.3s ease,
@@ -477,21 +477,21 @@ const {
     }
 
     .back-nav:hover {
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
     .arrow {
-      font-size: 2.5rem;
+      font-size: 1.8rem;
     }
 
     .project-info-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      margin-bottom: 4rem;
-      padding: 2rem 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem 1rem;
+      margin-bottom: 3rem;
+      padding: 1rem 0;
       width: 100%;
-      order: 1;
+      order: 3;
     }
 
     .info-column {
@@ -510,7 +510,7 @@ const {
 
     .info-title {
       font-family: "Owners-XXNarrow", sans-serif;
-      font-size: 3.5rem;
+      font-size: clamp(1.3rem, 2.2vw, 1.8rem);
       color: var(--color-blue);
       font-weight: 600;
       margin: 0;
@@ -518,9 +518,9 @@ const {
 
     .info-content {
       font-family: "Instrument Serif", serif;
-      font-size: 1.5rem;
+      font-size: clamp(0.85rem, 1.1vw, 1rem);
       color: var(--color-blue-light);
-      margin-top: -1.5rem;
+      margin-top: -1rem;
       line-height: 1.6;
     }
 
@@ -535,7 +535,7 @@ const {
       max-width: 90vw;
       text-align: center;
       white-space: nowrap;
-      order: 2;
+      order: 1;
     }
 
     .project-description {
@@ -544,16 +544,16 @@ const {
       line-height: 1.5;
       color: var(--color-blue-light);
       max-width: min(85vw, 900px);
-      margin: 0 0 4rem 0;
+      margin: 0 0 2rem 0;
       text-align: center;
-      order: 3;
+      order: 2;
     }
 
     /* Gallery Styles */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 12px;
       width: 100%;
       max-width: min(1200px, 90vw);
       margin: 0 0 4rem 0;
@@ -605,7 +605,7 @@ const {
 
     /* Wide images (landscape or single portrait/square) span both columns */
     .gallery-item.wide {
-      grid-column: span 2;
+      grid-column: span 1;
     }
 
     /* Special handling for portrait + square pairs */
@@ -613,147 +613,148 @@ const {
       align-self: end; /* Both align to bottom of grid row */
     }
 
-    .gallery-item.portrait-in-pair {
-      /* Dimensions set dynamically by JS to match square height */
-      /* Width adjusted proportionally to avoid cropping */
-      justify-self: start; /* Stay within left column */
-    }
-
+    .gallery-item.portrait-in-pair,
     .gallery-item.square-in-pair {
       width: 100%;
       height: auto;
-      max-height: 600px; /* Square sets the reference height */
-      object-fit: cover;
-      justify-self: start; /* Start from left of its column */
-      position: relative;
-      z-index: 2; /* Ensure square appears above to cross the middle */
+      max-height: none;
+      min-height: auto;
+      max-width: 100%;
     }
 
     /* Responsive Design */
-    @media (max-width: 1024px) {
-      .project-info-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem 1.5rem;
-        order: 3;
-      }
-
-      .project-name {
-        order: 1;
-      }
-
-      .project-description {
-        order: 2;
-      }
-
-      .gallery {
-        order: 4;
-      }
-
+    @media (min-width: 30rem) {
       .info-title {
-        font-size: clamp(2rem, 3vw, 3rem);
+        font-size: 1.8rem;
       }
 
       .info-content {
-        font-size: clamp(1rem, 1.3vw, 1.3rem);
+        font-size: 1.1rem;
+      }
+
+      .project-name {
+        margin-bottom: 1.5rem;
       }
 
       .back-nav {
         font-size: 1.5rem;
         padding: 0.4rem 1.5rem;
-        bottom: 2rem;
-      }
-
-      .arrow {
-        font-size: 2rem;
       }
     }
 
-    @media (max-width: 768px) {
-      .project-description {
-        margin-bottom: 3rem;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .project-detail {
-        padding: 1rem;
-      }
-
-      .project-info-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem 1rem;
-        margin-bottom: 3rem;
-        padding: 1rem 0;
-        order: 3;
-      }
-
+    @media (min-width: 35rem) {
       .info-title {
-        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-size: 2.5rem;
       }
 
       .info-content {
-        font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+        font-size: 1.3rem;
       }
 
       .project-name {
-        order: 1;
-      }
-
-      .project-description {
-        order: 2;
-        margin-bottom: 2rem;
-      }
-
-      .gallery {
-        order: 4;
-      }
-
-      .info-content {
-        margin-top: -1rem;
-      }
-
-      .gallery {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .gallery-item.wide {
-        grid-column: span 1;
-      }
-
-      .gallery-item.mixed-pair {
-        /* Disable special mixed pair behavior on mobile */
-      }
-
-      .gallery-item.portrait-in-pair,
-      .gallery-item.square-in-pair {
-        width: 100%;
-        height: auto;
-        max-height: none;
-        min-height: auto;
-        max-width: 100%;
-      }
-
-      .back-nav {
-        font-size: 1.3rem;
-        padding: 0.4rem 1.2rem;
-        bottom: 1.5rem;
-        gap: 0.3rem;
-      }
-
-      .back-nav:hover {
-        gap: 1rem;
-      }
-
-      .arrow {
-        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
       }
     }
 
-    @media (max-width: 480px) {
+    @media (min-width: 40rem) {
+      .info-title {
+        font-size: 2.8rem;
+      }
+
+      .info-content {
+        font-size: 1.4rem;
+      }
+
+      .project-name {
+        margin-bottom: 1.2rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .gallery-item.wide {
+        grid-column: span 2;
+      }
+
+      .gallery-item.portrait-in-pair {
+        justify-self: start;
+      }
+
+      .gallery-item.square-in-pair {
+        width: 100%;
+        height: auto;
+        max-height: 600px;
+        object-fit: cover;
+        justify-self: start;
+        position: relative;
+        z-index: 2;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .info-title {
+        font-size: 3rem;
+      }
+
+      .info-content {
+        font-size: 1.45rem;
+      }
+
+      .project-name {
+        margin-bottom: 1rem;
+      }
+
+      .project-description {
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .project-detail {
+        padding: 2rem;
+      }
+
+      .project-info-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        margin-bottom: 4rem;
+        padding: 2rem 0;
+        order: 1;
+      }
+
+      .info-title {
+        font-size: clamp(2rem, 3.5vw, 3.5rem);
+      }
+
+      .info-content {
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        margin-top: -1.5rem;
+      }
+
+      .project-name {
+        order: 2;
+      }
+
+      .project-description {
+        order: 3;
+        margin-bottom: 4rem;
+      }
+
       .back-nav {
-        font-size: 1.1rem;
-        padding: 0.3rem 1rem;
+        font-size: 1.8rem;
+        padding: 0.5rem 2rem;
+        bottom: 3rem;
+        gap: 0.5rem;
+      }
+
+      .back-nav:hover {
+        gap: 1.5rem;
+      }
+
+      .arrow {
+        font-size: 2.5rem;
       }
     }
   </style>
