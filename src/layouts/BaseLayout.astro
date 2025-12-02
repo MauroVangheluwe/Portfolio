@@ -75,4 +75,15 @@ const { withLoadingState = false } = Astro.props;
       setupSmoother();
     </script>
   </body>
+
+  <style is:global>
+    #fixed-elements {
+      position: relative;
+      pointer-events: none;
+    }
+
+    #fixed-elements > * {
+      pointer-events: auto;
+    }
+  </style>
 </html>
