@@ -1,9 +1,9 @@
 ---
 name: "FOUR BY FOUR"
-img: "/images/Project-2/Cover-image.mp4"
-headImg: "/images/Project-2/Cover-image.mp4"
+img: "./images/Project-2/Cover-image.gif"
+headImg: "./images/Project-2/Cover-image.mp4"
 imgs:
-  - "/images/Project-2/Cover-image.mp4"
+  - "./images/Project-2/Cover-image.mp4"
 creativeField: ["Motion Design"]
 duration: "1 or 2 weeks"
 year: 2024

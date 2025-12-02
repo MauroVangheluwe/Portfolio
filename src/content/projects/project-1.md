@@ -3,7 +3,7 @@ name: "Wiselight"
 img: "./images/Project-1/Cover-image.png"
 headImg: "./images/Project-1/Hero-img.png"
 imgs:
-  - "/images/Project-1/gif-1.mp4"
+  - "./images/Project-1/gif-1.mp4"
   - "./images/Project-1/img-2.png"
   - "./images/Project-1/img-3.png"
   - "./images/Project-1/img-4.png"
