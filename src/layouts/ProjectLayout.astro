@@ -511,16 +511,7 @@ const {
   </script>
 
   <style>
-    .project-detail {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .back-nav {
+    :global(.back-nav) {
       position: fixed !important;
       bottom: 1.5rem;
       left: 50%;
@@ -548,16 +539,25 @@ const {
       z-index: 9999;
     }
 
-    .back-nav .line {
+    :global(.back-nav .line) {
       letter-spacing: -0.3em;
     }
 
-    .back-nav:hover {
+    :global(.back-nav:hover) {
       gap: 1rem;
     }
 
-    .arrow {
+    :global(.back-nav .arrow) {
       font-size: 1.8rem;
+    }
+
+    .project-detail {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .project-info-grid {
@@ -730,7 +730,7 @@ const {
         margin-bottom: 1.5rem;
       }
 
-      .back-nav {
+      :global(.back-nav) {
         position: fixed !important;
         font-size: 1.5rem;
         padding: 0.4rem 1.5rem;
@@ -843,7 +843,7 @@ const {
         margin-bottom: 4rem;
       }
 
-      .back-nav {
+      :global(.back-nav) {
         position: fixed !important;
         font-size: 1.8rem;
         padding: 0.5rem 2rem;
@@ -851,11 +851,11 @@ const {
         gap: 0.5rem;
       }
 
-      .back-nav:hover {
+      :global(.back-nav:hover) {
         gap: 1.5rem;
       }
 
-      .arrow {
+      :global(.back-nav .arrow) {
         font-size: 2.55rem;
       }
     }
