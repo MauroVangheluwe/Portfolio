@@ -237,6 +237,22 @@ const {
           aspectRatios[itemIndex] = video.videoWidth / video.videoHeight;
           loadedCount++;
 
+          // Try to play the video on mobile after metadata is loaded
+          video.play().catch((error) => {
+            console.log(
+              "Video autoplay prevented, will try on interaction:",
+              error
+            );
+            // Add click handler to play on user interaction
+            video.addEventListener(
+              "click",
+              () => {
+                video.play();
+              },
+              { once: true }
+            );
+          });
+
           if (loadedCount === totalImages) {
             applyLayout(items, aspectRatios);
           }

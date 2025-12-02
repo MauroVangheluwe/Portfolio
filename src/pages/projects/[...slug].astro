@@ -103,27 +103,29 @@ const { body } = project;
             );
           }
 
-          // Check if it's a video (MP4, WebM) - these are now imported URLs as strings
+          
           if (typeof imgSrc === "string") {
             const isVideo = imgSrc.includes(".mp4") || imgSrc.includes(".webm");
 
             if (isVideo) {
-              // The video path is already processed with ?url import, so use it directly
               return (
                 <video
                   autoplay
                   loop
                   muted
                   playsinline
+                  preload="auto"
                   class="gallery-item"
                   data-is-website={
                     websiteImgIndexes?.includes(index) ? "true" : "false"
                   }
+                  onloadstart="this.play().catch(e => console.log('Video autoplay prevented:', e))"
                 >
                   <source
                     src={imgSrc}
                     type={imgSrc.includes(".webm") ? "video/webm" : "video/mp4"}
                   />
+                  Your browser does not support the video tag.
                 </video>
               );
             }
