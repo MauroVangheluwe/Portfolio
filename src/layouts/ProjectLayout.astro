@@ -54,12 +54,12 @@ const {
     </div>
 
     <slot />
-
-    <button class="back-nav" id="back-button">
-      <span class="arrow">←</span>
-      <span class="text">Back</span>
-    </button>
   </main>
+
+  <button class="back-nav" id="back-button" slot="fixed">
+    <span class="arrow">←</span>
+    <span class="text">Back</span>
+  </button>
 
   <script>
     const backButton = document.getElementById("back-button");

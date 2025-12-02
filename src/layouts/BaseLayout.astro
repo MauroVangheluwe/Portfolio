@@ -67,6 +67,9 @@ const { withLoadingState = false } = Astro.props;
         <slot />
       </div>
     </div>
+    <div id="fixed-elements">
+      <slot name="fixed" />
+    </div>
     <script>
       import { setupSmoother } from "../scripts/smoother.js";
       setupSmoother();
