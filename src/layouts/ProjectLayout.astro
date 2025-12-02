@@ -505,7 +505,7 @@ const {
     }
 
     .back-nav {
-      position: fixed;
+      position: fixed !important;
       bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
@@ -529,7 +529,7 @@ const {
 
       cursor: pointer;
       transition: all 0.5s ease;
-      z-index: 100;
+      z-index: 1000;
     }
 
     .back-nav .line {
@@ -837,6 +837,7 @@ const {
       }
 
       .back-nav {
+        position: fixed !important;
         font-size: 1.8rem;
         padding: 0.5rem 2rem;
         bottom: 3rem;

@@ -2,15 +2,18 @@
 import { Image } from "astro:assets";
 const { project } = Astro.props;
 
-// Check if cover image is a video (MP4 or WebM)
+// Check if cover image is a video (MP4 or WebM) or GIF
 const coverImg = project.data.img;
-// Content collections import videos as strings (from public folder), images as objects (from content)
+// Content collections import videos as strings (from public folder), images/GIFs as objects (from content)
 const isVideo =
   typeof coverImg === "string" &&
   (coverImg.includes(".mp4") || coverImg.includes(".webm"));
 
-// Add BASE_URL to video paths
-const videoSrc = isVideo ? `${import.meta.env.BASE_URL}${coverImg}` : null;
+const isGif = typeof coverImg === "object" && coverImg?.src && coverImg.src.includes(".gif");
+
+// Add BASE_URL to video paths (handle paths that already start with /)
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const videoSrc = isVideo ? (coverImg.startsWith('/') ? `${baseUrl}${coverImg}` : `${import.meta.env.BASE_URL}${coverImg}`) : null;
 ---
 
 {
@@ -27,12 +30,20 @@ const videoSrc = isVideo ? `${import.meta.env.BASE_URL}${coverImg}` : null;
           ))}
         </div>
         {isVideo ? (
-          <video autoplay loop muted playsinline class="card-cover">
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            class="card-cover carousel-video"
+          >
             <source
               src={videoSrc}
               type={coverImg.includes(".webm") ? "video/webm" : "video/mp4"}
             />
           </video>
+        ) : isGif ? (
+          <img src={coverImg.src} alt={project.data.name} class="card-cover" />
         ) : (
           <Image
             src={project.data.img}
