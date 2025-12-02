@@ -29,24 +29,41 @@ const {
   iframeIndexes,
 } = project.data;
 
-// Process imgs to handle videos - import them with ?url for proper paths
-const imgs = rawImgs ? await Promise.all(
-  rawImgs.map(async (img) => {
-    // If it's a string path pointing to a video, import it with ?url
-    if (typeof img === "string" && (img.includes(".mp4") || img.includes(".webm"))) {
-      // Convert relative path to absolute import path
-      const videoPath = img.replace("./images/", `/src/content/projects/images/`);
-      try {
-        const videoModule = await import(/* @vite-ignore */ `${videoPath}?url`);
-        return videoModule.default;
-      } catch (e) {
-        console.error(`Failed to import video: ${videoPath}`, e);
-        return img; // Fallback to original path
-      }
-    }
-    return img;
-  })
-) : [];
+// Import all videos from content/projects/images using Vite's glob import
+const videos = import.meta.glob(
+  "/src/content/projects/images/**/*.{mp4,webm}",
+  {
+    eager: true,
+    query: "?url",
+    import: "default",
+  }
+);
+
+// Process imgs to handle videos - replace relative paths with actual imported URLs
+const imgs = rawImgs
+  ? await Promise.all(
+      rawImgs.map(async (img) => {
+        if (
+          typeof img === "string" &&
+          (img.includes(".mp4") || img.includes(".webm"))
+        ) {
+          // Convert relative path to absolute import path for lookup
+          const videoPath = img.replace(
+            "./images/",
+            `/src/content/projects/images/`
+          );
+          // Find the matching video import
+          const videoUrl = videos[videoPath];
+          if (videoUrl) {
+            return videoUrl as string;
+          }
+          console.warn(`Video not found in imports: ${videoPath}`);
+          return img; // Fallback to original path
+        }
+        return img;
+      })
+    )
+  : [];
 
 // Render the description content to HTML string
 const { body } = project;
@@ -110,7 +127,7 @@ const { body } = project;
                 </video>
               );
             }
-            
+
             // String but not a video - skip
             return null;
           }
