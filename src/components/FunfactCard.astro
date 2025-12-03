@@ -1,0 +1,453 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  funfacts: CollectionEntry<"funfacts">[];
+}
+
+const { funfacts } = Astro.props;
+---
+
+<div class="funfact-card" id="funfact-card">
+  {
+    funfacts.map((funfact, index) => {
+      const img = funfact.data.img;
+      const isString = typeof img === "string";
+
+      return (
+        <div
+          class={`funfact-content ${index === 0 ? "active" : ""}`}
+          data-funfact-index={index}
+        >
+          <div class="funfact-card-left">
+            {isString ? (
+              <img src={img} alt={funfact.data.title} class="funfact-image" />
+            ) : (
+              <Image
+                src={img}
+                alt={funfact.data.title}
+                class="funfact-image"
+                widths={[300, 400, 600]}
+                sizes="(min-width: 64rem) 600px, (min-width: 40rem) 400px, 300px"
+                format="webp"
+              />
+            )}
+          </div>
+          <div class="funfact-card-right">
+            <p class="funfact-text">{funfact.data.title}</p>
+            <div class="funfact-number" data-number={funfact.data.number} />
+          </div>
+        </div>
+      );
+    })
+  }
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const card = document.getElementById("funfact-card");
+    if (!card) return;
+
+    const contents = Array.from(card.querySelectorAll(".funfact-content"));
+    if (contents.length <= 1) return;
+
+    let currentIndex = 0;
+    const totalFunfacts = contents.length;
+
+    // Create random order array (shuffle indices)
+    const randomOrder: number[] = [];
+    const indices = Array.from({ length: totalFunfacts }, (_, i) => i);
+
+    while (indices.length > 0) {
+      const randomIdx = Math.floor(Math.random() * indices.length);
+      randomOrder.push(indices.splice(randomIdx, 1)[0]);
+    }
+
+    let orderIndex = 0;
+
+    // Track current numbers for each position
+    let currentNumbers: { [key: number]: string } = {};
+
+    // Initialize first funfact number with animation
+    initializeNumber(contents[currentIndex], true);
+
+    function initializeNumber(content: Element, isFirst = false) {
+      const numberEl = content.querySelector(".funfact-number") as HTMLElement;
+      if (!numberEl) return;
+
+      const targetNumber = numberEl.getAttribute("data-number") || "0";
+      const contentIndex = parseInt(
+        content.getAttribute("data-funfact-index") || "0"
+      );
+
+      const previousNumber =
+        currentNumbers[contentIndex] || (isFirst ? targetNumber : "0");
+      currentNumbers[contentIndex] = targetNumber;
+
+      animateNumber(numberEl, previousNumber, targetNumber, isFirst);
+    }
+
+    function animateNumber(
+      element: HTMLElement,
+      fromString: string,
+      toString: string,
+      isFirst: boolean
+    ) {
+      element.innerHTML = "";
+      element.style.display = "flex";
+      element.style.alignItems = "center";
+
+      // Parse numbers to get individual digits
+      const fromDigits: string[] = [];
+      const toDigits: string[] = [];
+      let fromSuffix = "";
+      let toSuffix = "";
+
+      // Extract digits and suffix from 'from' string
+      for (let i = 0; i < fromString.length; i++) {
+        if (/\d/.test(fromString[i])) {
+          fromDigits.push(fromString[i]);
+        } else {
+          fromSuffix = fromString.substring(i);
+          break;
+        }
+      }
+
+      // Extract digits and suffix from 'to' string
+      for (let i = 0; i < toString.length; i++) {
+        if (/\d/.test(toString[i])) {
+          toDigits.push(toString[i]);
+        } else {
+          toSuffix = toString.substring(i);
+          break;
+        }
+      }
+
+      const maxDigits = Math.max(fromDigits.length, toDigits.length);
+
+      // Pad with empty strings if needed
+      while (fromDigits.length < maxDigits) fromDigits.unshift("");
+      while (toDigits.length < maxDigits) toDigits.unshift("");
+
+      // Create digit rollers for each position
+      for (let i = 0; i < maxDigits; i++) {
+        const fromChar = fromDigits[i];
+        const toChar = toDigits[i];
+
+        if (toChar === "") continue; // Skip empty positions
+
+        if (fromChar !== "" && toChar !== "") {
+          // Both have digits - animate
+          const fromDigit = parseInt(fromChar);
+          const toDigit = parseInt(toChar);
+
+          const wrapper = document.createElement("span");
+          wrapper.className = "digit-wrapper";
+          wrapper.style.display = "inline-block";
+          wrapper.style.overflow = "hidden";
+          wrapper.style.height = "1em";
+          wrapper.style.lineHeight = "1";
+
+          const roller = document.createElement("span");
+          roller.className = "digit-roller";
+          roller.style.display = "flex";
+          roller.style.flexDirection = "column";
+          roller.style.transition =
+            "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+          const distance = toDigit - fromDigit;
+
+          if (distance >= 0) {
+            for (let d = fromDigit; d <= toDigit; d++) {
+              const digitSpan = document.createElement("span");
+              digitSpan.textContent = d.toString();
+              digitSpan.style.display = "block";
+              digitSpan.style.height = "1em";
+              digitSpan.style.lineHeight = "1";
+              roller.appendChild(digitSpan);
+            }
+          } else {
+            for (let d = fromDigit; d >= toDigit; d--) {
+              const digitSpan = document.createElement("span");
+              digitSpan.textContent = d.toString();
+              digitSpan.style.display = "block";
+              digitSpan.style.height = "1em";
+              digitSpan.style.lineHeight = "1";
+              roller.appendChild(digitSpan);
+            }
+          }
+
+          roller.style.transform = "translateY(0)";
+          wrapper.appendChild(roller);
+          element.appendChild(wrapper);
+
+          if (!isFirst) {
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                const steps = Math.abs(distance);
+                roller.style.transform = `translateY(-${steps}em)`;
+              }, i * 80);
+            });
+          } else {
+            const steps = Math.abs(distance);
+            roller.style.transform = `translateY(-${steps}em)`;
+          }
+        } else if (toChar !== "") {
+          // New digit appearing - animate from 0 to target
+          const toDigit = parseInt(toChar);
+
+          const wrapper = document.createElement("span");
+          wrapper.className = "digit-wrapper";
+          wrapper.style.display = "inline-block";
+          wrapper.style.overflow = "hidden";
+          wrapper.style.height = "1em";
+          wrapper.style.lineHeight = "1";
+
+          const roller = document.createElement("span");
+          roller.className = "digit-roller";
+          roller.style.display = "flex";
+          roller.style.flexDirection = "column";
+          roller.style.transition =
+            "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+          // Animate from 0 to target
+          for (let d = 0; d <= toDigit; d++) {
+            const digitSpan = document.createElement("span");
+            digitSpan.textContent = d.toString();
+            digitSpan.style.display = "block";
+            digitSpan.style.height = "1em";
+            digitSpan.style.lineHeight = "1";
+            roller.appendChild(digitSpan);
+          }
+
+          roller.style.transform = "translateY(0)";
+          wrapper.appendChild(roller);
+          element.appendChild(wrapper);
+
+          if (!isFirst) {
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                roller.style.transform = `translateY(-${toDigit}em)`;
+              }, i * 80);
+            });
+          } else {
+            roller.style.transform = `translateY(-${toDigit}em)`;
+          }
+        }
+      }
+
+      // Handle suffix (like +, -)
+      if (toSuffix) {
+        const span = document.createElement("span");
+        span.textContent = toSuffix;
+        span.style.display = "inline-block";
+        span.style.lineHeight = "1";
+
+        if (fromSuffix !== toSuffix && !isFirst) {
+          span.style.opacity = "0";
+          span.style.transition = "opacity 0.3s ease-in-out";
+          element.appendChild(span);
+          setTimeout(() => {
+            span.style.opacity = "1";
+          }, 300);
+        } else {
+          span.style.opacity = "1";
+          element.appendChild(span);
+        }
+      }
+    }
+
+    function switchFunfact() {
+      const previousIndex = currentIndex;
+
+      // Get next index from random order
+      orderIndex = (orderIndex + 1) % randomOrder.length;
+      currentIndex = randomOrder[orderIndex];
+
+      // Get number elements
+      const prevNumberEl = contents[previousIndex].querySelector(
+        ".funfact-number"
+      ) as HTMLElement;
+      const currNumberEl = contents[currentIndex].querySelector(
+        ".funfact-number"
+      ) as HTMLElement;
+
+      if (prevNumberEl && currNumberEl) {
+        const prevNumber = prevNumberEl.getAttribute("data-number") || "0";
+        const currContentIndex = parseInt(
+          contents[currentIndex].getAttribute("data-funfact-index") || "0"
+        );
+        currentNumbers[currContentIndex] = prevNumber;
+      }
+
+      // Initialize number animation for new item
+      initializeNumber(contents[currentIndex]);
+
+      // Mark previous as transitioning (keeps it visible)
+      contents[previousIndex].classList.add("transitioning");
+
+      // Add active class to next (starts fade in)
+      contents[currentIndex].classList.add("active");
+
+      // After transition completes, clean up
+      setTimeout(() => {
+        contents[previousIndex].classList.remove("active");
+        contents[previousIndex].classList.remove("transitioning");
+      }, 1000);
+    }
+
+    // Switch every 6 seconds
+    setInterval(switchFunfact, 6000);
+  });
+</script>
+
+<style>
+  /* Funfact Card Styles */
+  .funfact-card {
+    max-width: min(1200px, 90vw);
+    margin: 4rem auto 6rem;
+    position: relative;
+    box-shadow: var(--box-shadow);
+    min-height: 400px;
+  }
+
+  .funfact-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none;
+  }
+
+  .funfact-content:not(:first-child) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .funfact-content.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  .funfact-content.transitioning {
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .funfact-card-left {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    height: 400px;
+  }
+
+  .funfact-card-left :global(.funfact-image),
+  .funfact-card-left :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 0.5rem solid var(--color-blue-light);
+    border-radius: var(--border-radius-lg);
+    display: block;
+  }
+
+  .funfact-card-right {
+    background-color: var(--color-blue-light);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    position: relative;
+    border: 0.5rem solid var(--color-blue-light);
+    border-radius: var(--border-radius-lg);
+  }
+
+  .funfact-text {
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(1.6rem, 4vw, 2rem);
+    line-height: 1.5;
+    color: var(--color-blue-dark);
+    margin: 0;
+    text-align: left;
+  }
+
+  .funfact-number {
+    font-family: "Owners-XXNarrow", sans-serif;
+    font-size: clamp(10rem, 15vw, 15rem);
+    font-weight: 900;
+    color: var(--color-blue-dark);
+    line-height: 1;
+    align-self: flex-start;
+    margin-top: auto;
+  }
+
+  .funfact-number :global(.digit-wrapper) {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .funfact-number :global(.digit-roller) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Tablet and larger */
+  @media (min-width: 48rem) {
+    .funfact-content {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .funfact-card {
+      min-height: 500px;
+    }
+
+    .funfact-card-left {
+      height: 500px;
+    }
+
+    .funfact-card-right {
+      min-height: auto;
+      padding: 3rem;
+    }
+
+    .funfact-text {
+      font-size: 1.6rem;
+      max-width: 90%;
+    }
+
+    .funfact-number {
+      font-size: clamp(13rem, 12vw, 18rem);
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 64rem) {
+    .funfact-card {
+      min-height: 550px;
+    }
+
+    .funfact-card-left {
+      height: 550px;
+    }
+
+    .funfact-card-right {
+      padding: 4rem;
+    }
+
+    .funfact-text {
+      font-size: 1.8rem;
+    }
+
+    .funfact-number {
+      font-size: 18rem;
+    }
+  }
+</style>

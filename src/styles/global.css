@@ -274,6 +274,30 @@ main {
     transform: translateY(60px);
 }
 
+/* ABOUT HOME SECTION */
+.about-home-text-container {
+    max-width: min(1200px, 90vw);
+    margin: 0rem auto;
+    padding: 0 1rem;
+    text-align: left;
+}
+
+.about-home-title {
+    font-family: "Owners-XNarrow", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 3vw, 3rem);
+    color: var(--color-blue-light);
+    margin-bottom: 1rem;
+}
+
+.about-home-text {
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--color-blue-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* PROJECTS CAROUSEL */
 .projects-carousel {
     margin-top: -2rem;
@@ -746,6 +770,18 @@ main {
         padding-bottom: 30px;
     }
 
+    .about-home-text-container {
+        padding: 0rem;
+    }
+
+    .about-home-title {
+        font-size: clamp(3rem, 3.5vw, 3.5rem);
+    }
+
+    .about-home-text {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+    }
+
     @media (hover: hover) and (pointer: fine) {
         .project-card.active:hover {
             transform: scale(1.05) translateY(-35px) translateZ(0px) rotateY(0deg) rotateZ(0deg);
@@ -1026,6 +1062,20 @@ main {
         padding-right: calc(50vw - 225px);
         padding-top: 60px;
         padding-bottom: 60px;
+    }
+
+    .about-home-text-container {
+        padding: 0rem;
+    }
+
+    .about-home-title {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-home-text {
+        font-size: 2.5rem;
+        line-height: 1.5;
     }
 
     @media (hover: hover) and (pointer: fine) {

@@ -9,8 +9,10 @@ import heroImage3 from "../assets/Hero-image-3.gif";
 import heroImage4 from "../assets/Hero-image-4.png";
 import ProjectCard from "../components/ProjectCard.astro";
 import HeroTitle from "../components/HeroTitle.astro";
+import FunfactCard from "../components/FunfactCard.astro";
 
 const projects = await getCollection("projects");
+const funfacts = await getCollection("funfacts");
 ---
 
 <BaseLayout title="Home" withLoadingState={true}>
@@ -93,6 +95,20 @@ const projects = await getCollection("projects");
         }
       </div>
     </div>
+
+    <div class="about-home-text-container">
+      <h3 class="about-home-title">
+        (About Mauro)
+      </h3>
+      <p class="about-home-text">
+        I'm a passionate digital designer and developer dedicated to crafting engaging and innovative digital experiences. While I'm early in my professional journey, my love for the sector runs deep. From motion design to branding, I thrive on bringing ideas to life through creativity and code. Let's create something amazing together!
+      </p>
+    </div>
+
+    <!-- Funfact Card -->
+    <FunfactCard funfacts={funfacts} />
+
+    
 
     <script>
       import { gsap } from "gsap";
