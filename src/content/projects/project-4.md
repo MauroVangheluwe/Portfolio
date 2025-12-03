@@ -22,5 +22,3 @@ iframeIndexes: [5]
 ---
 
 This project is a campaign website prototype for Rode Kruis-Vlaanderen, created for a school assignment. The concept, Night of Light, targets students and uses a fluorescent visual style to raise awareness for plasma donation. The website combines bold colors, symbolic neon elements, and clear information to guide users through the digital and in real life experience and motivate them to donate.
-
-<!-- Content handled through frontmatter only -->

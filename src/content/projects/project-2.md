@@ -11,7 +11,7 @@ client: "School Assignment"
 software: ["Adobe After Effects"]
 ---
 
-This project is a 4x4 motion grid animation and was designed and animated as my first Motion Design project at Devine, Howest. Each tile has a unique animation, yet together they form one cohesive animated composition. The goal was to explore the software and think about rhythm, visual harmony, timing & transitions.
+For this Motion Design assignment, I created a 4x4 grid where every square brings its own little animation moment to life. Each tile had to feel unique, but still fit into one cohesive visual style. The result is a rhythmic, playful composition where 16 animations sync together into one satisfying grid.
 
 <!-- if it is a website:
 imgs:

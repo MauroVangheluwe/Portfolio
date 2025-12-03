@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import skillsData from "../data/skills.json";
 
 interface Props {
   reverse?: boolean;
@@ -7,11 +7,7 @@ interface Props {
 
 const { reverse = false } = Astro.props;
 
-const skillsEntries = await getCollection("skills");
-const skillNames = skillsEntries
-  .map((entry) => entry.data.name)
-  .filter(Boolean)
-  .sort((a, b) => a.localeCompare(b));
+const skillNames = skillsData.skills.sort((a, b) => a.localeCompare(b));
 
 // Duplicate the list to create a seamless infinite loop
 const marqueeItems = [...skillNames, ...skillNames];

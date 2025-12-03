@@ -4,13 +4,6 @@ import { z, defineCollection } from "astro:content";
 
 
 
-const skills = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/skills" }),
-  schema: z.object({
-    name: z.string(),
-  }),
-});
-
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: ({ image }) => z.object({
@@ -34,4 +27,4 @@ const projects = defineCollection({
 });
 
 // Export a single `collections` object to register your collection(s)
-export const collections = { skills, projects };
+export const collections = { projects };

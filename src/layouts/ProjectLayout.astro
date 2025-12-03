@@ -15,7 +15,7 @@ interface Props {
 const {
   title,
   projectName,
-  projectDescription,
+  projectDescription: ProjectDescription,
   creativeField,
   duration,
   year,
@@ -50,7 +50,7 @@ const {
 
     <h1 class="project-name" id="project-name">{projectName}</h1>
     <div class="project-description">
-      <projectDescription></projectDescription>
+      <ProjectDescription />
     </div>
 
     <slot />
@@ -574,14 +574,6 @@ const {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-    }
-
-    .info-column:hover .info-title {
-      color: var(--color-blue-light);
-    }
-
-    .info-column:hover .info-content {
-      color: var(--color-blue);
     }
 
     .info-title {
