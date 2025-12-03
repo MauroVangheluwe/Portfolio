@@ -22,4 +22,4 @@ iframes:
 iframeIndexes: [6]
 ---
 
-<!-- Content handled through frontmatter only -->
+For this school assignment, we designed a brandboard and app prototype for Mixbox, a cocktail delivery service that lets you order ingredients and shake up your own drinks at home. The challenge was to build a fresh, consistent visual style that fit both the brand and our target users. From colors and typography to UI flows and micro-interactions, everything was crafted to feel smooth, inviting, and perfectly on-brand—just like a good cocktail.
