@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroTitle from "../components/HeroTitle.astro";
 import Topscroll from "../components/Topscroll.astro";
+import NavButton from "../components/NavButton.astro";
 import leftImage from "../assets/left.png";
 import middleImage from "../assets/middle.png";
 import rightImage from "../assets/right.png";
@@ -184,4 +185,6 @@ import rightImage from "../assets/right.png";
       }
     </script>
   </main>
+
+  <NavButton href="" text="Back" direction="left" position="fixed" slot="fixed" />
 </BaseLayout>
