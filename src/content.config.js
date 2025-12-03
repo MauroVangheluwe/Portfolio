@@ -27,7 +27,7 @@ const projects = defineCollection({
 });
 
 const funfacts = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/Funfacts" }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/funfacts" }),
   schema: ({ image }) => z.object({
     title: z.string(),
     number: z.string(),
