@@ -61,6 +61,74 @@ const {
     <span class="text">Back</span>
   </button>
 
+  <!-- Image/Video Overlay Modal -->
+  <div id="media-overlay" class="media-overlay" slot="fixed">
+    <div class="overlay-content">
+      <button
+        class="overlay-close"
+        id="overlay-close"
+        aria-label="Close overlay"
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M24 8L8 24M8 8L24 24"
+            stroke="var(--color-blue-dark)"
+            stroke-width="3"
+            stroke-linecap="round"></path>
+        </svg>
+      </button>
+      <button
+        class="overlay-nav overlay-prev"
+        id="overlay-prev"
+        aria-label="Previous image"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="var(--color-blue-dark)"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <button
+        class="overlay-nav overlay-next"
+        id="overlay-next"
+        aria-label="Next image"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9 18L15 12L9 6"
+            stroke="var(--color-blue-dark)"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <div id="overlay-content" class="overlay-media-container">
+        <!-- Media will be inserted here -->
+      </div>
+    </div>
+  </div>
+
   <script>
     const backButton = document.getElementById("back-button");
     if (backButton) {
@@ -321,6 +389,11 @@ const {
       let portraitQueue = [...portraitItems];
       let landscapeIndex = 0;
       let originalIndex = 0;
+      const reorderedElements: (
+        | HTMLImageElement
+        | HTMLIFrameElement
+        | HTMLVideoElement
+      )[] = [];
 
       while (originalIndex < itemData.length) {
         const originalItem = itemData[originalIndex];
@@ -329,6 +402,7 @@ const {
           // Add landscape item (spans both columns) - images or iframes
           originalItem.element.classList.add("wide");
           gallery.appendChild(originalItem.element);
+          reorderedElements.push(originalItem.element);
           landscapeIndex++;
           originalIndex++;
         } else {
@@ -390,16 +464,29 @@ const {
 
             gallery.appendChild(first.element);
             gallery.appendChild(second.element);
+            reorderedElements.push(first.element);
+            reorderedElements.push(second.element);
           } else if (portraitQueue.length === 1) {
             // Single portrait remaining - span both columns
             const single = portraitQueue.shift();
             if (!single) continue;
             single.element.classList.add("wide");
             gallery.appendChild(single.element);
+            reorderedElements.push(single.element);
           }
           originalIndex++;
         }
       }
+
+      // Update data-media-index to reflect the new visual order
+      // Only update for non-iframe elements (images and videos)
+      let visualIndex = 0;
+      reorderedElements.forEach((element) => {
+        if (element.tagName === "IMG" || element.tagName === "VIDEO") {
+          element.setAttribute("data-media-index", visualIndex.toString());
+          visualIndex++;
+        }
+      });
     }
 
     // Adjust mixed pair heights to match and fill full grid width
@@ -496,7 +583,13 @@ const {
       square: HTMLImageElement;
     }> = [];
 
-    window.addEventListener("load", setupGallery);
+    window.addEventListener("load", () => {
+      setupGallery();
+      // Initialize media overlay after gallery is set up
+      setTimeout(() => {
+        initMediaOverlay();
+      }, 500);
+    });
 
     // Re-adjust mixed pairs on resize
     let resizeTimeout: ReturnType<typeof setTimeout>;
@@ -508,9 +601,305 @@ const {
         });
       }, 150);
     });
+
+    // Media Overlay functionality - Initialize after DOM is ready
+    function initMediaOverlay() {
+      const overlay = document.getElementById("media-overlay");
+      const overlayContent = document.getElementById("overlay-content");
+      const closeBtn = document.getElementById("overlay-close");
+      const prevBtn = document.getElementById("overlay-prev");
+      const nextBtn = document.getElementById("overlay-next");
+      const gallery = document.getElementById("gallery");
+
+      if (!overlay || !overlayContent || !gallery) {
+        console.error("Media overlay elements not found");
+        return;
+      }
+
+      let currentMediaIndex = 0;
+      let mediaItems: (HTMLImageElement | HTMLVideoElement)[] = [];
+
+      // Get all clickable media items (images and videos, excluding iframes)
+      function initializeMediaItems() {
+        const allItems = Array.from(gallery.querySelectorAll(".gallery-item"));
+        mediaItems = allItems.filter(
+          (item) => item.tagName === "IMG" || item.tagName === "VIDEO"
+        ) as (HTMLImageElement | HTMLVideoElement)[];
+
+        console.log("Found media items:", mediaItems.length);
+        console.log("Gallery element:", gallery);
+        console.log(
+          "Gallery pointer-events:",
+          window.getComputedStyle(gallery).pointerEvents
+        );
+
+        // Test: Add click to document body to see if ANY clicks work
+        document.body.addEventListener(
+          "click",
+          (e) => {
+            console.log("Body clicked, target:", e.target);
+          },
+          true
+        );
+
+        // Use event delegation on the gallery container
+        gallery.addEventListener(
+          "click",
+          (e) => {
+            console.log("Gallery clicked!");
+            const target = e.target as HTMLElement;
+            console.log("Click target:", target, "Tag:", target.tagName);
+
+            // Check if clicked element is a media item or inside one
+            const mediaElement = target.closest(
+              ".gallery-item:not(.gallery-iframe)"
+            ) as HTMLElement;
+            console.log("Media element found:", mediaElement);
+
+            if (mediaElement && mediaElement.hasAttribute("data-media-index")) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              const clickedIndex = parseInt(
+                mediaElement.getAttribute("data-media-index") || "0",
+                10
+              );
+              console.log("Clicked media item:", clickedIndex);
+
+              // Find the position in our filtered mediaItems array
+              const mediaIndex = mediaItems.indexOf(mediaElement as any);
+              if (mediaIndex !== -1) {
+                openOverlay(mediaIndex);
+              }
+            }
+          },
+          true
+        );
+
+        // Add cursor pointer style to media items
+        mediaItems.forEach((item) => {
+          item.style.cursor = "pointer";
+        });
+      }
+
+      function openOverlay(index: number) {
+        currentMediaIndex = index;
+        showMedia();
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeOverlay() {
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          overlayContent.innerHTML = "";
+        }, 300);
+      }
+
+      function showMedia() {
+        const mediaItem = mediaItems[currentMediaIndex];
+        overlayContent.innerHTML = "";
+
+        if (mediaItem.tagName === "VIDEO") {
+          const video = mediaItem as HTMLVideoElement;
+          const videoClone = document.createElement("video");
+          videoClone.src = video.querySelector("source")?.src || "";
+          videoClone.autoplay = true;
+          videoClone.loop = true;
+          videoClone.muted = true;
+          videoClone.playsInline = true;
+          videoClone.className = "overlay-media";
+          overlayContent.appendChild(videoClone);
+        } else {
+          const img = mediaItem as HTMLImageElement;
+          const imgClone = document.createElement("img");
+          imgClone.src = img.src;
+          imgClone.srcset = img.srcset || "";
+          imgClone.alt = img.alt;
+          imgClone.className = "overlay-media";
+          overlayContent.appendChild(imgClone);
+        }
+
+        if (prevBtn)
+          prevBtn.style.display = currentMediaIndex > 0 ? "flex" : "none";
+        if (nextBtn)
+          nextBtn.style.display =
+            currentMediaIndex < mediaItems.length - 1 ? "flex" : "none";
+      }
+
+      function showPrevious() {
+        if (currentMediaIndex > 0) {
+          currentMediaIndex--;
+          showMedia();
+        }
+      }
+
+      function showNext() {
+        if (currentMediaIndex < mediaItems.length - 1) {
+          currentMediaIndex++;
+          showMedia();
+        }
+      }
+
+      // Event listeners
+      closeBtn?.addEventListener("click", closeOverlay);
+      prevBtn?.addEventListener("click", showPrevious);
+      nextBtn?.addEventListener("click", showNext);
+
+      // Close overlay when clicking outside the image (on the blue background)
+      const overlayContentDiv = document.querySelector(
+        ".overlay-content"
+      ) as HTMLElement;
+      overlayContentDiv?.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        // Close if clicking on overlay-content or overlay-media-container (blue background areas)
+        if (
+          target.classList.contains("overlay-content") ||
+          target.classList.contains("overlay-media-container")
+        ) {
+          closeOverlay();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!overlay.classList.contains("active")) return;
+        if (e.key === "Escape") closeOverlay();
+        if (e.key === "ArrowLeft") showPrevious();
+        if (e.key === "ArrowRight") showNext();
+      });
+
+      // Initialize media items
+      initializeMediaItems();
+    }
   </script>
 
   <style>
+    /* Media Overlay Styles */
+    :global(.media-overlay) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 1.5rem;
+    }
+
+    :global(.media-overlay.active) {
+      display: flex;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    :global(.overlay-content) {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background-color: rgba(179, 215, 231, 0.95);
+      border-radius: 12px;
+      padding: 4rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    :global(.overlay-media-container) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    :global(.overlay-media) {
+      max-width: 100%;
+      max-height: 75vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: var(--border-radius-md);
+    }
+
+    :global(.overlay-close) {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      z-index: 10001;
+    }
+
+    :global(.overlay-close:hover) {
+      transform: scale(1.1);
+    }
+
+    :global(.overlay-nav) {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10001;
+    }
+
+    :global(.overlay-nav:hover) {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    :global(.overlay-prev) {
+      left: 2rem;
+    }
+
+    :global(.overlay-next) {
+      right: 2rem;
+    }
+
+    @media (max-width: 48rem) {
+      :global(.overlay-close) {
+        top: 1rem;
+        right: 1rem;
+      }
+
+      :global(.overlay-nav) {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+
+      :global(.overlay-prev) {
+        left: 1rem;
+      }
+
+      :global(.overlay-next) {
+        right: 1rem;
+      }
+
+      :global(.overlay-content) {
+        max-width: 95vw;
+      }
+    }
+
     :global(.back-nav) {
       position: fixed !important;
       bottom: 1.5rem;

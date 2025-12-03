@@ -103,7 +103,6 @@ const { body } = project;
             );
           }
 
-          
           if (typeof imgSrc === "string") {
             const isVideo = imgSrc.includes(".mp4") || imgSrc.includes(".webm");
 
@@ -116,6 +115,7 @@ const { body } = project;
                   playsinline
                   preload="auto"
                   class="gallery-item"
+                  data-media-index={index}
                   data-is-website={
                     websiteImgIndexes?.includes(index) ? "true" : "false"
                   }
@@ -134,12 +134,12 @@ const { body } = project;
             return null;
           }
 
-          
           return (
             <Image
               src={imgSrc}
               alt={`${name} - Image ${index + 1}`}
               class="gallery-item"
+              data-media-index={index}
               data-is-website={
                 websiteImgIndexes?.includes(index) ? "true" : "false"
               }
