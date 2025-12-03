@@ -26,5 +26,14 @@ const projects = defineCollection({
   }),
 });
 
+const funfacts = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/Funfacts" }),
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    number: z.string(),
+    img: z.union([image(), z.string()]),
+  }),
+});
+
 // Export a single `collections` object to register your collection(s)
-export const collections = { projects };
+export const collections = { projects, funfacts };

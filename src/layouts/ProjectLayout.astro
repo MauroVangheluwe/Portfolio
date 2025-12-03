@@ -621,6 +621,8 @@ const {
 
       // Get all clickable media items (images and videos, excluding iframes)
       function initializeMediaItems() {
+        if (!gallery) return;
+
         const allItems = Array.from(gallery.querySelectorAll(".gallery-item"));
         mediaItems = allItems.filter(
           (item) => item.tagName === "IMG" || item.tagName === "VIDEO"
@@ -683,6 +685,8 @@ const {
       }
 
       function openOverlay(index: number) {
+        if (!overlay) return;
+
         currentMediaIndex = index;
         showMedia();
         overlay.classList.add("active");
@@ -690,14 +694,20 @@ const {
       }
 
       function closeOverlay() {
+        if (!overlay || !overlayContent) return;
+
         overlay.classList.remove("active");
         document.body.style.overflow = "";
         setTimeout(() => {
-          overlayContent.innerHTML = "";
+          if (overlayContent) {
+            overlayContent.innerHTML = "";
+          }
         }, 300);
       }
 
       function showMedia() {
+        if (!overlayContent) return;
+
         const mediaItem = mediaItems[currentMediaIndex];
         overlayContent.innerHTML = "";
 
