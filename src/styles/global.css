@@ -387,7 +387,6 @@ main {
     transition: border 0.3s ease;
     -webkit-user-drag: none;
     user-select: none;
-    border: 0.4rem solid var(--color-blue-dark);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -450,7 +449,7 @@ main {
     border-radius: 0.5rem;
     font-family: "Owners-XNarrow", serif;
     text-transform: uppercase;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: 700;
     transition: all 0.3s ease;
     width: fit-content;
@@ -692,11 +691,10 @@ main {
     .card-image-wrapper {
         width: 280px;
         height: 280px;
-        border: 0.45rem solid var(--color-blue-dark);
     }
 
     .card-title {
-        font-size: 1.6rem;
+        font-size: 2.5rem;
     }
 
     .carousel-track {
@@ -771,11 +769,10 @@ main {
     .card-image-wrapper {
         width: 300px;
         height: 300px;
-        border: 0.5rem solid var(--color-blue-dark);
     }
 
     .card-title {
-        font-size: 1.8rem;
+        font-size: 2.5rem;
     }
 
     .carousel-track {
@@ -916,7 +913,7 @@ main {
     }
 
     .card-title {
-        font-size: 2rem;
+        font-size: 3.5rem;
     }
 
     .carousel-track {
@@ -1076,11 +1073,10 @@ main {
     .card-image-wrapper {
         width: 450px;
         height: 450px;
-        border: 1rem solid var(--color-blue-dark);
     }
 
     .card-title {
-        font-size: 2.5rem;
+        font-size: 4rem;
     }
 
     .carousel-track {
@@ -1255,11 +1251,10 @@ main {
     .card-image-wrapper {
         width: 260px;
         height: 260px;
-        border: 0.4rem solid var(--color-blue-dark);
     }
 
     .card-title {
-        font-size: 1.5rem;
+        font-size: 2.2rem;
     }
 
     .carousel-track {
