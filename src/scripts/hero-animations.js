@@ -64,10 +64,10 @@ window.addEventListener("load", () => {
 
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  tl.to(".first-word.animated", { fontSize: computedSize, opacity: 1, duration: 1, ease: "bounce.out" })
-    .to(".first-word.animated", { y: 0, duration: 0.5, ease: "bounce.out" })
-    .to(".skills-marquee", { y: 0, opacity: 1, duration: 1, ease: "bounce.out" }, "-=0.4")
+  tl.to(".first-word.animated", { fontSize: computedSize, opacity: 1, duration: 1, ease: "power3.out" })
+    .to(".first-word.animated", { y: 0, duration: 0.5, ease: "power3.out" })
     .to(".second-word.animated", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "-=0.4")
+    .to(".skills-marquee", { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, "-=0.4")
     .to(".hero-top-title", { opacity: 1, duration: 0.5 }, "-=0.5")
     .to(".heroimages", { y: 0, opacity: 1, duration: 0.8 }, "-=0.8")
     .to(
