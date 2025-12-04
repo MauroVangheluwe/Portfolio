@@ -1,0 +1,290 @@
+---
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const getPath = (path: string) => {
+  const normalized = path.startsWith("/") ? path.slice(1) : path;
+  return BASE_URL.endsWith("/")
+    ? `${BASE_URL}${normalized}`
+    : `${BASE_URL}/${normalized}`;
+};
+---
+
+<footer class="footer-container">
+  <div class="footer-star-background" id="footer-star-background"></div>
+  <div class="footer-top">
+    <nav class="footer-col-center">
+      <a href={getPath("")}>Home</a>
+      <a href={getPath("about")}>About</a>
+      <a href={getPath("allprojects")}>Projects</a>
+    </nav>
+
+    <div class="footer-col-left">
+      <p class="footer-col-left-title">Contact</p>
+      <a href="mailto:mauro1.vangheluwe@gmail.com" class="footer-col-left-mail"
+        >mauro1.vangheluwe@gmail.com</a
+      >
+      <a href="tel:+32479208288" class="footer-col-left-number"
+        >+32 479 20 82 88</a
+      >
+    </div>
+
+    <div class="footer-col-right">
+      <p class="footer-col-right-title">Follow me</p>
+      <a
+        href="https://instagram.com/mauro_vangheluwe"
+        target="_blank"
+        rel="noreferrer"
+        class="footer-instagram"
+        ><i class="fa-brands fa-instagram fa-6x" aria-hidden="true"></i><span
+          >Instagram</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <div class="footer-bottom-wrapper">
+    <p class="footer-copy">© 2025 Mauro Vangheluwe — All rights reserved.</p>
+
+    <h2 class="footer-bottom-title">LET’S WORK TOGETHER</h2>
+  </div>
+</footer>
+
+<style>
+  :root {
+    --footer-x-font: "Owners-XNarrow", sans-serif;
+    --footer-xx-font: "Owners-XXNarrow", sans-serif;
+  }
+
+  /* was .site-footer */
+  .footer-container {
+    margin-top: 4rem;
+    background: var(--color-blue-light);
+    color: var(--color-blue-dark);
+    font-family: var(--footer-x-font);
+    padding: 3rem 6vw 0;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .footer-star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .footer-top,
+  .footer-bottom-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  /* Reorder columns: center is first in HTML but should be in middle */
+  .footer-col-center {
+    order: 2;
+  }
+
+  .footer-col-left {
+    order: 1;
+  }
+
+  .footer-col-right {
+    order: 3;
+  }
+
+  /* was .footer-col */
+  .footer-col-left,
+  .footer-col-center,
+  .footer-col-right {
+    display: flex;
+    gap: 1rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    flex-direction: column;
+  }
+
+  .footer-col-left-mail,
+  .footer-col-left-number,
+  .footer-instagram {
+    font-size: 1.8rem;
+  }
+
+  .footer-instagram i {
+    font-size: 5rem;
+    font-weight: 900;
+  }
+
+  /* was .footer-col.center */
+  .footer-col-center {
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+  }
+
+  .footer-col-left {
+    align-items: flex-start;
+    justify-self: start;
+  }
+
+  .footer-col-right {
+    align-items: flex-end;
+    justify-self: end;
+  }
+
+  /* was .site-footer a */
+  .footer-container a {
+    color: var(--color-blue-dark);
+    text-decoration: none;
+  }
+
+  .footer-container a:hover {
+    text-decoration: none;
+    color: var(--color-blue);
+  }
+
+  .footer-bottom-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 6rem;
+  }
+
+  .footer-copy {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  /* was .footer-big */
+  .footer-bottom-title {
+    font-family: "Owners-XXNarrow", sans-serif;
+    margin: 0 auto;
+    padding: 1rem 0 0.5rem;
+    font-size: clamp(9rem, 10vw, 14rem);
+    line-height: 0.85;
+    text-align: center;
+    margin-bottom: -2rem;
+  }
+
+  /* Mobile stacking */
+  @media (max-width: 48rem) {
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .footer-col-center,
+    .footer-col-left,
+    .footer-col-right {
+      align-items: center;
+      justify-self: center;
+    }
+
+    .footer-bottom-title {
+      text-align: center;
+    }
+
+    .footer-col-center {
+      order: 1;
+    }
+
+    .footer-col-left {
+      order: 2;
+    }
+
+    .footer-col-right {
+      order: 3;
+    }
+  }
+
+  /* Instagram icon + text */
+  .footer-instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .footer-instagram i {
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<script>
+  // Generate random star pattern for footer
+  const footerStarBackground = document.getElementById(
+    "footer-star-background"
+  );
+  if (footerStarBackground) {
+    const footerContainer = footerStarBackground.parentElement;
+    if (footerContainer) {
+      const starSize = 50; // 50x50px
+      const spacing = 120; // minimum spacing between stars
+      const containerWidth = footerContainer.offsetWidth;
+      const containerHeight = footerContainer.offsetHeight;
+
+      const stars: { x: number; y: number }[] = [];
+
+      function hasOverlap(x: number, y: number): boolean {
+        return stars.some((star) => {
+          const distance = Math.sqrt(
+            Math.pow(x - star.x, 2) + Math.pow(y - star.y, 2)
+          );
+          return distance < spacing;
+        });
+      }
+
+      const maxAttempts = 300;
+      const desiredStars = Math.floor(
+        (containerWidth * containerHeight) / (spacing * spacing * 3)
+      );
+
+      for (let i = 0; i < maxAttempts && stars.length < desiredStars; i++) {
+        const x = Math.random() * (containerWidth - starSize);
+        const y = Math.random() * (containerHeight - starSize);
+
+        if (!hasOverlap(x, y)) {
+          stars.push({ x, y });
+
+          const starSvg = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+          );
+          starSvg.setAttribute("width", starSize.toString());
+          starSvg.setAttribute("height", starSize.toString());
+          starSvg.setAttribute("viewBox", "0 0 22 24");
+          starSvg.setAttribute("fill", "none");
+          starSvg.style.position = "absolute";
+          starSvg.style.left = `${x}px`;
+          starSvg.style.top = `${y}px`;
+          starSvg.style.opacity = "0.25";
+          starSvg.style.pointerEvents = "none";
+          starSvg.style.zIndex = "1";
+
+          const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          path.setAttribute(
+            "d",
+            "M11 0L13.1889 4.83178L17.8237 2.27639L16.5407 7.62087L22 8.50794L18.0439 12L22 15.4921L16.5407 16.3791L17.8237 21.7236L13.1889 19.1682L11 24L8.81114 19.1682L4.17634 21.7236L5.45931 16.3791L0 15.4921L3.95614 12L0 8.50794L5.45931 7.62087L4.17634 2.27639L8.81114 4.83178L11 0Z"
+          );
+          path.setAttribute("fill", "#DDEFF6");
+
+          starSvg.appendChild(path);
+          footerStarBackground.appendChild(starSvg);
+        }
+      }
+    }
+  }
+</script>

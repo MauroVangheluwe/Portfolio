@@ -7,10 +7,12 @@ import NavButton from "../components/NavButton.astro";
 import leftImage from "../assets/left.png";
 import middleImage from "../assets/middle.png";
 import rightImage from "../assets/right.png";
+import Footer from "../components/Footer.astro";
 ---
 
 <BaseLayout title="About" withLoadingState={false}>
   <main>
+    <Footer />
     <p class="about-hero-top-title">Digital Designer & Developer</p>
     <p class="about-hero-top-subtitle">Clarity in design. Purpose in code.</p>
     <HeroTitle firstName="Mauro" lastName="Vangheluwe" />
@@ -186,5 +188,11 @@ import rightImage from "../assets/right.png";
     </script>
   </main>
 
-  <NavButton href="" text="Back" direction="left" position="fixed" slot="fixed" />
+  <NavButton
+    href=""
+    text="Back"
+    direction="left"
+    position="fixed"
+    slot="fixed"
+  />
 </BaseLayout>
