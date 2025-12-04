@@ -1,0 +1,35 @@
+---
+interface Props {
+  href: string;
+  icon: string;
+  label: string;
+}
+
+const { href, icon, label } = Astro.props;
+---
+
+<a href={href} target="_blank" rel="noreferrer" class="social-link">
+  <i class={`fa-brands ${icon}`} aria-hidden="true"></i>
+  <span>{label}</span>
+</a>
+
+<style>
+  .social-link {
+    font-size: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--color-blue-dark);
+    text-decoration: none;
+  }
+
+  .social-link:hover {
+    text-decoration: none;
+    color: var(--color-blue);
+  }
+
+  .social-link i {
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+// Contact Me section for footer
+---
+
+<div class="footer-col-left">
+  <p class="footer-col-left-title">Contact Me</p>
+  <a href="mailto:mauro1.vangheluwe@gmail.com" class="footer-col-left-mail"
+    >mauro1.vangheluwe@gmail.com</a
+  >
+  <a href="tel:+32479208288" class="footer-col-left-number">+32 479 20 82 88</a>
+</div>
+
+<style>
+  .footer-col-left {
+    order: 1;
+    display: flex;
+    gap: 1rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-self: start;
+  }
+
+  .footer-col-left-mail,
+  .footer-col-left-number {
+    font-size: 1.8rem;
+    color: var(--color-blue-dark);
+    text-decoration: none;
+  }
+
+  .footer-col-left-mail:hover,
+  .footer-col-left-number:hover {
+    text-decoration: none;
+    color: var(--color-blue);
+  }
+
+  @media (max-width: 48rem) {
+    .footer-col-left {
+      align-items: center;
+      justify-self: center;
+      order: 2;
+    }
+  }
+</style>

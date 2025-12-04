@@ -1,12 +1,14 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
   withLoadingState?: boolean;
+  hideFooter?: boolean;
 }
 
-const { withLoadingState = false } = Astro.props;
+const { withLoadingState = false, hideFooter = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -73,6 +75,7 @@ const { withLoadingState = false } = Astro.props;
       <div id="smooth-content">
         {withLoadingState && <div id="loading-overlay" />}
         <slot />
+        {!hideFooter && <Footer />}
       </div>
     </div>
     <div id="fixed-elements">
