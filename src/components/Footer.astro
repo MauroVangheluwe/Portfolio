@@ -1,4 +1,7 @@
 ---
+import FooterContactMe from "./FooterContactMe.astro";
+import FooterFollowMe from "./FooterFollowMe.astro";
+
 const BASE_URL = import.meta.env.BASE_URL || "/";
 const getPath = (path: string) => {
   const normalized = path.startsWith("/") ? path.slice(1) : path;
@@ -17,28 +20,9 @@ const getPath = (path: string) => {
       <a href={getPath("allprojects")}>Projects</a>
     </nav>
 
-    <div class="footer-col-left">
-      <p class="footer-col-left-title">Contact</p>
-      <a href="mailto:mauro1.vangheluwe@gmail.com" class="footer-col-left-mail"
-        >mauro1.vangheluwe@gmail.com</a
-      >
-      <a href="tel:+32479208288" class="footer-col-left-number"
-        >+32 479 20 82 88</a
-      >
-    </div>
+    <FooterContactMe />
 
-    <div class="footer-col-right">
-      <p class="footer-col-right-title">Follow me</p>
-      <a
-        href="https://instagram.com/mauro_vangheluwe"
-        target="_blank"
-        rel="noreferrer"
-        class="footer-instagram"
-        ><i class="fa-brands fa-instagram fa-6x" aria-hidden="true"></i><span
-          >Instagram</span
-        ></a
-      >
-    </div>
+    <FooterFollowMe />
   </div>
 
   <div class="footer-bottom-wrapper">
@@ -56,7 +40,7 @@ const getPath = (path: string) => {
 
   /* was .site-footer */
   .footer-container {
-    margin-top: 4rem;
+    margin-top: 6rem;
     background: var(--color-blue-light);
     color: var(--color-blue-dark);
     font-family: var(--footer-x-font);
@@ -98,47 +82,17 @@ const getPath = (path: string) => {
     order: 1;
   }
 
-  .footer-col-right {
-    order: 3;
-  }
-
-  /* was .footer-col */
-  .footer-col-left,
-  .footer-col-center,
-  .footer-col-right {
+  /* was .footer-col.center */
+  .footer-col-center {
+    order: 2;
     display: flex;
     gap: 1rem;
     font-size: 2.5rem;
     font-weight: 800;
     flex-direction: column;
-  }
-
-  .footer-col-left-mail,
-  .footer-col-left-number,
-  .footer-instagram {
-    font-size: 1.8rem;
-  }
-
-  .footer-instagram i {
-    font-size: 5rem;
-    font-weight: 900;
-  }
-
-  /* was .footer-col.center */
-  .footer-col-center {
     justify-content: center;
     justify-self: center;
     align-items: center;
-  }
-
-  .footer-col-left {
-    align-items: flex-start;
-    justify-self: start;
-  }
-
-  .footer-col-right {
-    align-items: flex-end;
-    justify-self: end;
   }
 
   /* was .site-footer a */
@@ -183,40 +137,15 @@ const getPath = (path: string) => {
       gap: 3rem;
     }
 
-    .footer-col-center,
-    .footer-col-left,
-    .footer-col-right {
-      align-items: center;
-      justify-self: center;
-    }
-
     .footer-bottom-title {
       text-align: center;
     }
 
     .footer-col-center {
       order: 1;
+      align-items: center;
+      justify-self: center;
     }
-
-    .footer-col-left {
-      order: 2;
-    }
-
-    .footer-col-right {
-      order: 3;
-    }
-  }
-
-  /* Instagram icon + text */
-  .footer-instagram {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
-  .footer-instagram i {
-    font-size: 1.8rem !important;
-    font-weight: 900 !important;
   }
 </style>
 

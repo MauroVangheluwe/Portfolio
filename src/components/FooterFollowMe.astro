@@ -1,0 +1,38 @@
+---
+import SocialLink from "./SocialLink.astro";
+---
+
+<div class="footer-col-right">
+  <p class="footer-col-right-title">Follow me</p>
+  <SocialLink
+    href="https://instagram.com/mauro_vangheluwe"
+    icon="fa-instagram"
+    label="Instagram"
+  />
+  <SocialLink
+    href="https://facebook.com/profile.php?id=100013389014194"
+    icon="fa-facebook"
+    label="Facebook"
+  />
+</div>
+
+<style>
+  .footer-col-right {
+    order: 3;
+    display: flex;
+    gap: 1rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+  }
+
+  @media (max-width: 48rem) {
+    .footer-col-right {
+      align-items: center;
+      justify-self: center;
+      order: 3;
+    }
+  }
+</style>
