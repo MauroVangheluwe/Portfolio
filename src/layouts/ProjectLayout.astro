@@ -798,6 +798,16 @@ const {
       z-index: 10000;
       opacity: 0;
       transition: opacity 0.3s ease;
+      background-image: radial-gradient(
+        circle,
+        rgba(19, 44, 64, 0.3) 1px,
+        transparent 1px
+      );
+      background-size: 50px 50px;
+      background-position:
+        0 0,
+        25px 25px;
+      background-attachment: fixed;
       padding: 1.5rem;
     }
 
@@ -814,7 +824,16 @@ const {
       align-items: center;
       justify-content: center;
       position: relative;
-      background-color: rgba(179, 215, 231, 0.95);
+      background-color: var(--color-blue-light);
+      background-image: radial-gradient(
+        circle,
+        var(--color-blue-dark) 1px,
+        transparent 1px
+      );
+      background-size: 50px 50px;
+      background-position:
+        0 0,
+        25px 25px;
       border-radius: 12px;
       padding: 4rem;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -1017,7 +1036,7 @@ const {
       line-height: 1.5;
       color: var(--color-blue-light);
       max-width: min(85vw, 900px);
-      margin: 0 0 2rem 0;
+      margin: 0 0 5rem 0;
       text-align: center;
       order: 2;
     }
@@ -1197,7 +1216,7 @@ const {
       }
 
       .project-description {
-        margin-bottom: 3rem;
+        margin-bottom: 5rem;
       }
     }
 
@@ -1231,7 +1250,7 @@ const {
 
       .project-description {
         order: 3;
-        margin-bottom: 4rem;
+        margin-bottom: 4rem !important;
       }
 
       :global(.back-nav) {

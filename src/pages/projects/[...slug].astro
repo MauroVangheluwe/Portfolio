@@ -80,9 +80,22 @@ const { body } = project;
   client={client}
   software={software}
 >
+  <!-- Loading Animation -->
+  <div id="project-loader" class="project-loader">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <p class="loader-text">Loading project...</p>
+    </div>
+  </div>
+
   {
     imgs && imgs.length > 0 && (
-      <div class="gallery" id="gallery" data-image-count={imgs.length}>
+      <div
+        class="gallery"
+        id="gallery"
+        data-image-count={imgs.length}
+        style="opacity: 0;"
+      >
         {imgs.map((imgSrc, index) => {
           const isIframePlaceholder = imgSrc === "IFRAME_PLACEHOLDER";
           const isIframeIndex = iframeIndexes?.includes(index);
@@ -155,3 +168,135 @@ const { body } = project;
     )
   }
 </ProjectLayout>
+
+<style>
+  .project-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-blue-dark);
+    background-image: radial-gradient(
+      circle,
+      var(--color-blue-light) 1px,
+      transparent 1px
+    );
+    background-size: 50px 50px;
+    background-position:
+      0 0,
+      25px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition:
+      opacity 0.5s ease,
+      visibility 0.5s ease;
+    overflow: hidden;
+  }
+
+  .project-loader.loaded {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :global(body.loading) {
+    overflow: hidden !important;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+  }
+
+  .loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .spinner {
+    width: 6rem;
+    height: 6rem;
+    border: 0.4rem solid var(--color-blue);
+    border-top-color: var(--color-blue-light);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loader-text {
+    font-family: "Owners-XXNarrow", sans-serif;
+    font-size: 3rem;
+    color: var(--color-blue-light);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+  // Disable scrolling immediately
+  document.body.classList.add("loading");
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const loader = document.getElementById("project-loader");
+    const gallery = document.getElementById("gallery");
+
+    if (!gallery || !loader) {
+      document.body.classList.remove("loading");
+      return;
+    }
+
+    // Get all images and videos in the gallery
+    const images = Array.from(gallery.querySelectorAll("img"));
+    const videos = Array.from(gallery.querySelectorAll("video"));
+    const iframes = Array.from(gallery.querySelectorAll("iframe"));
+
+    const maxLoadTime = 2000; // Maximum 2 seconds total
+
+    // Always hide loader after max time, regardless of load status
+    setTimeout(() => {
+      hideLoader();
+    }, maxLoadTime);
+
+    function hideLoader() {
+      // Wait for gallery to be marked as ready (layout complete)
+      let attempts = 0;
+      const maxAttempts = 20; // 1 second max (20 * 50ms)
+
+      const checkGalleryReady = () => {
+        attempts++;
+
+        if (
+          (gallery && gallery.classList.contains("ready")) ||
+          attempts >= maxAttempts
+        ) {
+          if (attempts >= maxAttempts) {
+            console.warn("Gallery ready timeout - forcing loader hide");
+          }
+
+          if (loader) {
+            loader.classList.add("loaded");
+          }
+          if (gallery) {
+            gallery.style.opacity = "1";
+            gallery.style.transition = "opacity 0.5s ease";
+          }
+          // Re-enable scrolling
+          document.body.classList.remove("loading");
+        } else {
+          // Check again in 50ms
+          setTimeout(checkGalleryReady, 50);
+        }
+      };
+
+      checkGalleryReady();
+    }
+  });
+</script>
