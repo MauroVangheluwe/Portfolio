@@ -16,7 +16,7 @@ mm.add("(max-width: 39.9375rem)", () => {
       start: "top 30%",
       end: "bottom 50%",
       scrub: true,
-      markers: true,
+      markers: false,
     }
   });
 
@@ -48,7 +48,7 @@ mm.add("(min-width: 40rem) and (max-width: 47.9375rem)", () => {
       start: "top 30%",
       end: "bottom 50%",
       scrub: true,
-      markers: true,
+      markers: false,
     }
   });
 
@@ -80,7 +80,7 @@ mm.add("(min-width: 48rem)", () => {
       start: "top 70%",
       end: "bottom 50%",
       scrub: true,
-      markers: true,
+      markers: false,
     }
   });
 
