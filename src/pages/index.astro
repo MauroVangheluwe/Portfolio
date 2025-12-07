@@ -123,116 +123,6 @@ const funfacts = await getCollection("funfacts");
       import { gsap } from "gsap";
       import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-      // Fallback: Remove loading state after 3 seconds if animations fail
-      setTimeout(() => {
-        if (document.body.classList.contains("loading")) {
-          document.body.classList.remove("loading");
-          document.body.classList.add("loaded");
-          const overlay = document.getElementById("loading-overlay");
-          if (overlay) overlay.remove();
-        }
-      }, 3000);
-
-      window.addEventListener("load", () => {
-        // Check if animation should be skipped
-        const skipEntrance =
-          sessionStorage.getItem("skipHomeAnimation") === "true";
-
-        const vh = window.innerHeight;
-
-        const firstEl = document.querySelector(".first-word");
-        let startY = -vh * 0.4;
-        if (firstEl) {
-          const r = firstEl.getBoundingClientRect();
-          const elCenter = r.top + r.height / 2;
-          const viewportCenter = vh / 2;
-          startY = viewportCenter - elCenter;
-        }
-
-        const computedSize = firstEl
-          ? window.getComputedStyle(firstEl).fontSize
-          : "35rem";
-
-        const overlay = document.getElementById("loading-overlay");
-        if (overlay) overlay.style.opacity = "0";
-
-        if (skipEntrance) {
-          gsap.set(".first-word.animated", { y: 0, opacity: 1 });
-          gsap.set(".skills-marquee", { y: 0, opacity: 1 });
-          gsap.set(".hero-top-title", { opacity: 1 });
-          gsap.set(".second-word.animated", { y: 0, opacity: 1 });
-          gsap.set(".heroimages", { y: 0, opacity: 1 });
-          gsap.set(".heroimage", { y: 0, opacity: 1 });
-          gsap.set(".work-title", { opacity: 0 });
-          gsap.set(".work-subtitle", { opacity: 0 });
-
-          document.body.classList.add("entrance-done");
-          document.body.classList.remove("loading");
-          document.body.classList.add("loaded");
-          if (overlay) overlay.remove();
-          return;
-        }
-
-        gsap.set(".first-word.animated", {
-          y: startY,
-          opacity: 0,
-          fontSize: "0rem",
-          scale: 1,
-        });
-        gsap.set(".skills-marquee", { y: -140, opacity: 0 });
-        gsap.set(".hero-top-title", { opacity: 0 });
-        gsap.set(".second-word.animated", { y: 160, opacity: 0 });
-        gsap.set(".heroimages", { y: 180, opacity: 0 });
-        gsap.set(".heroimage", { y: 45, opacity: 0 });
-        gsap.set(".work-title", { opacity: 0 });
-        gsap.set(".work-subtitle", { opacity: 0 });
-
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-        tl.to(".first-word.animated", {
-          fontSize: computedSize,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-        })
-          .to(".first-word.animated", {
-            y: 0,
-            duration: 0.5,
-            ease: "power3.out",
-          })
-          .to(
-            ".second-word.animated",
-            { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-            "-=0.4"
-          )
-          .to(
-            ".skills-marquee",
-            { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-            "-=0.4"
-          )
-          .to(".hero-top-title", { opacity: 1, duration: 0.5 }, "-=0.4")
-          .to(".hero-top-title", { opacity: 1, duration: 0.5 }, "-=0.5")
-          .to(".heroimages", { y: 0, opacity: 1, duration: 0.8 }, "-=0.8")
-          .to(
-            ".heroimage",
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              stagger: 0.12,
-            },
-            "-=0.45"
-          )
-          .eventCallback("onComplete", () => {
-            document.body.classList.add("entrance-done");
-            document.body.classList.remove("loading");
-            document.body.classList.add("loaded");
-            const overlay = document.getElementById("loading-overlay");
-            if (overlay) overlay.remove();
-          });
-      });
-
-      // Setup ScrollTrigger animations
       gsap.registerPlugin(ScrollTrigger);
 
       function setupScrollTriggers() {
@@ -281,6 +171,8 @@ const funfacts = await getCollection("funfacts");
         }
       });
     </script>
+
+    <script src="../scripts/home-animations.js"></script>
 
     <script>
       // Check if this is a back/forward navigation or reload

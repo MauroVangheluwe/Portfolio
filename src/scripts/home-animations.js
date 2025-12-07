@@ -136,3 +136,31 @@ window.addEventListener("pageshow", (event) => {
     setupScrollTriggers();
   }
 });
+
+// About home text animation
+document.fonts.ready.then(async () => {
+  const { SplitText } = await import("gsap/SplitText");
+  gsap.registerPlugin(SplitText);
+
+  // Split the text into lines
+  const split = new SplitText(".about-home-text", {
+    type: "lines",
+    aria: "hidden",
+  });
+
+  // Animate each line
+  gsap.from(split.lines, {
+    opacity: 0,
+    y: 15,
+    ease: "power3.out",
+    duration: 0.03,
+    stagger: 0.05,
+    scrollTrigger: {
+      trigger: ".about-home-text",
+      start: "top 40%",
+      end: "top 30%",
+      scrub: 1.5,
+      markers: true,
+    },
+  });
+});
