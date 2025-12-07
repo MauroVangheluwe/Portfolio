@@ -1,0 +1,147 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import NavButton from "../components/NavButton.astro";
+import Footer from "../components/Footer.astro";
+import Topscroll from "../components/Topscroll.astro";
+
+const projects = await getCollection("projects");
+---
+
+<BaseLayout title="Projects" withLoadingState={false}>
+  <Topscroll />
+  <main class="allprojects-main">
+    <div class="allprojects-container">
+      <h1 class="allprojects-title">All Projects</h1>
+      <div class="allprojects-grid">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </main>
+
+  <NavButton
+    text="Back"
+    direction="left"
+    position="fixed"
+    slot="fixed"
+    useHistory={true}
+  />
+</BaseLayout>
+
+<style>
+  .allprojects-main {
+    min-height: 100vh;
+    padding: 6rem 0 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: -10rem;
+  }
+
+  .allprojects-container {
+    width: 85%;
+    max-width: 120rem;
+    margin: 0 auto;
+  }
+
+  .allprojects-title {
+    font-family: "Owners-XXNarrow", sans-serif;
+    font-size: clamp(8rem, 12vw, 18rem);
+    color: var(--color-blue);
+    text-transform: uppercase;
+    margin-bottom: 6rem;
+    text-align: center;
+    width: 100%;
+    line-height: 0.5;
+  }
+
+  .allprojects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-bottom: 8rem;
+    justify-items: center;
+  }
+
+  /* Reset project-card styles for grid layout */
+  .allprojects-grid :global(.project-card) {
+    flex: none;
+    width: 100%;
+    max-width: 35rem;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Reset card image wrapper to be responsive */
+  .allprojects-grid :global(.card-image-wrapper) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Center card title */
+  .allprojects-grid :global(.card-title) {
+    text-align: center;
+    width: 100%;
+  }
+
+  /* 35rem breakpoint */
+  @media (max-width: 35rem) {
+    .allprojects-title {
+      line-height: 0.9;
+      margin-top: -2rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .allprojects-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  /* 40rem breakpoint: 2 columns */
+  @media (min-width: 40rem) {
+    .allprojects-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  /* 48rem breakpoint */
+  @media (min-width: 48rem) {
+    .allprojects-main {
+      padding: 8rem 0 8rem;
+    }
+
+    .allprojects-title {
+      margin-bottom: 8rem;
+      font-size: clamp(10rem, 14vw, 20rem);
+    }
+
+    .allprojects-grid {
+      gap: 2.5rem;
+    }
+  }
+
+  /* 64rem breakpoint: 3 columns */
+  @media (min-width: 64rem) {
+    .allprojects-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .allprojects-grid :global(.project-card) {
+      max-width: none !important;
+    }
+  }
+
+  /* Large desktop: Better spacing */
+  @media (min-width: 80rem) {
+    .allprojects-grid {
+      gap: 5rem;
+    }
+  }
+</style>

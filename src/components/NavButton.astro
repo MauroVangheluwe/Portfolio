@@ -1,18 +1,20 @@
 ---
 interface Props {
-  href: string;
+  href?: string;
   text: string;
   direction?: "left" | "right";
   position?: "fixed" | "inline";
   class?: string;
+  useHistory?: boolean;
 }
 
 const {
-  href,
+  href = "",
   text,
   direction = "left",
   position = "inline",
   class: className = "",
+  useHistory = false,
 } = Astro.props;
 const arrow = direction === "left" ? "←" : "→";
 const BASE_URL = import.meta.env.BASE_URL || "/";
@@ -24,8 +26,9 @@ const fullPath = BASE_URL.endsWith("/")
 ---
 
 <a
-  href={fullPath}
+  href={useHistory ? "#" : fullPath}
   class={`nav-button ${position === "fixed" ? "nav-button-fixed" : ""} ${className}`}
+  data-use-history={useHistory}
 >
   {direction === "left" && <span class="arrow">{arrow}</span>}
   <span class="text">{text}</span>
@@ -107,3 +110,17 @@ const fullPath = BASE_URL.endsWith("/")
     }
   }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(
+      '.nav-button[data-use-history="true"]'
+    );
+    buttons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.history.back();
+      });
+    });
+  });
+</script>

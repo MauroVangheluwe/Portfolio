@@ -258,6 +258,7 @@ main {
     font-family: "Owners-XNarrow", sans-serif;
     text-align: center;
     font-size: 3rem;
+    font-weight: 900;
     opacity: 0;
 }
 
@@ -641,8 +642,22 @@ main {
 }
 
 
+/* ALLPROJECTS PAGE */
+.allprojects-container {
+    max-width: min(1200px, 90vw);
+    margin: 0rem auto 8rem auto;
+    padding: 0 1rem;
+    text-align: left;
+}
 
-
+.allprojects-title {
+    font-family: "Owners-XNarrow", sans-serif;
+    font-weight: 700;
+    font-size: clamp(3rem, 5vw, 4rem);
+    color: var(--color-blue-light);
+    margin-bottom: 2rem;
+    text-align: center;
+}
 
 
 

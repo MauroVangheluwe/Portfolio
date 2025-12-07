@@ -5,37 +5,104 @@ import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(SplitText);
 
-const tl = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".about-image-stack",
-    start: "top 80%",   // when top of stack hits 80% of viewport
-    end: "bottom 20%",  // when bottom of stack hits 20%
-    scrub: true,        // smooth animation tied to scroll
-  }
+// About image stack animations
+const mm = gsap.matchMedia();
+
+mm.add("(max-width: 39.9375rem)", () => {
+  // Mobile - smallest screens
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".about-image-stack",
+      start: "top 30%",
+      end: "bottom 50%",
+      scrub: true,
+      markers: true,
+    }
+  });
+
+  tl.to(".img-left", {
+    y: -60,
+    x: -150,
+    rotation: -20,
+    ease: "power1.out",
+  }, 0);
+
+  tl.to(".img-right", {
+    y: -60,
+    x: 150,
+    rotation: 20,
+    ease: "power1.out",
+  }, 0);
+
+  tl.to(".img-middle", {
+    y: -60,
+    ease: "power1.out",
+  }, 0);
 });
 
-// Animate left image
-tl.to(".img-left", {
-  y: -150,           // move up
-  x: -300,           // move further left
-  rotation: -20,     // rotate more
-  ease: "power1.out"
-}, 0); // start at time 0
+mm.add("(min-width: 40rem) and (max-width: 47.9375rem)", () => {
+  // Tablet - medium screens
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".about-image-stack",
+      start: "top 30%",
+      end: "bottom 50%",
+      scrub: true,
+      markers: true,
+    }
+  });
 
-// Animate right image
-tl.to(".img-right", {
-  y: -150,           // move up
-  x: 300,            // move further right
-  rotation: 20,      // rotate more
-  ease: "power1.out"
-}, 0);
+  tl.to(".img-left", {
+    y: -80,
+    x: -200,
+    rotation: -20,
+    ease: "power1.out",
+  }, 0);
 
-// Animate middle image
-tl.to(".img-middle", {
-  y: -150,           // move up
-  ease: "power1.out"
-}, 0);
+  tl.to(".img-right", {
+    y: -80,
+    x: 200,
+    rotation: 20,
+    ease: "power1.out",
+  }, 0);
 
+  tl.to(".img-middle", {
+    y: -80,
+    ease: "power1.out",
+  }, 0);
+});
+
+mm.add("(min-width: 48rem)", () => {
+  // Desktop - largest screens
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".about-image-stack",
+      start: "top 70%",
+      end: "bottom 50%",
+      scrub: true,
+      markers: true,
+    }
+  });
+
+  tl.to(".img-left", {
+    y: -150,
+    x: -300,
+    rotation: -20,
+    ease: "power1.out",
+  }, 0);
+
+  tl.to(".img-right", {
+    y: -150,
+    x: 300,
+    rotation: 20,
+    ease: "power1.out",
+  }, 0);
+
+  tl.to(".img-middle", {
+    y: -150,
+    ease: "power1.out",
+  }, 0);
+});
 
 document.fonts.ready.then(() => {
   // 1. Split the text into words
@@ -51,15 +118,16 @@ document.fonts.ready.then(() => {
     ease: "power3.out",
     
     // Maintain tiny duration and stagger to keep time duration near zero
-    duration: 0.01,
-    stagger: 0.01, 
+    duration: 0.03,
+    stagger: 0.05, 
 
     scrollTrigger: {
       trigger: ".about-description",
       start: "top 60%",   
-      end: "bottom top",   
+      end: "bottom 40%",   
       // *** FINAL FIX: Change scrub: true to scrub: 1 ***
-      scrub: 1, 
+      scrub: 1.5, 
+      markers: false,
       // Add markers: true to definitively see your start/end points
       // markers: true,
     },
@@ -86,7 +154,7 @@ if (signatureMaskPath) {
         start: "top 80%",
         end: "top 60%",
         scrub: 1,
-        markers: true,
+        markers: false,
       },
     }
   );
