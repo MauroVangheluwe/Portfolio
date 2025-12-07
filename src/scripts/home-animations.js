@@ -158,9 +158,9 @@ document.fonts.ready.then(async () => {
     scrollTrigger: {
       trigger: ".about-home-text",
       start: "top 40%",
-      end: "top 30%",
+      end: "top 10%",
       scrub: 1.5,
-      markers: true,
+      markers: false,
     },
   });
 });

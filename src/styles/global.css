@@ -318,6 +318,13 @@ main {
     margin: 0;
 }
 
+
+.about-home-text-span {
+    font-style: italic;
+    color: var(--color-blue);
+    font-weight: 900;
+}
+
 /* PROJECTS CAROUSEL */
 .projects-carousel {
     margin-top: -2rem;

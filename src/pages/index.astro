@@ -104,593 +104,598 @@ const funfacts = await getCollection("funfacts");
     <div class="about-home-text-container">
       <h3 class="about-home-title">(About Mauro)</h3>
       <p class="about-home-text">
-        I'm a passionate digital designer and developer dedicated to crafting
-        engaging and innovative digital experiences. While I'm early in my
-        professional journey, my love for the sector runs deep. From motion
-        design to branding, I thrive on bringing ideas to life through
-        creativity and code. Let's create something amazing together!
+        I'm a passionate <span class="about-home-text-span"
+          >digital designer and developer</span> dedicated to crafting engaging
+          and innovative digital experiences. While I'm early in my professional
+          journey, my love for the sector runs deep. From motion design to
+          branding, I thrive on <span class="about-home-text-span"
+            >bringing ideas to life</span
+          > through <span class="about-home-text-span">creativity and code</span
+          >. Let's create something amazing together!
+        </span>
       </p>
-    </div>
 
-    <!-- Funfact Card -->
-    <FunfactCard funfacts={funfacts} />
+      <!-- Funfact Card -->
+      <FunfactCard funfacts={funfacts} />
 
-    <div class="button-container button-container-about">
-      <NavButton href="about" text="More About Me" direction="right" />
-    </div>
+      <div class="button-container button-container-about">
+        <NavButton href="about" text="More About Me" direction="right" />
+      </div>
 
-    <script>
-      import { gsap } from "gsap";
-      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      <script>
+        import { gsap } from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-      gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger);
 
-      function setupScrollTriggers() {
-        ScrollTrigger.getAll().forEach((trigger) => {
-          if (
-            trigger.vars.trigger === ".work-title" ||
-            trigger.vars.trigger === ".work-subtitle"
-          ) {
-            trigger.kill();
-          }
-        });
-
-        gsap.to(".work-title", {
-          opacity: 1,
-          y: 0,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".work-title",
-            start: "bottom 60%",
-            end: "bottom 30%",
-            scrub: true,
-          },
-        });
-
-        gsap.to(".work-subtitle", {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          delay: 0.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".work-subtitle",
-            start: "bottom 60%",
-            end: "bottom 30%",
-            scrub: true,
-            markers: false,
-          },
-        });
-      }
-
-      window.addEventListener("load", setupScrollTriggers);
-      window.addEventListener("pageshow", (event) => {
-        if (event.persisted) {
-          setupScrollTriggers();
-        }
-      });
-    </script>
-
-    <script src="../scripts/home-animations.js"></script>
-
-    <script>
-      // Check if this is a back/forward navigation or reload
-      const navEntry = performance.getEntriesByType("navigation")[0];
-      const isBackForward =
-        navEntry &&
-        (navEntry as PerformanceNavigationTiming).type === "back_forward";
-
-      const isReload =
-        navEntry && (navEntry as PerformanceNavigationTiming).type === "reload";
-
-      if (isReload) {
-        // On reload: always clear skip flag, scroll to top, and play animation
-        sessionStorage.removeItem("skipHomeAnimation");
-        window.history.scrollRestoration = "manual";
-        window.scrollTo({ top: 0, behavior: "instant" });
-      } else if (isBackForward) {
-        // Returning via browser back: skip animation and restore scroll
-        sessionStorage.setItem("skipHomeAnimation", "true");
-        window.history.scrollRestoration = "auto";
-      } else {
-        // Fresh load: clear flag, play animation, scroll to top
-        sessionStorage.removeItem("skipHomeAnimation");
-        window.history.scrollRestoration = "manual";
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
-    </script>
-
-    <!-- JS goes here, after the DOM elements -->
-    <script>
-      const heroImages = document.querySelectorAll(".heroimage");
-      const container = document.getElementById("heroimages");
-
-      window.addEventListener("load", () => {
-        if (container) {
-          container.classList.add("heromounted");
-        }
-      });
-
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      let prevMouseX = mouseX;
-      let prevMouseY = mouseY;
-
-      document.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
-
-      // Adjust individual intensity per image here
-      const intensities = [0.1, 0.06, 0.08, 0.12]; // image 0, 1, 2, 3
-
-      // Check if device is mobile/touch (disable mouse animation)
-      const isTouchDevice =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
-      const shouldDisableMouseAnimation = isTouchDevice || isSmallScreen;
-
-      function animate() {
-        if (!container || shouldDisableMouseAnimation) return;
-
-        const containerRect = container.getBoundingClientRect();
-        const containerCenterX = containerRect.left + containerRect.width / 2;
-        const containerCenterY = containerRect.top + containerRect.height / 2;
-
-        // Calculate offset from container center
-        const offsetX = mouseX - containerCenterX;
-        const offsetY = mouseY - containerCenterY;
-
-        // Calculate mouse velocity for rotation
-        const velocityX = mouseX - prevMouseX;
-        const velocityY = mouseY - prevMouseY;
-        prevMouseX = mouseX;
-        prevMouseY = mouseY;
-
-        heroImages.forEach((img, index) => {
-          if (!(img instanceof HTMLElement)) return;
-
-          const strength = intensities[index];
-
-          const moveX = offsetX * strength;
-          const moveY = offsetY * strength;
-
-          // Add rotation based on horizontal velocity
-          const rotateAttr = img.getAttribute("data-rotate") ?? "0";
-          const baseRotate = parseFloat(rotateAttr) || 0;
-          const dynamicRotate = velocityX * 0.05;
-          const totalRotate = baseRotate + dynamicRotate;
-
-          img.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${totalRotate}deg)`;
-        });
-        requestAnimationFrame(animate);
-      }
-
-      if (!shouldDisableMouseAnimation) {
-        animate();
-      } else {
-        // On mobile/small screens, don't apply inline transform
-        // Let CSS rotate property handle the rotation
-        heroImages.forEach((img) => {
-          if (!(img instanceof HTMLElement)) return;
-          img.style.transform = "";
-        });
-      }
-    </script>
-
-    <!-- Carousel drag script -->
-    <script>
-      // @ts-nocheck
-      const track = document.getElementById("carouselTrack");
-      const cards = track?.querySelectorAll(".project-card");
-
-      if (!track || !cards) throw new Error("Carousel elements not found");
-
-      const totalCards = cards.length;
-      const uniqueCards = totalCards / 3; // We have 3 copies
-
-      // Get responsive cardWidth based on viewport
-      function getCardWidth() {
-        const viewportWidth = window.innerWidth;
-        // Convert rem to px (assuming 16px = 1rem)
-        const rem = parseFloat(
-          getComputedStyle(document.documentElement).fontSize
-        );
-
-        if (viewportWidth >= 64 * rem) {
-          // min-width: 64rem -> card: 450px, gap: 60px
-          return 450 + 60;
-        } else if (viewportWidth >= 48 * rem) {
-          // min-width: 48rem -> card: 350px, gap: 40px
-          return 350 + 40;
-        } else if (viewportWidth >= 35 * rem) {
-          // min-width: 35rem -> card: 280px, gap: 28px
-          return 280 + 28;
-        } else if (viewportWidth >= 30 * rem) {
-          // min-width: 30rem -> card: 300px, gap: 30px
-          return 300 + 30;
-        } else {
-          // Base mobile -> card: 260px, gap: 25px
-          return 260 + 25;
-        }
-      }
-
-      let cardWidth = getCardWidth();
-
-      // Check if returning from a project detail page
-      const returnedFromProject = sessionStorage.getItem("clickedProjectId");
-      let currentIndex = uniqueCards; // Default: start at middle set
-
-      if (returnedFromProject) {
-        // Find the index of the clicked project in the middle set
-        const targetCard = Array.from(cards).find((card, idx) => {
-          return (
-            idx >= uniqueCards &&
-            idx < uniqueCards * 2 &&
-            card.getAttribute("data-project-id") === returnedFromProject
-          );
-        });
-
-        if (targetCard) {
-          currentIndex = Array.from(cards).indexOf(targetCard);
-        }
-
-        // Clear the stored project ID
-        sessionStorage.removeItem("clickedProjectId");
-      }
-
-      let currentX = -currentIndex * cardWidth;
-      let isDragging = false;
-      let hasDragged = false;
-      let startX = 0;
-      let currentTranslate = currentX;
-      let prevTranslate = currentX;
-      let animationID = 0;
-      let offset = 0; // Track continuous offset for smooth infinite scroll
-      let isTransitioning = false; // Prevent rapid navigation
-
-      // Initialize position
-      track.style.transform = `translateX(${currentX}px)`;
-      updateActiveCard();
-
-      // Update card positions for circular effect
-      function updateCardPositions() {
-        const viewportWidth = window.innerWidth;
-        const rem = parseFloat(
-          getComputedStyle(document.documentElement).fontSize
-        );
-
-        // Adjust 3D effect intensity based on screen size
-        let scaleIntensity = 0.7;
-        let translateYActive = -60;
-        let translateYInactive = 100;
-        let translateZBase = -200;
-        let rotateYBase = 35;
-        let rotateZBase = 8;
-
-        if (viewportWidth < 48 * rem) {
-          // Reduce 3D effects on smaller screens
-          scaleIntensity = 0.8;
-          translateYActive = -30;
-          translateYInactive = 60;
-          translateZBase = -100;
-          rotateYBase = 25;
-          rotateZBase = 5;
-        }
-
-        if (viewportWidth < 35 * rem) {
-          // Further reduce on smaller screens
-          scaleIntensity = 0.82;
-          translateYActive = -25;
-          translateYInactive = 50;
-          translateZBase = -90;
-          rotateYBase = 22;
-          rotateZBase = 4;
-        }
-
-        if (viewportWidth < 30 * rem) {
-          // Further reduce on mobile
-          scaleIntensity = 0.85;
-          translateYActive = -20;
-          translateYInactive = 40;
-          translateZBase = -80;
-          rotateYBase = 20;
-          rotateZBase = 3;
-        }
-
-        cards.forEach((card, index) => {
-          const offset = index - currentIndex;
-          card.setAttribute("data-offset", offset.toString());
-
-          // Calculate curve effect based on absolute distance from center
-          const absOffset = Math.abs(offset);
-
-          // Scale: smaller as you move away from center
-          const scale =
-            offset === 0
-              ? 1
-              : Math.max(scaleIntensity - (absOffset - 1) * 0.1, 0.5);
-
-          // Y-axis: cards further away sink lower (parabolic curve)
-          const translateY =
-            offset === 0
-              ? translateYActive
-              : translateYInactive + (absOffset - 1) * 40;
-
-          // Z-axis: cards further away go deeper
-          const translateZ =
-            offset === 0 ? 0 : translateZBase - (absOffset - 1) * 100;
-
-          // Y-rotation: increases with distance (0 for center)
-          const rotateY =
-            offset === 0
-              ? 0
-              : offset < 0
-                ? Math.max(offset * rotateYBase - (absOffset - 1) * 10, -50)
-                : Math.min(offset * rotateYBase + (absOffset - 1) * 10, 50);
-
-          // Z-rotation: tilt based on position (0 for center)
-          const rotateZ = offset === 0 ? 0 : offset * rotateZBase;
-
-          // Opacity: fade out as cards move away
-          const opacity =
-            offset === 0 ? 1 : Math.max(0.4 - (absOffset - 1) * 0.15, 0.2);
-
-          // Set CSS custom properties
-          card.style.setProperty("--scale", scale.toString());
-          card.style.setProperty("--translate-y", `${translateY}px`);
-          card.style.setProperty("--translate-z", `${translateZ}px`);
-          card.style.setProperty("--rotate-y", `${rotateY}deg`);
-          card.style.setProperty("--rotate-z", `${rotateZ}deg`);
-          card.style.setProperty("--opacity", opacity.toString());
-        });
-      }
-      updateCardPositions();
-
-      // Prevent default drag behavior
-      track.addEventListener("dragstart", (e) => e.preventDefault());
-
-      // Prevent click on links when dragging
-      cards.forEach((card) => {
-        card.addEventListener("click", (e) => {
-          if (hasDragged || !card.classList.contains("active")) {
-            e.preventDefault();
-          } else {
-            // Store which project was clicked for carousel restoration
-            const projectId = card.getAttribute("data-project-id");
-            if (projectId) {
-              sessionStorage.setItem("clickedProjectId", projectId);
+        function setupScrollTriggers() {
+          ScrollTrigger.getAll().forEach((trigger) => {
+            if (
+              trigger.vars.trigger === ".work-title" ||
+              trigger.vars.trigger === ".work-subtitle"
+            ) {
+              trigger.kill();
             }
+          });
+
+          gsap.to(".work-title", {
+            opacity: 1,
+            y: 0,
+            duration: 2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".work-title",
+              start: "bottom 60%",
+              end: "bottom 30%",
+              scrub: true,
+            },
+          });
+
+          gsap.to(".work-subtitle", {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            delay: 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".work-subtitle",
+              start: "bottom 60%",
+              end: "bottom 30%",
+              scrub: true,
+              markers: false,
+            },
+          });
+        }
+
+        window.addEventListener("load", setupScrollTriggers);
+        window.addEventListener("pageshow", (event) => {
+          if (event.persisted) {
+            setupScrollTriggers();
           }
         });
-      }); // Mouse events
-      track.addEventListener("mousedown", dragStart);
-      track.addEventListener("mousemove", drag);
-      track.addEventListener("mouseup", dragEnd);
-      track.addEventListener("mouseleave", dragEnd);
+      </script>
 
-      // Touch events
-      track.addEventListener("touchstart", dragStart, { passive: true });
-      track.addEventListener("touchmove", drag, { passive: true });
-      track.addEventListener("touchend", dragEnd);
+      <script src="../scripts/home-animations.js"></script>
 
-      // Keyboard navigation
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          navigateCarousel(-1); // Go left (previous)
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          navigateCarousel(1); // Go right (next)
+      <script>
+        // Check if this is a back/forward navigation or reload
+        const navEntry = performance.getEntriesByType("navigation")[0];
+        const isBackForward =
+          navEntry &&
+          (navEntry as PerformanceNavigationTiming).type === "back_forward";
+
+        const isReload =
+          navEntry &&
+          (navEntry as PerformanceNavigationTiming).type === "reload";
+
+        if (isReload) {
+          // On reload: always clear skip flag, scroll to top, and play animation
+          sessionStorage.removeItem("skipHomeAnimation");
+          window.history.scrollRestoration = "manual";
+          window.scrollTo({ top: 0, behavior: "instant" });
+        } else if (isBackForward) {
+          // Returning via browser back: skip animation and restore scroll
+          sessionStorage.setItem("skipHomeAnimation", "true");
+          window.history.scrollRestoration = "auto";
+        } else {
+          // Fresh load: clear flag, play animation, scroll to top
+          sessionStorage.removeItem("skipHomeAnimation");
+          window.history.scrollRestoration = "manual";
+          window.scrollTo({ top: 0, behavior: "instant" });
         }
-      });
+      </script>
 
-      function navigateCarousel(direction) {
-        if (isDragging || isTransitioning) return; // Don't navigate while dragging or transitioning
+      <!-- JS goes here, after the DOM elements -->
+      <script>
+        const heroImages = document.querySelectorAll(".heroimage");
+        const container = document.getElementById("heroimages");
 
-        isTransitioning = true;
-        currentIndex += direction;
-
-        currentX = -currentIndex * cardWidth;
-        currentTranslate = currentX;
-        prevTranslate = currentX;
-
-        track.style.transition =
-          "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-        track.style.transform = `translateX(${currentX}px)`;
-
-        updateActiveCard();
-        updateCardPositions();
-
-        // Handle infinite loop after transition completes
-        const handleTransitionEnd = (e) => {
-          if (e.target !== track || e.propertyName !== "transform") return;
-
-          track.removeEventListener("transitionend", handleTransitionEnd);
-
-          let needsReposition = false;
-          let newIndex = currentIndex;
-
-          if (currentIndex >= uniqueCards * 2) {
-            newIndex = currentIndex - uniqueCards;
-            needsReposition = true;
-          } else if (currentIndex < uniqueCards) {
-            newIndex = currentIndex + uniqueCards;
-            needsReposition = true;
+        window.addEventListener("load", () => {
+          if (container) {
+            container.classList.add("heromounted");
           }
+        });
 
-          if (needsReposition) {
-            currentIndex = newIndex;
-            currentX = -currentIndex * cardWidth;
-            currentTranslate = currentX;
-            prevTranslate = currentX;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let prevMouseX = mouseX;
+        let prevMouseY = mouseY;
 
-            cards.forEach((card) => {
-              card.style.transition = "none";
-            });
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
 
-            track.style.transition = "none";
-            track.style.transform = `translateX(${currentX}px)`;
-            updateActiveCard();
-            updateCardPositions();
+        // Adjust individual intensity per image here
+        const intensities = [0.1, 0.06, 0.08, 0.12]; // image 0, 1, 2, 3
 
-            track.offsetHeight;
+        // Check if device is mobile/touch (disable mouse animation)
+        const isTouchDevice =
+          "ontouchstart" in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth <= 768;
+        const shouldDisableMouseAnimation = isTouchDevice || isSmallScreen;
 
-            cards.forEach((card) => {
-              card.style.transition = "";
-            });
-          }
+        function animate() {
+          if (!container || shouldDisableMouseAnimation) return;
 
-          // Re-enable navigation after repositioning
-          isTransitioning = false;
-        };
+          const containerRect = container.getBoundingClientRect();
+          const containerCenterX = containerRect.left + containerRect.width / 2;
+          const containerCenterY = containerRect.top + containerRect.height / 2;
 
-        track.addEventListener("transitionend", handleTransitionEnd);
-      }
+          // Calculate offset from container center
+          const offsetX = mouseX - containerCenterX;
+          const offsetY = mouseY - containerCenterY;
 
-      function dragStart(e) {
-        e.preventDefault();
-        isDragging = true;
-        hasDragged = false;
-        startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
-        prevTranslate = currentTranslate;
-        track.style.transition = "none";
-        animationID = requestAnimationFrame(animation);
-        track.style.cursor = "grabbing";
-      }
+          // Calculate mouse velocity for rotation
+          const velocityX = mouseX - prevMouseX;
+          const velocityY = mouseY - prevMouseY;
+          prevMouseX = mouseX;
+          prevMouseY = mouseY;
 
-      function drag(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        const currentPosition = e.type.includes("mouse")
-          ? e.clientX
-          : e.touches[0].clientX;
-        const diff = currentPosition - startX;
+          heroImages.forEach((img, index) => {
+            if (!(img instanceof HTMLElement)) return;
 
-        // If moved more than 5px, consider it a drag
-        if (Math.abs(diff) > 5) {
-          hasDragged = true;
+            const strength = intensities[index];
+
+            const moveX = offsetX * strength;
+            const moveY = offsetY * strength;
+
+            // Add rotation based on horizontal velocity
+            const rotateAttr = img.getAttribute("data-rotate") ?? "0";
+            const baseRotate = parseFloat(rotateAttr) || 0;
+            const dynamicRotate = velocityX * 0.05;
+            const totalRotate = baseRotate + dynamicRotate;
+
+            img.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${totalRotate}deg)`;
+          });
+          requestAnimationFrame(animate);
         }
 
-        currentTranslate = prevTranslate + diff;
-      }
-
-      function dragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        cancelAnimationFrame(animationID);
-        track.style.cursor = "grab";
-
-        // Reset hasDragged after a short delay
-        setTimeout(() => {
-          hasDragged = false;
-        }, 100);
-
-        // Snap to nearest card
-        const movedBy = currentTranslate - prevTranslate;
-        if (Math.abs(movedBy) > 50) {
-          currentIndex += movedBy > 0 ? -1 : 1;
+        if (!shouldDisableMouseAnimation) {
+          animate();
+        } else {
+          // On mobile/small screens, don't apply inline transform
+          // Let CSS rotate property handle the rotation
+          heroImages.forEach((img) => {
+            if (!(img instanceof HTMLElement)) return;
+            img.style.transform = "";
+          });
         }
+      </script>
 
-        currentX = -currentIndex * cardWidth;
-        currentTranslate = currentX;
-        prevTranslate = currentX;
+      <!-- Carousel drag script -->
+      <script>
+        // @ts-nocheck
+        const track = document.getElementById("carouselTrack");
+        const cards = track?.querySelectorAll(".project-card");
 
-        // Animate to the new position
-        track.style.transition =
-          "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-        track.style.transform = `translateX(${currentX}px)`;
+        if (!track || !cards) throw new Error("Carousel elements not found");
 
-        updateActiveCard();
-        updateCardPositions();
+        const totalCards = cards.length;
+        const uniqueCards = totalCards / 3; // We have 3 copies
 
-        // Handle infinite loop after transition completes
-        const handleTransitionEnd = (e) => {
-          // Only trigger for track's transform, not child card transitions
-          if (e.target !== track || e.propertyName !== "transform") return;
+        // Get responsive cardWidth based on viewport
+        function getCardWidth() {
+          const viewportWidth = window.innerWidth;
+          // Convert rem to px (assuming 16px = 1rem)
+          const rem = parseFloat(
+            getComputedStyle(document.documentElement).fontSize
+          );
 
-          track.removeEventListener("transitionend", handleTransitionEnd);
-
-          let needsReposition = false;
-          let newIndex = currentIndex;
-
-          // Check if we need to reposition
-          if (currentIndex >= uniqueCards * 2) {
-            newIndex = currentIndex - uniqueCards;
-            needsReposition = true;
-          } else if (currentIndex < uniqueCards) {
-            newIndex = currentIndex + uniqueCards;
-            needsReposition = true;
-          }
-
-          if (needsReposition) {
-            currentIndex = newIndex;
-            currentX = -currentIndex * cardWidth;
-            currentTranslate = currentX;
-            prevTranslate = currentX;
-
-            // Disable transitions on all cards during jump
-            cards.forEach((card) => {
-              card.style.transition = "none";
-            });
-
-            // Reposition instantly without transition
-            track.style.transition = "none";
-            track.style.transform = `translateX(${currentX}px)`;
-            updateActiveCard();
-            updateCardPositions();
-
-            // Force reflow to ensure transition: none takes effect
-            track.offsetHeight;
-
-            // Re-enable transitions on cards
-            cards.forEach((card) => {
-              card.style.transition = "";
-            });
-          }
-        };
-
-        track.addEventListener("transitionend", handleTransitionEnd);
-      }
-
-      function animation() {
-        track.style.transform = `translateX(${currentTranslate}px)`;
-        if (isDragging) requestAnimationFrame(animation);
-      }
-
-      function updateActiveCard() {
-        cards.forEach((card, index) => {
-          if (index === currentIndex) {
-            card.classList.add("active");
+          if (viewportWidth >= 64 * rem) {
+            // min-width: 64rem -> card: 450px, gap: 60px
+            return 450 + 60;
+          } else if (viewportWidth >= 48 * rem) {
+            // min-width: 48rem -> card: 350px, gap: 40px
+            return 350 + 40;
+          } else if (viewportWidth >= 35 * rem) {
+            // min-width: 35rem -> card: 280px, gap: 28px
+            return 280 + 28;
+          } else if (viewportWidth >= 30 * rem) {
+            // min-width: 30rem -> card: 300px, gap: 30px
+            return 300 + 30;
           } else {
-            card.classList.remove("active");
+            // Base mobile -> card: 260px, gap: 25px
+            return 260 + 25;
+          }
+        }
+
+        let cardWidth = getCardWidth();
+
+        // Check if returning from a project detail page
+        const returnedFromProject = sessionStorage.getItem("clickedProjectId");
+        let currentIndex = uniqueCards; // Default: start at middle set
+
+        if (returnedFromProject) {
+          // Find the index of the clicked project in the middle set
+          const targetCard = Array.from(cards).find((card, idx) => {
+            return (
+              idx >= uniqueCards &&
+              idx < uniqueCards * 2 &&
+              card.getAttribute("data-project-id") === returnedFromProject
+            );
+          });
+
+          if (targetCard) {
+            currentIndex = Array.from(cards).indexOf(targetCard);
+          }
+
+          // Clear the stored project ID
+          sessionStorage.removeItem("clickedProjectId");
+        }
+
+        let currentX = -currentIndex * cardWidth;
+        let isDragging = false;
+        let hasDragged = false;
+        let startX = 0;
+        let currentTranslate = currentX;
+        let prevTranslate = currentX;
+        let animationID = 0;
+        let offset = 0; // Track continuous offset for smooth infinite scroll
+        let isTransitioning = false; // Prevent rapid navigation
+
+        // Initialize position
+        track.style.transform = `translateX(${currentX}px)`;
+        updateActiveCard();
+
+        // Update card positions for circular effect
+        function updateCardPositions() {
+          const viewportWidth = window.innerWidth;
+          const rem = parseFloat(
+            getComputedStyle(document.documentElement).fontSize
+          );
+
+          // Adjust 3D effect intensity based on screen size
+          let scaleIntensity = 0.7;
+          let translateYActive = -60;
+          let translateYInactive = 100;
+          let translateZBase = -200;
+          let rotateYBase = 35;
+          let rotateZBase = 8;
+
+          if (viewportWidth < 48 * rem) {
+            // Reduce 3D effects on smaller screens
+            scaleIntensity = 0.8;
+            translateYActive = -30;
+            translateYInactive = 60;
+            translateZBase = -100;
+            rotateYBase = 25;
+            rotateZBase = 5;
+          }
+
+          if (viewportWidth < 35 * rem) {
+            // Further reduce on smaller screens
+            scaleIntensity = 0.82;
+            translateYActive = -25;
+            translateYInactive = 50;
+            translateZBase = -90;
+            rotateYBase = 22;
+            rotateZBase = 4;
+          }
+
+          if (viewportWidth < 30 * rem) {
+            // Further reduce on mobile
+            scaleIntensity = 0.85;
+            translateYActive = -20;
+            translateYInactive = 40;
+            translateZBase = -80;
+            rotateYBase = 20;
+            rotateZBase = 3;
+          }
+
+          cards.forEach((card, index) => {
+            const offset = index - currentIndex;
+            card.setAttribute("data-offset", offset.toString());
+
+            // Calculate curve effect based on absolute distance from center
+            const absOffset = Math.abs(offset);
+
+            // Scale: smaller as you move away from center
+            const scale =
+              offset === 0
+                ? 1
+                : Math.max(scaleIntensity - (absOffset - 1) * 0.1, 0.5);
+
+            // Y-axis: cards further away sink lower (parabolic curve)
+            const translateY =
+              offset === 0
+                ? translateYActive
+                : translateYInactive + (absOffset - 1) * 40;
+
+            // Z-axis: cards further away go deeper
+            const translateZ =
+              offset === 0 ? 0 : translateZBase - (absOffset - 1) * 100;
+
+            // Y-rotation: increases with distance (0 for center)
+            const rotateY =
+              offset === 0
+                ? 0
+                : offset < 0
+                  ? Math.max(offset * rotateYBase - (absOffset - 1) * 10, -50)
+                  : Math.min(offset * rotateYBase + (absOffset - 1) * 10, 50);
+
+            // Z-rotation: tilt based on position (0 for center)
+            const rotateZ = offset === 0 ? 0 : offset * rotateZBase;
+
+            // Opacity: fade out as cards move away
+            const opacity =
+              offset === 0 ? 1 : Math.max(0.4 - (absOffset - 1) * 0.15, 0.2);
+
+            // Set CSS custom properties
+            card.style.setProperty("--scale", scale.toString());
+            card.style.setProperty("--translate-y", `${translateY}px`);
+            card.style.setProperty("--translate-z", `${translateZ}px`);
+            card.style.setProperty("--rotate-y", `${rotateY}deg`);
+            card.style.setProperty("--rotate-z", `${rotateZ}deg`);
+            card.style.setProperty("--opacity", opacity.toString());
+          });
+        }
+        updateCardPositions();
+
+        // Prevent default drag behavior
+        track.addEventListener("dragstart", (e) => e.preventDefault());
+
+        // Prevent click on links when dragging
+        cards.forEach((card) => {
+          card.addEventListener("click", (e) => {
+            if (hasDragged || !card.classList.contains("active")) {
+              e.preventDefault();
+            } else {
+              // Store which project was clicked for carousel restoration
+              const projectId = card.getAttribute("data-project-id");
+              if (projectId) {
+                sessionStorage.setItem("clickedProjectId", projectId);
+              }
+            }
+          });
+        }); // Mouse events
+        track.addEventListener("mousedown", dragStart);
+        track.addEventListener("mousemove", drag);
+        track.addEventListener("mouseup", dragEnd);
+        track.addEventListener("mouseleave", dragEnd);
+
+        // Touch events
+        track.addEventListener("touchstart", dragStart, { passive: true });
+        track.addEventListener("touchmove", drag, { passive: true });
+        track.addEventListener("touchend", dragEnd);
+
+        // Keyboard navigation
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            navigateCarousel(-1); // Go left (previous)
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            navigateCarousel(1); // Go right (next)
           }
         });
-      }
 
-      // Handle window resize to recalculate card widths
-      let resizeTimeout;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          // Recalculate cardWidth for new viewport
-          cardWidth = getCardWidth();
+        function navigateCarousel(direction) {
+          if (isDragging || isTransitioning) return; // Don't navigate while dragging or transitioning
 
-          // Update positions without animation
+          isTransitioning = true;
+          currentIndex += direction;
+
           currentX = -currentIndex * cardWidth;
           currentTranslate = currentX;
           prevTranslate = currentX;
 
-          track.style.transition = "none";
+          track.style.transition =
+            "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
           track.style.transform = `translateX(${currentX}px)`;
 
+          updateActiveCard();
           updateCardPositions();
 
-          // Force reflow
-          track.offsetHeight;
-        }, 100);
-      });
-    </script>
+          // Handle infinite loop after transition completes
+          const handleTransitionEnd = (e) => {
+            if (e.target !== track || e.propertyName !== "transform") return;
+
+            track.removeEventListener("transitionend", handleTransitionEnd);
+
+            let needsReposition = false;
+            let newIndex = currentIndex;
+
+            if (currentIndex >= uniqueCards * 2) {
+              newIndex = currentIndex - uniqueCards;
+              needsReposition = true;
+            } else if (currentIndex < uniqueCards) {
+              newIndex = currentIndex + uniqueCards;
+              needsReposition = true;
+            }
+
+            if (needsReposition) {
+              currentIndex = newIndex;
+              currentX = -currentIndex * cardWidth;
+              currentTranslate = currentX;
+              prevTranslate = currentX;
+
+              cards.forEach((card) => {
+                card.style.transition = "none";
+              });
+
+              track.style.transition = "none";
+              track.style.transform = `translateX(${currentX}px)`;
+              updateActiveCard();
+              updateCardPositions();
+
+              track.offsetHeight;
+
+              cards.forEach((card) => {
+                card.style.transition = "";
+              });
+            }
+
+            // Re-enable navigation after repositioning
+            isTransitioning = false;
+          };
+
+          track.addEventListener("transitionend", handleTransitionEnd);
+        }
+
+        function dragStart(e) {
+          e.preventDefault();
+          isDragging = true;
+          hasDragged = false;
+          startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
+          prevTranslate = currentTranslate;
+          track.style.transition = "none";
+          animationID = requestAnimationFrame(animation);
+          track.style.cursor = "grabbing";
+        }
+
+        function drag(e) {
+          if (!isDragging) return;
+          e.preventDefault();
+          const currentPosition = e.type.includes("mouse")
+            ? e.clientX
+            : e.touches[0].clientX;
+          const diff = currentPosition - startX;
+
+          // If moved more than 5px, consider it a drag
+          if (Math.abs(diff) > 5) {
+            hasDragged = true;
+          }
+
+          currentTranslate = prevTranslate + diff;
+        }
+
+        function dragEnd() {
+          if (!isDragging) return;
+          isDragging = false;
+          cancelAnimationFrame(animationID);
+          track.style.cursor = "grab";
+
+          // Reset hasDragged after a short delay
+          setTimeout(() => {
+            hasDragged = false;
+          }, 100);
+
+          // Snap to nearest card
+          const movedBy = currentTranslate - prevTranslate;
+          if (Math.abs(movedBy) > 50) {
+            currentIndex += movedBy > 0 ? -1 : 1;
+          }
+
+          currentX = -currentIndex * cardWidth;
+          currentTranslate = currentX;
+          prevTranslate = currentX;
+
+          // Animate to the new position
+          track.style.transition =
+            "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+          track.style.transform = `translateX(${currentX}px)`;
+
+          updateActiveCard();
+          updateCardPositions();
+
+          // Handle infinite loop after transition completes
+          const handleTransitionEnd = (e) => {
+            // Only trigger for track's transform, not child card transitions
+            if (e.target !== track || e.propertyName !== "transform") return;
+
+            track.removeEventListener("transitionend", handleTransitionEnd);
+
+            let needsReposition = false;
+            let newIndex = currentIndex;
+
+            // Check if we need to reposition
+            if (currentIndex >= uniqueCards * 2) {
+              newIndex = currentIndex - uniqueCards;
+              needsReposition = true;
+            } else if (currentIndex < uniqueCards) {
+              newIndex = currentIndex + uniqueCards;
+              needsReposition = true;
+            }
+
+            if (needsReposition) {
+              currentIndex = newIndex;
+              currentX = -currentIndex * cardWidth;
+              currentTranslate = currentX;
+              prevTranslate = currentX;
+
+              // Disable transitions on all cards during jump
+              cards.forEach((card) => {
+                card.style.transition = "none";
+              });
+
+              // Reposition instantly without transition
+              track.style.transition = "none";
+              track.style.transform = `translateX(${currentX}px)`;
+              updateActiveCard();
+              updateCardPositions();
+
+              // Force reflow to ensure transition: none takes effect
+              track.offsetHeight;
+
+              // Re-enable transitions on cards
+              cards.forEach((card) => {
+                card.style.transition = "";
+              });
+            }
+          };
+
+          track.addEventListener("transitionend", handleTransitionEnd);
+        }
+
+        function animation() {
+          track.style.transform = `translateX(${currentTranslate}px)`;
+          if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function updateActiveCard() {
+          cards.forEach((card, index) => {
+            if (index === currentIndex) {
+              card.classList.add("active");
+            } else {
+              card.classList.remove("active");
+            }
+          });
+        }
+
+        // Handle window resize to recalculate card widths
+        let resizeTimeout;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            // Recalculate cardWidth for new viewport
+            cardWidth = getCardWidth();
+
+            // Update positions without animation
+            currentX = -currentIndex * cardWidth;
+            currentTranslate = currentX;
+            prevTranslate = currentX;
+
+            track.style.transition = "none";
+            track.style.transform = `translateX(${currentX}px)`;
+
+            updateCardPositions();
+
+            // Force reflow
+            track.offsetHeight;
+          }, 100);
+        });
+      </script>
+    </div>
   </main>
 </BaseLayout>
