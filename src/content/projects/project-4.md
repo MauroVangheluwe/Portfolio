@@ -1,14 +1,13 @@
 ---
 name: "CAMPAGNE RODE KRUIS"
-img: "./images/Project-3/Cover-image.png"
-headImg: "./images/Project-3/img-2"
+img: "./images/Project-4/Cover-image.png"
+headImg: "./images/Project-4/img-2.png"
 imgs:
-  - "./images/Project-3/img-1.png"
-  - "./images/Project-3/img-5.png"
-  - "./images/Project-3/img-3.png"
-  - "./images/Project-3/img-4.png"
-  - "./images/Project-3/img-2.png"
-  - "IFRAME_PLACEHOLDER"
+  - "./images/Project-4/img-1.png"
+  - "./images/Project-4/img-5.png"
+  - "./images/Project-4/img-3.png"
+  - "./images/Project-4/img-4.png"
+  - "./images/Project-4/img-2.png"
 creativeField: ["Visual Design"]
 duration: "3 weeks"
 year: 2024

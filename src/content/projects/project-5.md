@@ -1,7 +1,7 @@
 ---
 name: "TELENET CAMPAGNE"
 img: "./images/Project-5/Cover-image.png"
-headImg: "./images/Project-5/Cover-image"
+headImg: "./images/Project-5/Cover-image.png"
 imgs:
   - "./images/Project-5/img-1.png"
   - "./images/Project-5/img-2.png"

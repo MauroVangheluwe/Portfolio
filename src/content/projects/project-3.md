@@ -1,14 +1,14 @@
 ---
 name: "MIXBOX"
-img: "./images/Project-4/Cover-image.png"
-headImg: "./images/Project-4/Cover-image.png"
+img: "./images/Project-3/Cover-image.png"
+headImg: "./images/Project-3/Cover-image.png"
 imgs:
-  - "./images/Project-4/img-1.png"
-  - "./images/Project-4/img-2.png"
-  - "./images/Project-4/img-3.png"
-  - "./images/Project-4/img-4.png"
-  - "./images/Project-4/img-5.png"
-  - "./images/Project-4/img-6.png"
+  - "./images/Project-3/img-1.png"
+  - "./images/Project-3/img-3.png"
+  - "./images/Project-3/img-4.png"
+  - "./images/Project-3/img-5.png"
+  - "./images/Project-3/img-extra-1.jpg"
+  - "./images/Project-3/img-extra-3.jpg"
   - "IFRAME_PLACEHOLDER"
 creativeField: ["Visual Design", "Branding", "Packaging"]
 duration: "5 weeks"

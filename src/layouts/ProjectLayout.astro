@@ -462,8 +462,21 @@ const {
               }
             }
 
-            gallery.appendChild(first.element);
-            gallery.appendChild(second.element);
+            // Each pair gets its own row so it never shares grid columns
+            // with other rows (a mixed pair sets fixed pixel widths).
+            const pairRow = document.createElement("div");
+            pairRow.className = "gallery-pair";
+            pairRow.appendChild(first.element);
+            pairRow.appendChild(second.element);
+            // Plain pairs: crop both images to one shared ratio so they end up
+            // equally wide AND equally tall (geometric mean = least cropping).
+            if (!first.element.classList.contains("mixed-pair")) {
+              const sharedRatio = Math.sqrt(
+                first.aspectRatio * second.aspectRatio
+              );
+              pairRow.style.setProperty("--pair-ratio", String(sharedRatio));
+            }
+            gallery.appendChild(pairRow);
             reorderedElements.push(first.element);
             reorderedElements.push(second.element);
           } else if (portraitQueue.length === 1) {
@@ -1107,6 +1120,13 @@ const {
       align-self: end;
     }
 
+    :global(.gallery-pair) {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     :global(.gallery-item.portrait-in-pair),
     :global(.gallery-item.square-in-pair) {
       width: 100%;
@@ -1185,6 +1205,17 @@ const {
 
       :global(.gallery-item.wide) {
         grid-column: span 2;
+      }
+      :global(.gallery-pair) {
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 16px;
+      }
+      :global(.gallery-pair > .gallery-item:not(.mixed-pair)) {
+        flex: 1 1 0;
+        min-width: 0;
+        aspect-ratio: var(--pair-ratio, auto);
+        object-fit: cover;
       }
 
       :global(.gallery-item.portrait-in-pair) {
